@@ -39,9 +39,9 @@ fun BottomBar(
                 selected = selected,
                 onClick = { onItemClick(item) },
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = Color.Red,
-                    selectedTextColor = Color.Red,
-                    indicatorColor = Color.DarkGray,
+                    selectedIconColor = Color.Black,
+                    selectedTextColor = Color.Black,
+                    indicatorColor = Color.Gray,
                     unselectedIconColor = Color.LightGray,
                     unselectedTextColor = Color.LightGray,
                 ),
@@ -54,7 +54,7 @@ fun BottomBar(
                         Text(
                             text = item.name,
                             textAlign = TextAlign.Center,
-                            fontSize = 10.sp,
+                            fontSize = 15.sp,
                             style = MaterialTheme.typography.displayLarge,
                         )
                     }

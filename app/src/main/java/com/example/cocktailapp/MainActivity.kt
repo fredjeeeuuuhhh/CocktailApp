@@ -30,7 +30,6 @@ class MainActivity : ComponentActivity() {
             CocktailAppTheme {
                 val navController = rememberNavController()
                 // A surface container using the 'background' color from the theme
-
                     Scaffold(
                         topBar = {},
                         bottomBar = {
@@ -66,7 +65,6 @@ class MainActivity : ComponentActivity() {
 
                     }
             }
-
         }
     }
 }
