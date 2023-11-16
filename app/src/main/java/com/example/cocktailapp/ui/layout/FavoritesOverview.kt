@@ -1,4 +1,4 @@
-package com.example.cocktailapp.layout
+package com.example.cocktailapp.ui.layout
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
