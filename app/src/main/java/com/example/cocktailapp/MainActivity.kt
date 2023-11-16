@@ -10,7 +10,6 @@ import androidx.compose.material.icons.filled.LocalBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -29,7 +28,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             CocktailAppTheme {
                 val navController = rememberNavController()
-                // A surface container using the 'background' color from the theme
                     Scaffold(
                         topBar = {},
                         bottomBar = {
@@ -51,8 +49,6 @@ class MainActivity : ComponentActivity() {
                                         icon = Icons.Filled.Favorite
                                     )
                                 ),
-                                navController = navController,
-                                modifier = Modifier,
                                 onItemClick = {
                                     navController.navigate(it.route)
                                 },
