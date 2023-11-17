@@ -16,10 +16,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navigation
 import com.example.cocktailapp.R
-import com.example.cocktailapp.ui.layout.CocktailOverview
-import com.example.cocktailapp.ui.layout.FavoritesOverview
-import com.example.cocktailapp.ui.layout.IngredientsOverview
+import com.example.cocktailapp.ui.CocktailDestinationsArgs.COCKTAIL_NAME_ARG
+import com.example.cocktailapp.ui.CocktailDestinationsArgs.INGREDIENT_NAME_ARG
+import com.example.cocktailapp.ui.cocktails.cocktaildetail.CocktailDetail
+import com.example.cocktailapp.ui.cocktails.cocktaildetail.CocktailDetailViewModel
+import com.example.cocktailapp.ui.cocktails.cocktailoverview.CocktailOverview
+import com.example.cocktailapp.ui.favorites.FavoritesOverview
+import com.example.cocktailapp.ui.ingredients.ingredientsdetail.IngredientDetail
+import com.example.cocktailapp.ui.ingredients.ingredientsdetail.IngredientDetailViewModel
+import com.example.cocktailapp.ui.ingredients.ingredientsoverview.IngredientsOverview
 import com.example.cocktailapp.ui.navigation.BottomNavigationBar
 import com.example.cocktailapp.ui.navigation.NavigationMenuItem
 
@@ -72,14 +79,42 @@ fun CocktailAppNavGraph(
             Modifier.padding(innerPadding),
         ) {
             composable(CocktailDestinations.COCKTAIL_ROUTE) {
-                CocktailOverview()
+                CocktailOverview(
+                    onViewDetailClicked = { cocktail ->  navActions.navigateToCocktailDetail(cocktail.strDrink)}
+                )
             }
             composable(CocktailDestinations.INGREDIENT_ROUTE) {
-                IngredientsOverview()
+                IngredientsOverview(
+                    onViewDetailClicked = { ingredient ->  navActions.navigateToIngredientDetail(ingredient.strIngredient)}
+                )
             }
             composable(CocktailDestinations.FAVORITE_ROUTE) {
                 FavoritesOverview()
             }
+
+            composable(CocktailDestinations.COCKTAIL_DETAIL_ROUTE) { entry->
+                val cocktailName = entry.arguments?.getString(COCKTAIL_NAME_ARG)
+                val parentEntry = remember(entry) { navController.getBackStackEntry(CocktailDestinations.COCKTAIL_DETAIL_ROUTE) }
+                val viewModel = CocktailDetailViewModel()
+                CocktailDetail(
+                    onBack = { navController.popBackStack() },
+                    cocktailDetailViewModel = viewModel,
+                    name = cocktailName,
+                )
+            }
+
+            composable(CocktailDestinations.INGREDIENT_DETAIL_ROUTE) { entry->
+                val ingredientName = entry.arguments?.getString(INGREDIENT_NAME_ARG)
+                val parentEntry = remember(entry) { navController.getBackStackEntry(CocktailDestinations.INGREDIENT_DETAIL_ROUTE) }
+                val viewModel = IngredientDetailViewModel()
+                IngredientDetail(
+                    onBack = { navController.popBackStack() },
+                    ingredientDetailViewModel = viewModel,
+                    name = ingredientName,
+                )
+            }
         }
     }
 }
+
+

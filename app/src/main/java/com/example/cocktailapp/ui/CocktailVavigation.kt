@@ -3,28 +3,34 @@ package com.example.cocktailapp.ui
 import androidx.compose.ui.input.key.Key.Companion.F
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import com.example.cocktailapp.ui.AdminScreens.COCKTAIL_SCREEN
-import com.example.cocktailapp.ui.AdminScreens.FAVORITE_SCREEN
-import com.example.cocktailapp.ui.AdminScreens.INGREDIENT_SCREEN
+import com.example.cocktailapp.ui.CocktailDestinationsArgs.COCKTAIL_NAME_ARG
+import com.example.cocktailapp.ui.CocktailDestinationsArgs.INGREDIENT_NAME_ARG
+import com.example.cocktailapp.ui.CocktailScreens.COCKTAIL_DETAIL_SCREEN
+import com.example.cocktailapp.ui.CocktailScreens.COCKTAIL_SCREEN
+import com.example.cocktailapp.ui.CocktailScreens.FAVORITE_SCREEN
+import com.example.cocktailapp.ui.CocktailScreens.INGREDIENT_DETAIL_SCREEN
+import com.example.cocktailapp.ui.CocktailScreens.INGREDIENT_SCREEN
 
-private object AdminScreens {
+private object CocktailScreens {
     const val COCKTAIL_SCREEN = "cocktails"
+    const val COCKTAIL_DETAIL_SCREEN = "detailCocktail"
     const val INGREDIENT_SCREEN = "ingredients"
+    const val INGREDIENT_DETAIL_SCREEN = "detailIngredient"
     const val FAVORITE_SCREEN = "favorites"
 }
+object CocktailDestinationsArgs {
+    const val COCKTAIL_NAME_ARG = "cocktailName"
+    const val INGREDIENT_NAME_ARG = "ingredientName"
+}
 
-/**
- * Destinations used in the [AdminApp]
- */
 object CocktailDestinations {
     const val COCKTAIL_ROUTE = COCKTAIL_SCREEN
+    const val COCKTAIL_DETAIL_ROUTE = "$COCKTAIL_DETAIL_SCREEN/{$COCKTAIL_NAME_ARG}"
     const val INGREDIENT_ROUTE = INGREDIENT_SCREEN
+    const val INGREDIENT_DETAIL_ROUTE = "$INGREDIENT_DETAIL_SCREEN/{$INGREDIENT_NAME_ARG}"
     const val FAVORITE_ROUTE = FAVORITE_SCREEN
 }
 
-/**
- * Models the navigation actions in the app.
- */
 class CocktailNavigationActions(private val navController: NavHostController) {
     fun navigateToCocktails() {
         navigateToMenuItem(CocktailDestinations.COCKTAIL_ROUTE)
@@ -51,4 +57,12 @@ class CocktailNavigationActions(private val navController: NavHostController) {
             restoreState = true
         }
     }
+
+    fun navigateToCocktailDetail(cocktailName: String) {
+        navController.navigate("$COCKTAIL_DETAIL_SCREEN/$cocktailName")
+    }
+    fun navigateToIngredientDetail(ingredientName: String) {
+        navController.navigate("$INGREDIENT_DETAIL_SCREEN/$ingredientName")
+    }
 }
+
