@@ -12,6 +12,7 @@ object IngredientSampler {
             strAlcohol = "Yes",
             strABV = "40",
             strIngredientThumb = "www.thecocktaildb.com/images/ingredients/gin-Small.png",
+            isOwned = false,
         ),
         Ingredient(
             idIngredient = "1",
@@ -21,6 +22,7 @@ object IngredientSampler {
             strAlcohol = "Yes",
             strABV = "40",
             strIngredientThumb = "www.thecocktaildb.com/images/ingredients/vodka-Small.png",
+            isOwned = true,
         ),
         Ingredient(
             idIngredient = "3",
@@ -30,6 +32,7 @@ object IngredientSampler {
             strAlcohol = "Yes",
             strABV = "40",
             strIngredientThumb = "www.thecocktaildb.com/images/ingredients/rum-Small.png",
+            isOwned = false,
         ),
         Ingredient(
             idIngredient = "4",
@@ -39,6 +42,7 @@ object IngredientSampler {
             strAlcohol = "Yes",
             strABV = "40",
             strIngredientThumb = "www.thecocktaildb.com/images/ingredients/tequila-Small.png",
+            isOwned = true
         ),
         Ingredient(
             idIngredient = "5",
@@ -48,6 +52,7 @@ object IngredientSampler {
             strAlcohol = "Yes",
             strABV = null,
             strIngredientThumb = "www.thecocktaildb.com/images/ingredients/scotch-Small.png",
+            isOwned = false
         ),
     )
 

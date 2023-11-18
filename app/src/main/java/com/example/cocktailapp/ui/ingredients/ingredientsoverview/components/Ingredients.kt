@@ -14,15 +14,17 @@ import com.example.cocktailapp.ui.ingredients.ingredientsoverview.components.Ing
 fun Ingredients(
     ingredients: List<Ingredient>,
     onViewDetailClicked: (Ingredient) -> Unit,
+    onOwnedStatusChanged: (Ingredient) -> Unit,
 ){
     LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
+        columns = GridCells.Fixed(3),
         modifier = Modifier.padding(top = 10.dp),
     ){
         items(ingredients){ingredient->
             IngredientListItem(
                 ingredient = ingredient,
                 onViewDetailClicked = { onViewDetailClicked(ingredient) },
+                onOwnedStatusChanged = { onOwnedStatusChanged(ingredient) }
             )
         }
     }

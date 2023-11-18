@@ -8,4 +8,5 @@ data class Ingredient(
     val strAlcohol: String,
     val strABV: String?,
     val strIngredientThumb: String,
+    var isOwned: Boolean,
 )
