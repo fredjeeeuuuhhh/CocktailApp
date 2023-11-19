@@ -33,8 +33,8 @@ private val DarkColorScheme = darkColorScheme(
 private val LightColorScheme = lightColorScheme(
     primary = Color.White,
     secondary = Color.Cyan,
-    tertiary =BottomBarContainerGreen,
-    background = CocktailOverviewBackGroundColor,
+    tertiary = orange80,
+    background = brown80,
     surface = Color(0xFFFFFBFE),
     onPrimary = Color.White,
     onSecondary = Color.White,
@@ -48,7 +48,7 @@ private val LightColorScheme = lightColorScheme(
 fun CocktailAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
