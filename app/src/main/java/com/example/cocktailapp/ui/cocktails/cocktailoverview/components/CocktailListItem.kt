@@ -22,7 +22,7 @@ import com.example.cocktailapp.model.Cocktail
 fun CocktailListItem(
     cocktail: Cocktail,
     onViewDetailClicked: (Cocktail) -> Unit,
-){
+) {
     Card(
         modifier = Modifier
             .fillMaxSize()
@@ -35,36 +35,29 @@ fun CocktailListItem(
         ),
     ) {
         AsyncImage(
-            model = cocktail.strDrinkThumb+"/preview",
+            model = cocktail.strDrinkThumb + "/preview",
             contentDescription = cocktail.strDrink,
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(1f)
+                .aspectRatio(1f),
         )
         Text(
-            text= cocktail.strDrink,
+            text = cocktail.strDrink,
             color = Color.White,
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.DarkGray)
+                .background(Color(0xFF5f9ea0))
                 .padding(10.dp),
             textAlign = TextAlign.Center,
         )
     }
-
 }
 
-
-
-
-
-
-
-    //Card(
-        //modifier = Modifier
-       //     .padding(start=10.dp)
-      //      .background(Color.DarkGray)
-      //      .clickable { onViewDetailClicked(cocktail) },
-      //  elevation = CardDefaults.cardElevation(
-       //     defaultElevation = 12.dp
-      //  ),
+// Card(
+// modifier = Modifier
+//     .padding(start=10.dp)
+//      .background(Color.DarkGray)
+//      .clickable { onViewDetailClicked(cocktail) },
+//  elevation = CardDefaults.cardElevation(
+//     defaultElevation = 12.dp
+//  ),

@@ -2,9 +2,9 @@ package com.example.cocktailapp.ui
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Liquor
 import androidx.compose.material.icons.filled.LocalBar
+import androidx.compose.material.icons.filled.QuestionMark
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -16,14 +16,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navigation
 import com.example.cocktailapp.R
 import com.example.cocktailapp.ui.CocktailDestinationsArgs.COCKTAIL_NAME_ARG
 import com.example.cocktailapp.ui.CocktailDestinationsArgs.INGREDIENT_NAME_ARG
 import com.example.cocktailapp.ui.cocktails.cocktaildetail.CocktailDetail
 import com.example.cocktailapp.ui.cocktails.cocktaildetail.CocktailDetailViewModel
 import com.example.cocktailapp.ui.cocktails.cocktailoverview.CocktailOverview
-import com.example.cocktailapp.ui.favorites.FavoritesOverview
+import com.example.cocktailapp.ui.favorites.RandomSelect
 import com.example.cocktailapp.ui.ingredients.ingredientsdetail.IngredientDetail
 import com.example.cocktailapp.ui.ingredients.ingredientsdetail.IngredientDetailViewModel
 import com.example.cocktailapp.ui.ingredients.ingredientsoverview.IngredientsOverview
@@ -58,9 +57,9 @@ fun CocktailAppNavGraph(
         },
     )
     val favoritesMenuItem = NavigationMenuItem(
-        route = CocktailDestinations.FAVORITE_ROUTE,
-        title = R.string.title_favorites,
-        icon = Icons.Filled.Favorite,
+        route = CocktailDestinations.RANDOMSELECT_ROUTE,
+        title = R.string.title_random,
+        icon = Icons.Filled.QuestionMark,
         navigationAction = {
             navActions.navigateToFavorites()
         },
@@ -80,19 +79,19 @@ fun CocktailAppNavGraph(
         ) {
             composable(CocktailDestinations.COCKTAIL_ROUTE) {
                 CocktailOverview(
-                    onViewDetailClicked = { cocktail ->  navActions.navigateToCocktailDetail(cocktail.strDrink)}
+                    onViewDetailClicked = { cocktail -> navActions.navigateToCocktailDetail(cocktail.strDrink) },
                 )
             }
             composable(CocktailDestinations.INGREDIENT_ROUTE) {
                 IngredientsOverview(
-                    onViewDetailClicked = { ingredient ->  navActions.navigateToIngredientDetail(ingredient.strIngredient)}
+                    onViewDetailClicked = { ingredient -> navActions.navigateToIngredientDetail(ingredient.strIngredient) },
                 )
             }
-            composable(CocktailDestinations.FAVORITE_ROUTE) {
-                FavoritesOverview()
+            composable(CocktailDestinations.RANDOMSELECT_ROUTE) {
+               RandomSelect()
             }
 
-            composable(CocktailDestinations.COCKTAIL_DETAIL_ROUTE) { entry->
+            composable(CocktailDestinations.COCKTAIL_DETAIL_ROUTE) { entry ->
                 val cocktailName = entry.arguments?.getString(COCKTAIL_NAME_ARG)
                 val parentEntry = remember(entry) { navController.getBackStackEntry(CocktailDestinations.COCKTAIL_DETAIL_ROUTE) }
                 val viewModel = CocktailDetailViewModel()
@@ -103,7 +102,7 @@ fun CocktailAppNavGraph(
                 )
             }
 
-            composable(CocktailDestinations.INGREDIENT_DETAIL_ROUTE) { entry->
+            composable(CocktailDestinations.INGREDIENT_DETAIL_ROUTE) { entry ->
                 val ingredientName = entry.arguments?.getString(INGREDIENT_NAME_ARG)
                 val parentEntry = remember(entry) { navController.getBackStackEntry(CocktailDestinations.INGREDIENT_DETAIL_ROUTE) }
                 val viewModel = IngredientDetailViewModel()
@@ -116,5 +115,3 @@ fun CocktailAppNavGraph(
         }
     }
 }
-
-

@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class CocktailOverviewViewModel(): ViewModel() {
+class CocktailOverviewViewModel() : ViewModel() {
     private val _uiState = MutableStateFlow(CocktailOverviewState(CocktailSampler.getAll()))
     val uiState: StateFlow<CocktailOverviewState> = _uiState.asStateFlow()
 }

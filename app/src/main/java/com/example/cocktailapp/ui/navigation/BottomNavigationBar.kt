@@ -15,18 +15,18 @@ fun BottomNavigationBar(
     menuItems: Array<NavigationMenuItem>,
 ) {
     NavigationBar(
-        containerColor = Color.DarkGray,
+        containerColor = Color(0xFF89c7bc),
     ) {
         menuItems.forEach { screen ->
             NavigationBarItem(
-                icon = { Icon(imageVector = screen.icon, contentDescription = null,) },
-                label = { Text(stringResource(screen.title))},
+                icon = { Icon(imageVector = screen.icon, contentDescription = null) },
+                label = { Text(stringResource(screen.title)) },
                 selected = currentRoute == screen.route,
                 onClick = screen.navigationAction,
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = Color.White,
                     selectedTextColor = Color.White,
-                    indicatorColor = Color.Gray,
+                    indicatorColor = Color(0xFF6d9f96),
                     unselectedIconColor = Color.White,
                     unselectedTextColor = Color.White,
                 ),

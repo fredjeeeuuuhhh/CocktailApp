@@ -7,16 +7,16 @@ import com.example.cocktailapp.ui.CocktailDestinationsArgs.COCKTAIL_NAME_ARG
 import com.example.cocktailapp.ui.CocktailDestinationsArgs.INGREDIENT_NAME_ARG
 import com.example.cocktailapp.ui.CocktailScreens.COCKTAIL_DETAIL_SCREEN
 import com.example.cocktailapp.ui.CocktailScreens.COCKTAIL_SCREEN
-import com.example.cocktailapp.ui.CocktailScreens.FAVORITE_SCREEN
 import com.example.cocktailapp.ui.CocktailScreens.INGREDIENT_DETAIL_SCREEN
 import com.example.cocktailapp.ui.CocktailScreens.INGREDIENT_SCREEN
+import com.example.cocktailapp.ui.CocktailScreens.RANDOM_SCREEN
 
 private object CocktailScreens {
     const val COCKTAIL_SCREEN = "cocktails"
     const val COCKTAIL_DETAIL_SCREEN = "detailCocktail"
     const val INGREDIENT_SCREEN = "ingredients"
     const val INGREDIENT_DETAIL_SCREEN = "detailIngredient"
-    const val FAVORITE_SCREEN = "favorites"
+    const val RANDOM_SCREEN = "randomSelect"
 }
 object CocktailDestinationsArgs {
     const val COCKTAIL_NAME_ARG = "cocktailName"
@@ -28,7 +28,7 @@ object CocktailDestinations {
     const val COCKTAIL_DETAIL_ROUTE = "$COCKTAIL_DETAIL_SCREEN/{$COCKTAIL_NAME_ARG}"
     const val INGREDIENT_ROUTE = INGREDIENT_SCREEN
     const val INGREDIENT_DETAIL_ROUTE = "$INGREDIENT_DETAIL_SCREEN/{$INGREDIENT_NAME_ARG}"
-    const val FAVORITE_ROUTE = FAVORITE_SCREEN
+    const val RANDOMSELECT_ROUTE = RANDOM_SCREEN
 }
 
 class CocktailNavigationActions(private val navController: NavHostController) {
@@ -41,7 +41,7 @@ class CocktailNavigationActions(private val navController: NavHostController) {
     }
 
     fun navigateToFavorites() {
-        navigateToMenuItem(CocktailDestinations.FAVORITE_ROUTE)
+        navigateToMenuItem(CocktailDestinations.RANDOMSELECT_ROUTE)
     }
 
     fun navigateToMenuItem(route: String) {
