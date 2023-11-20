@@ -10,4 +10,5 @@ data class Cocktail(
     val strDrinkThumb: String,
     val ingredients: List<String>,
     val measurements: List<String>,
+    var isFavorite: Boolean,
 )

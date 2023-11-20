@@ -17,30 +17,75 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Color.Black,
-    secondary = Color.DarkGray,
-    tertiary = Color.Gray,
+    primary = orange80,
+    onPrimary = orange20,
+    primaryContainer = orange30,
+    onPrimaryContainer = orange90,
+    inversePrimary = orange40,
 
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
+    secondary = flame80,
+    onSecondary = flame20,
+    secondaryContainer = flame30,
+    onSecondaryContainer = flame90,
+
+    tertiary = yellow80,
+    onTertiary = yellow20,
+    tertiaryContainer = yellow30,
+    onTertiaryContainer = yellow90,
+
+    error = Red80,
+    onError = Red20,
+    errorContainer = Red30,
+    onErrorContainer = Red90,
+
+    background = brown10,
+    onBackground = brown90,
+
+    surface = brown30,
+    onSurface = brown80,
+    inverseSurface = brown90,
+    inverseOnSurface = brown10,
+
+    surfaceVariant = brown30,
+    onSurfaceVariant = brown80,
+
+    outline = brown80,
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Color.White,
-    secondary = Color.Cyan,
-    tertiary = orange80,
-    background = brown80,
-    surface = Color(0xFFFFFBFE),
+    primary = orange40,
     onPrimary = Color.White,
+    primaryContainer = orange90,
+    onPrimaryContainer = orange10,
+    inversePrimary = orange80,
+
+    secondary = flame40,
     onSecondary = Color.White,
+    secondaryContainer = flame90,
+    onSecondaryContainer = flame10,
+
+    tertiary = yellow40,
     onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
+    tertiaryContainer = yellow90,
+    onTertiaryContainer = yellow10,
+
+    error = Red40,
+    onError = Color.White,
+    errorContainer = Red90,
+    onErrorContainer = Red10,
+
+    background = brown90,
+    onBackground = brown10,
+
+    surface = brown90,
+    onSurface = brown30,
+    inverseSurface = brown20,
+    inverseOnSurface = brown90,
+
+    surfaceVariant = brown80,
+    onSurfaceVariant = brown30,
+
+    outline = brown40,
 
 )
 

@@ -1,35 +1,29 @@
 package com.example.cocktailapp.ui.cocktails.cocktaildetail
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.cocktailapp.data.CocktailSampler
 import com.example.cocktailapp.model.Cocktail
+import com.example.cocktailapp.ui.CocktailDestinationsArgs
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
-class CocktailDetailViewModel() : ViewModel() {
+@HiltViewModel
+class CocktailDetailViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+) : ViewModel() {
+    private val cocktailName: String = savedStateHandle[CocktailDestinationsArgs.COCKTAIL_NAME_ARG]!!
+
     private val _uiState = MutableStateFlow(
-        CocktailDetailState(
-            Cocktail(
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                emptyList(),
-                emptyList(),
-            ),
-        ),
+        CocktailDetailState(CocktailSampler.cocktails.find { cocktail: Cocktail -> cocktail.strDrink == cocktailName }!!),
     )
     val uiState: StateFlow<CocktailDetailState> = _uiState.asStateFlow()
 
-    fun setCurrentCocktail(name: String) {
-        var c = CocktailSampler.getAll().find { c -> c.strDrink == name }
-        _uiState.update {
-            it.copy(currentCocktail = c!!)
-        }
+    fun onFavoriteChanged(flag:Boolean) {
+        _uiState.value.currentCocktail.isFavorite=flag
     }
 }

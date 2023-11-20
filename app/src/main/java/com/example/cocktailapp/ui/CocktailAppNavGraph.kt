@@ -92,13 +92,8 @@ fun CocktailAppNavGraph(
             }
 
             composable(CocktailDestinations.COCKTAIL_DETAIL_ROUTE) { entry ->
-                val cocktailName = entry.arguments?.getString(COCKTAIL_NAME_ARG)
-                val parentEntry = remember(entry) { navController.getBackStackEntry(CocktailDestinations.COCKTAIL_DETAIL_ROUTE) }
-                val viewModel = CocktailDetailViewModel()
                 CocktailDetail(
                     onBack = { navController.popBackStack() },
-                    cocktailDetailViewModel = viewModel,
-                    name = cocktailName,
                 )
             }
 

@@ -30,14 +30,13 @@ val orange40 = Color(0xFFc1540b)
 val orange80 = Color(0xFFf9c39f)
 val orange90= Color(0xFFfce1cf)
 
-val bistre10 = Color(0xFF29150a)
-val bistre20 = Color(0xFF522b14)
-val bistre30 = Color(0xFF7b401e)
-val bistre40 = Color(0xFFa45528)
-val bistre80 = Color(0xFFebc4ad)
-val bistre90= Color(0xFFf5e1d6)
 
-
+val Red10 = Color(0xFF410001)
+val Red20 = Color(0xFF680003)
+val Red30 = Color(0xFF930006)
+val Red40 = Color(0xFFBA1B1B)
+val Red80 = Color(0xFFFFB4A9)
+val Red90 = Color(0xFFFFDAD4)
 
 
 

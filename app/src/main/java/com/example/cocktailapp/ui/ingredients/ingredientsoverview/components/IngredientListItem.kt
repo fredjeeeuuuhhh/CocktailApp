@@ -17,6 +17,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,8 +46,8 @@ fun IngredientListItem(
             .clickable { onViewDetailClicked() },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.DarkGray,
-            contentColor = Color.White,
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
         ),
     ) {
         Box(
@@ -90,10 +91,8 @@ fun IngredientListItem(
         )
         Text(
             text= ingredient.strIngredient,
-            color = Color.White,
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.DarkGray)
                 .padding(5.dp),
             textAlign = TextAlign.Center,
         )

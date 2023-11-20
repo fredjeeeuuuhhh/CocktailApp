@@ -3,6 +3,8 @@ package com.example.cocktailapp.ui.cocktails.cocktailoverview
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,201 +30,41 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.cocktailapp.model.Cocktail
+import com.example.cocktailapp.ui.cocktails.cocktailoverview.components.CocktailFilterChip
 import com.example.cocktailapp.ui.cocktails.cocktailoverview.components.Cocktails
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun CocktailOverview(
     cocktailOverviewViewModel: CocktailOverviewViewModel = CocktailOverviewViewModel(),
     onViewDetailClicked: (Cocktail) -> Unit,
 ) {
     val cocktailOverviewState by cocktailOverviewViewModel.uiState.collectAsState()
-    var selectedFavorite by remember { mutableStateOf(false) }
-    var selectedAlcohol by remember { mutableStateOf(false) }
-    var selectedNonalcohol by remember { mutableStateOf(false) }
+    val cocktails = cocktailOverviewState.currentCocktailList
     Column(
-        modifier = Modifier.fillMaxSize().background(Color(0xFFbcd2d0)),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth().background(Color(0xFF89c7bc)),
-            horizontalArrangement = Arrangement.SpaceAround,
-        ) {
-            FilterChip(
-                selected = selectedFavorite,
-                onClick = { selectedFavorite = !selectedFavorite },
-                label = {
-                    Text("Favorites")
-                },
-                colors = FilterChipDefaults.filterChipColors(
-                    iconColor = Color.Black,
-                    containerColor = Color(0xFFd6e4e2),
-                    labelColor = Color.Black,
-                    selectedContainerColor = Color(0xFF6d9f96),
-                    selectedLabelColor = Color.White,
-                    selectedLeadingIconColor = Color.White,
-                ),
-                leadingIcon =  {
-
-                        if(selectedFavorite){
-                            Icon(
-                                imageVector = Icons.Filled.Done,
-                                contentDescription = "Done icon",
-                                modifier = Modifier.size(FilterChipDefaults.IconSize),
-                            )
-                        }else{
-                            Icon(
-                                imageVector = Icons.Filled.Add,
-                                contentDescription = "Done icon",
-                                modifier = Modifier.size(FilterChipDefaults.IconSize),
-                            )
-                        }
-
-                    }
-            )
-
-            FilterChip(
-                selected = selectedAlcohol,
-                onClick = { selectedAlcohol = !selectedAlcohol },
-                label = {
-                    Text("Alcohol")
-                },
-                colors = FilterChipDefaults.filterChipColors(
-                    iconColor = Color.Black,
-                    containerColor = Color(0xFFd6e4e2),
-                    labelColor = Color.Black,
-                    selectedContainerColor = Color(0xFF6d9f96),
-                    selectedLabelColor = Color.White,
-                    selectedLeadingIconColor = Color.White,
-                ),
-                leadingIcon =  {
-
-                    if(selectedAlcohol){
-                        Icon(
-                            imageVector = Icons.Filled.Done,
-                            contentDescription = "Done icon",
-                            modifier = Modifier.size(FilterChipDefaults.IconSize),
-                        )
-                    }else{
-                        Icon(
-                            imageVector = Icons.Filled.Add,
-                            contentDescription = "Done icon",
-                            modifier = Modifier.size(FilterChipDefaults.IconSize),
-                        )
-                    }
-
-                }
-            )
-
-            FilterChip(
-                selected = selectedNonalcohol,
-                onClick = { selectedNonalcohol = !selectedNonalcohol },
-                label = {
-                    Text("Non alcohol")
-                },
-                colors = FilterChipDefaults.filterChipColors(
-                    iconColor = Color.Black,
-                    containerColor = Color(0xFFd6e4e2),
-                    labelColor = Color.Black,
-                    selectedContainerColor = Color(0xFF6d9f96),
-                    selectedLabelColor = Color.White,
-                    selectedLeadingIconColor = Color.White,
-                ),
-                leadingIcon =  {
-
-                    if(selectedNonalcohol){
-                        Icon(
-                            imageVector = Icons.Filled.Done,
-                            contentDescription = "Done icon",
-                            modifier = Modifier.size(FilterChipDefaults.IconSize),
-                        )
-                    }else{
-                        Icon(
-                            imageVector = Icons.Filled.Add,
-                            contentDescription = "Done icon",
-                            modifier = Modifier.size(FilterChipDefaults.IconSize),
-                        )
-                    }
-
-                }
-            )
-        }
-        Row(
+        FlowRow(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFF89c7bc)),
+                .background(MaterialTheme.colorScheme.primaryContainer),
             horizontalArrangement = Arrangement.SpaceAround,
+
         ) {
-            FilterChip(
-                selected = selectedNonalcohol,
-                onClick = { selectedNonalcohol = !selectedNonalcohol },
-                label = {
-                    Text("Category")
-                },
-                colors = FilterChipDefaults.filterChipColors(
-                    iconColor = Color.Black,
-                    containerColor = Color(0xFFd6e4e2),
-                    labelColor = Color.Black,
-                    selectedContainerColor = Color(0xFF6d9f96),
-                    selectedLabelColor = Color.White,
-                    selectedLeadingIconColor = Color.White,
-                ),
-                leadingIcon =  {
-
-                    if(selectedNonalcohol){
-                        Icon(
-                            imageVector = Icons.Filled.Done,
-                            contentDescription = "Done icon",
-                            modifier = Modifier.size(FilterChipDefaults.IconSize),
-                        )
-                    }else{
-                        Icon(
-                            imageVector = Icons.Filled.Add,
-                            contentDescription = "Done icon",
-                            modifier = Modifier.size(FilterChipDefaults.IconSize),
-                        )
-                    }
-
-                }
-            )
-            FilterChip(
-                selected = selectedNonalcohol,
-                onClick = { selectedNonalcohol = !selectedNonalcohol },
-                label = {
-                    Text("Glass")
-                },
-                colors = FilterChipDefaults.filterChipColors(
-                    iconColor = Color.Black,
-                    containerColor = Color(0xFFd6e4e2),
-                    labelColor = Color.Black,
-                    selectedContainerColor = Color(0xFF6d9f96),
-                    selectedLabelColor = Color.White,
-                    selectedLeadingIconColor = Color.White,
-                ),
-                leadingIcon =  {
-
-                    if(selectedNonalcohol){
-                        Icon(
-                            imageVector = Icons.Filled.Done,
-                            contentDescription = "Done icon",
-                            modifier = Modifier.size(FilterChipDefaults.IconSize),
-                        )
-                    }else{
-                        Icon(
-                            imageVector = Icons.Filled.Add,
-                            contentDescription = "Done icon",
-                            modifier = Modifier.size(FilterChipDefaults.IconSize),
-                        )
-                    }
-
-                }
-            )
+            CocktailFilterChip(label = "Favorites",{ flag -> cocktailOverviewViewModel.favoritesValueChanged(flag)})
+            CocktailFilterChip(label = "Alcohol",{ flag -> cocktailOverviewViewModel.AlcoholValueChanged(flag)})
+            CocktailFilterChip(label = "Non Alcohol",{ flag -> cocktailOverviewViewModel.NonAlcoholValueChanged(flag)})
+            //CocktailFilterChip(label = "Category",{ flag -> cocktailOverviewViewModel.favoritesValueChanged(flag)})
+            //CocktailFilterChip(label = "Glass",{ flag -> cocktailOverviewViewModel.favoritesValueChanged(flag)})
         }
-
-        Divider(Modifier, 2.dp, Color.White)
+        Divider(Modifier, 2.dp, MaterialTheme.colorScheme.outline)
         Cocktails(
-            cocktails = cocktailOverviewState.currentCocktailList!!,
+            cocktails = cocktails!!,
             onViewDetailClicked = onViewDetailClicked,
         )
     }
 }
+
+
