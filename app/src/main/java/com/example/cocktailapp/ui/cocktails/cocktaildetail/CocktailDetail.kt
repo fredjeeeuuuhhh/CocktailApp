@@ -1,6 +1,5 @@
 package com.example.cocktailapp.ui.cocktails.cocktaildetail
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,6 +11,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.cocktailapp.R
 import com.example.cocktailapp.ui.cocktails.cocktaildetail.components.CocktaiilIngredientHeader
 import com.example.cocktailapp.ui.cocktails.cocktaildetail.components.CocktailDetailIngredientRow
 import com.example.cocktailapp.ui.cocktails.cocktaildetail.components.CocktailDetailSectionSeparartor
@@ -34,32 +34,30 @@ fun CocktailDetail(
             .background(MaterialTheme.colorScheme.surface)
             .verticalScroll(scrollState),
     ) {
-            cocktail?.let {
-                CocktaiilIngredientHeader(
-                    onBack,
-                    it.strDrink,
-                    it.isFavorite,
-                    {flag-> cocktailDetailViewModel.onFavoriteChanged(flag) },
-                )
-            }
+        CocktaiilIngredientHeader(
+            onBack,
+            cocktail.strDrink,
+            cocktail.isFavorite,
+            {flag-> cocktailDetailViewModel.onFavoriteChanged(flag) },
+        )
 
-        cocktail?.let { CocktailIngredientSpecifics(it.strCategory) }
-        cocktail?.let { CocktailIngredientSpecifics(it.strAlcoholic) }
-        cocktail?.let { CocktailIngredientSpecifics(it.strGlass) }
+        CocktailIngredientSpecifics(cocktail.strCategory)
+        CocktailIngredientSpecifics(cocktail.strAlcoholic)
+        CocktailIngredientSpecifics(cocktail.strGlass)
 
         CocktailDetailSectionSeparartor()
 
-        CocktailDetailSubTitle("Ingredients",color=MaterialTheme.colorScheme.secondary)
+        CocktailDetailSubTitle(R.string.subtitle_ingredients,color=MaterialTheme.colorScheme.secondary)
 
-        for ((i, ingredient) in cocktail!!.ingredients.withIndex()) {
+        for ((i, ingredient) in cocktail.ingredients.withIndex()) {
             CocktailDetailIngredientRow(ingredient, cocktail.measurements[i],)
         }
 
         CocktailDetailSectionSeparartor()
 
-        CocktailDetailSubTitle("Instructions",color= MaterialTheme.colorScheme.secondary)
+        CocktailDetailSubTitle(R.string.subtitle_instructions,color= MaterialTheme.colorScheme.secondary)
 
-        for ((i, instruction) in cocktail?.strInstructions?.split(". ")!!.withIndex()) {
+        for ((i, instruction) in cocktail.strInstructions.split(". ").withIndex()) {
             CocktailIngredientInstructionRow(i,instruction)
         }
     }

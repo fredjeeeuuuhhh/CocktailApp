@@ -1,7 +1,10 @@
 <resources>
-    <string name="app_name">CocktailApp</string>
+    <string name="app_name" translatable="false">CocktailApp</string>
     <string name="title_cocktails">Cocktails</string>
     <string name="title_ingredients">Ingredients</string>
-    <string name="title_favorites">Favorieten</string>
     <string name="title_random">Random</string>
+    <string name="subtitle_ingredients">Ingredients</string>
+    <string name="subtitle_instructions">Instructions</string>
+
+
 </resources>

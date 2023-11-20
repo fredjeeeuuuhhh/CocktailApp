@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class FavoritesOverviewViewModel():ViewModel() {
-    private val _uiState = MutableStateFlow(FavoritesOverviewState(emptyList()))
-    val uiState: StateFlow<FavoritesOverviewState> = _uiState.asStateFlow()
+class RandomSelectOverviewViewModel():ViewModel() {
+    private val _uiState = MutableStateFlow(RandomSelectOverviewState(null))
+    val uiState: StateFlow<RandomSelectOverviewState> = _uiState.asStateFlow()
 }
