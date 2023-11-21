@@ -64,7 +64,6 @@ fun CocktailAppNavGraph(
 
     val menuItems = arrayOf(cocktailsMenuItem, ingredientsMenuItem, favoritesMenuItem)
 
-
     NavHost(
         navController,
         startDestination = startDestination,
@@ -108,6 +107,7 @@ fun CocktailAppNavGraph(
         composable(CocktailDestinations.INGREDIENT_DETAIL_ROUTE) {
             IngredientDetail(
                 onBack = { navController.popBackStack() },
+                onViewDetailClicked = {cocktail -> navActions.navigateToCocktailDetail(cocktail.strDrink)}
             )
         }
     }

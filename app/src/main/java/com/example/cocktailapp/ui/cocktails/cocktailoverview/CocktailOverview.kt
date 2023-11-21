@@ -29,11 +29,6 @@ fun CocktailOverview(
        ChipSection(
            onFilterRequest = {filters -> cocktailOverviewViewModel.setFilters(filters)}
        )
-        //CocktailFilterChip(label = label,{ flag -> cocktailOverviewViewModel.favoritesValueChanged(flag)})
-        //CocktailFilterChip(label = "Alcohol",{ flag -> cocktailOverviewViewModel.AlcoholValueChanged(flag)})
-        //CocktailFilterChip(label = "Non Alcohol",{ flag -> cocktailOverviewViewModel.NonAlcoholValueChanged(flag)})
-        //CocktailFilterChip(label = "Category",{ flag -> cocktailOverviewViewModel.favoritesValueChanged(flag)})
-        //CocktailFilterChip(label = "Glass",{ flag -> cocktailOverviewViewModel.favoritesValueChanged(flag)})
         Divider(
             Modifier,
             2.dp,
