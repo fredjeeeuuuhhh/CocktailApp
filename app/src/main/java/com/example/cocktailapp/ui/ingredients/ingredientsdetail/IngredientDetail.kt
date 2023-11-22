@@ -20,11 +20,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.cocktailapp.model.Cocktail
 import com.example.cocktailapp.ui.cocktails.cocktaildetail.components.CocktailDetailSectionSeparartor
-import com.example.cocktailapp.ui.cocktails.cocktailoverview.components.CocktailListItem
 import com.example.cocktailapp.ui.ingredients.ingredientsdetail.components.CocktailRowItem
 import com.example.cocktailapp.ui.ingredients.ingredientsdetail.components.IngredientHeader
 import com.example.cocktailapp.ui.ingredients.ingredientsdetail.components.IngredientSpecifics
-
 
 @Composable
 fun IngredientDetail(
@@ -46,19 +44,19 @@ fun IngredientDetail(
     ){
         IngredientHeader(
             onBack,
-            ingredient.strIngredient,
+            ingredient.name,
             ingredient.isOwned,
             {flag -> ingredientDetailViewModel.onOwnedChanged(flag)}
         )
 
-        IngredientSpecifics("Contains alcohol: "+ ingredient.strAlcohol)
-        IngredientSpecifics("Type of alcohol: "+ ingredient.strType)
-        ingredient.strABV?.let { IngredientSpecifics("Alcohol percentage: "+it+"%") }
+        IngredientSpecifics("Contains alcohol: "+ if (ingredient.containsAlcohol) "Yes" else "No")
+        IngredientSpecifics("Type of alcohol: "+ ingredient.type)
+        ingredient.alcoholPercentage?.let { IngredientSpecifics("Alcohol percentage: "+it+"%") }
 
         CocktailDetailSectionSeparartor()
 
         Text(
-            text = ingredient.strDescription,
+            text = ingredient.description,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier

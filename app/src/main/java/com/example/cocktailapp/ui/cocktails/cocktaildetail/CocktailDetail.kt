@@ -36,28 +36,28 @@ fun CocktailDetail(
     ) {
         CocktaiilIngredientHeader(
             onBack,
-            cocktail.strDrink,
+            cocktail.title,
             cocktail.isFavorite,
             {flag-> cocktailDetailViewModel.onFavoriteChanged(flag) },
         )
 
-        CocktailIngredientSpecifics(cocktail.strCategory)
-        CocktailIngredientSpecifics(cocktail.strAlcoholic)
-        CocktailIngredientSpecifics(cocktail.strGlass)
+        CocktailIngredientSpecifics(cocktail.category)
+        CocktailIngredientSpecifics(cocktail.alcoholFilter)
+        CocktailIngredientSpecifics(cocktail.typeOfGlass)
 
         CocktailDetailSectionSeparartor()
 
         CocktailDetailSubTitle(R.string.subtitle_ingredients,color=MaterialTheme.colorScheme.secondary)
 
         for ((i, ingredient) in cocktail.ingredients.withIndex()) {
-            CocktailDetailIngredientRow(ingredient, cocktail.measurements[i],)
+            CocktailDetailIngredientRow(ingredient.name, cocktail.measurements[i],)
         }
 
         CocktailDetailSectionSeparartor()
 
         CocktailDetailSubTitle(R.string.subtitle_instructions,color= MaterialTheme.colorScheme.secondary)
 
-        for ((i, instruction) in cocktail.strInstructions.split(". ").withIndex()) {
+        for ((i, instruction) in cocktail.instructions.split(". ").withIndex()) {
             CocktailIngredientInstructionRow(i,instruction)
         }
     }

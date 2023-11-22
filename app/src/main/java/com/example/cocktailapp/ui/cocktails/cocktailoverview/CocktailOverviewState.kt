@@ -4,5 +4,6 @@ import com.example.cocktailapp.model.Cocktail
 
 data class CocktailOverviewState(
     val currentCocktailList: List<Cocktail>,
-    val currentFilters:List<String>,
+    val isLoading: Boolean = false,
+    //val filteringUiInfo:FilteringUiInfo = FilteringUiInfo(),
 )

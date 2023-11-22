@@ -1,12 +1,12 @@
 package com.example.cocktailapp.model
 
 data class Ingredient(
-    val idIngredient: String,
-    val strIngredient: String,
-    val strDescription: String,
-    val strType: String,
-    val strAlcohol: String,
-    val strABV: String?,
-    val strIngredientThumb: String,
+    val id: Int,
+    val name: String,
+    val description: String,
+    val type: String,
+    val containsAlcohol: Boolean,
+    val alcoholPercentage: String?,
+    val thumbnail: String,
     var isOwned: Boolean,
 )

@@ -32,15 +32,15 @@ fun CocktailListItem(
         ),
     ) {
         AsyncImage(
-            model = cocktail.strDrinkThumb + "/preview",
-            contentDescription = cocktail.strDrink,
+            model = cocktail.image + "/preview",
+            contentDescription = cocktail.title,
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(1f),
         )
 
         AutoResizedText(
-            text =  cocktail.strDrink,
+            text =  cocktail.title,
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(30.dp).fillMaxWidth(),
             color = MaterialTheme.colorScheme.onSecondary,

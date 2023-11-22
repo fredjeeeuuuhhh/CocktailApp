@@ -18,7 +18,7 @@ class CocktailDetailViewModel @Inject constructor(
     private val cocktailName: String = savedStateHandle[CocktailDestinationsArgs.COCKTAIL_NAME_ARG]!!
 
     private val _uiState = MutableStateFlow(
-        CocktailDetailState(CocktailSampler.cocktails.find { cocktail: Cocktail -> cocktail.strDrink == cocktailName }!!),
+        CocktailDetailState(CocktailSampler.cocktails.find { cocktail: Cocktail -> cocktail.title == cocktailName }!!),
     )
     val uiState: StateFlow<CocktailDetailState> = _uiState.asStateFlow()
 

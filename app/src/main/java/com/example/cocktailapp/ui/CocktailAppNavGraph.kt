@@ -73,7 +73,7 @@ fun CocktailAppNavGraph(
                 currentRoute=currentRoute,menuItems
             ) {
                 CocktailOverview(
-                    onViewDetailClicked = { cocktail -> navActions.navigateToCocktailDetail(cocktail.strDrink) },
+                    onViewDetailClicked = { cocktail -> navActions.navigateToCocktailDetail(cocktail.title) },
                 )
             }
         }
@@ -84,7 +84,7 @@ fun CocktailAppNavGraph(
                 IngredientsOverview(
                     onViewDetailClicked = { ingredient ->
                         navActions.navigateToIngredientDetail(
-                            ingredient.strIngredient
+                            ingredient.name
                         )
                     },
                 )
@@ -107,7 +107,7 @@ fun CocktailAppNavGraph(
         composable(CocktailDestinations.INGREDIENT_DETAIL_ROUTE) {
             IngredientDetail(
                 onBack = { navController.popBackStack() },
-                onViewDetailClicked = {cocktail -> navActions.navigateToCocktailDetail(cocktail.strDrink)}
+                onViewDetailClicked = {cocktail -> navActions.navigateToCocktailDetail(cocktail.title)}
             )
         }
     }

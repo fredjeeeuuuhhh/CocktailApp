@@ -1,14 +1,14 @@
 package com.example.cocktailapp.model
 
 data class Cocktail(
-    val idDrink: String,
-    val strDrink: String,
-    val strCategory: String,
-    val strAlcoholic: String,
-    val strGlass: String,
-    val strInstructions: String,
-    val strDrinkThumb: String,
-    val ingredients: List<String>,
-    val measurements: List<String>,
+    var id: Int,
+    var title: String,
+    var category: String,
+    var alcoholFilter: String,
+    var typeOfGlass: String,
+    var instructions: String,
+    var image: String,
+    var ingredients: List<Ingredient>,
+    var measurements: List<String>,
     var isFavorite: Boolean,
 )

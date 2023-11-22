@@ -21,8 +21,8 @@ class IngredientDetailViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(
         IngredientDetailState(
-            IngredientSampler.ingredients.find { ingredient:Ingredient -> ingredient.strIngredient==ingredientName }!!,
-            CocktailSampler.cocktails.filter { cocktail: Cocktail ->  cocktail.ingredients.contains(ingredientName)}
+            IngredientSampler.ingredients.find { ingredient:Ingredient -> ingredient.name==ingredientName }!!,
+            CocktailSampler.cocktails.filter { cocktail: Cocktail ->  cocktail.ingredients.map{it.name}.contains(ingredientName)}
         )
     )
 
