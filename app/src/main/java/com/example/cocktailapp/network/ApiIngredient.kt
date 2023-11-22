@@ -1,5 +1,7 @@
 package com.example.cocktailapp.network
 
+import com.example.cocktailapp.model.Cocktail
+import com.example.cocktailapp.model.Ingredient
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -24,3 +26,14 @@ data class ApiIngredientNames(
 data class ApiIngredientList(
     val ingredients: List<ApiIngredient>
 )
+fun List<ApiIngredient>.asDomainObjects() =
+    map { Ingredient(
+        id = it.idIngredient.toInt(),
+        name = it.strIngredient,
+        description = it.strDescription,
+        type = it.strType,
+        containsAlcohol = if (it.strAlcohol=="Yes") true else false,
+        alcoholPercentage = it.strABV,
+        thumbnail = "www.thecocktaildb.com/images/ingredients/${it.strIngredient}-Small.png",
+        isOwned = null,
+    )}

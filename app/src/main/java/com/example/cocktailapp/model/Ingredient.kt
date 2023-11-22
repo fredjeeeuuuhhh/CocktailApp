@@ -8,5 +8,5 @@ data class Ingredient(
     val containsAlcohol: Boolean,
     val alcoholPercentage: String?,
     val thumbnail: String,
-    var isOwned: Boolean,
+    var isOwned: Boolean?,
 )

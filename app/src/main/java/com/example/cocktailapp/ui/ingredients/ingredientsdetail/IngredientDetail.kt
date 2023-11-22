@@ -42,12 +42,14 @@ fun IngredientDetail(
             .background(MaterialTheme.colorScheme.surface)
             .verticalScroll(scrollState),
     ){
-        IngredientHeader(
-            onBack,
-            ingredient.name,
-            ingredient.isOwned,
-            {flag -> ingredientDetailViewModel.onOwnedChanged(flag)}
-        )
+        ingredient.isOwned?.let {
+            IngredientHeader(
+                onBack,
+                ingredient.name,
+                it,
+                {flag -> ingredientDetailViewModel.onOwnedChanged(flag)}
+            )
+        }
 
         IngredientSpecifics("Contains alcohol: "+ if (ingredient.containsAlcohol) "Yes" else "No")
         IngredientSpecifics("Type of alcohol: "+ ingredient.type)

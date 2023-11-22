@@ -8,7 +8,8 @@ data class Cocktail(
     var typeOfGlass: String,
     var instructions: String,
     var image: String,
-    var ingredients: List<Ingredient>,
+    var ingredients: List<Ingredient>?,
+    var ingredientNames: List<String>,
     var measurements: List<String>,
-    var isFavorite: Boolean,
+    var isFavorite: Boolean?,
 )

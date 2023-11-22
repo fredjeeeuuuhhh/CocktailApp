@@ -15,7 +15,7 @@ class IngredientsOverviewViewModel(): ViewModel() {
     val uiState: StateFlow<IngredientsOverviewState> = _uiState.asStateFlow()
 
     init{
-        getApiIngredients()
+        //getApiIngredients()
     }
 
     fun changeOwnedStatus(ingredient: Ingredient) {
@@ -24,8 +24,8 @@ class IngredientsOverviewViewModel(): ViewModel() {
     }
 
     private fun getApiIngredients(){
-        viewModelScope.launch {
-            val result = IngredientApi.ingredientService.getIngredients()
-        }
+        //viewModelScope.launch {
+
+        //}
     }
 }

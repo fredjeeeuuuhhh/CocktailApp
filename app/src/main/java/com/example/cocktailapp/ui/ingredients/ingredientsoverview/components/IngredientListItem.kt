@@ -55,7 +55,7 @@ fun IngredientListItem(
                 .padding(top = 10.dp),
             contentAlignment = Alignment.CenterEnd,
         ){
-            if(!isOwned){
+            if(!isOwned!!){//watch out for this make sure it is set
                 IconButton(onClick = {
                     isOwned=true
                     onOwnedStatusChanged()

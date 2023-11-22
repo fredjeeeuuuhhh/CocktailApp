@@ -13,6 +13,7 @@ object CocktailSampler {
             instructions = "Fill 14oz glass with ice and alcohol. Fill 2/3 glass with cola and remainder with sweet & sour. Top with dash of bitters and lemon wedge.",
             image = "https://www.thecocktaildb.com/images/media/drink/rrtssw1472668972.jpg",
             ingredients = IngredientSampler.ingredients,
+            ingredientNames = IngredientSampler.ingredients.map { it.name },
             measurements = listOf("1/2 oz", "1/2 oz", "1/2 oz", "1/2 oz", "1/2 oz", "1/2 oz", "1-2 dash ", "1 wedge ", "Garnish with"),
             isFavorite = true
         ),
@@ -25,6 +26,7 @@ object CocktailSampler {
             instructions = "Fill 14oz glass with ice and alcohol. Fill 2/3 glass with cola and remainder with sweet & sour. Top with dash of bitters and lemon wedge.",
             image = "https://www.thecocktaildb.com/images/media/drink/3k9qic1493068931.jpg",
             ingredients = IngredientSampler.ingredients,
+            ingredientNames = IngredientSampler.ingredients.map { it.name },
             measurements = listOf("1/2 oz", "1/2 oz", "1/2 oz", "1/2 oz", "1/2 oz", "1/2 oz", "1-2 dash ", "1 wedge ", "Garnish with"),
             isFavorite = false
         ),
@@ -37,6 +39,7 @@ object CocktailSampler {
             instructions = "Fill 14oz glass with ice and alcohol. Fill 2/3 glass with cola and remainder with sweet & sour. Top with dash of bitters and lemon wedge.",
             image = "https://www.thecocktaildb.com/images/media/drink/tqpvqp1472668328.jpg",
             ingredients = IngredientSampler.ingredients,
+            ingredientNames = IngredientSampler.ingredients.map { it.name },
             measurements = listOf("1/2 oz", "1/2 oz", "1/2 oz", "1/2 oz", "1/2 oz", "1/2 oz", "1-2 dash ", "1 wedge ", "Garnish with"),
             isFavorite = false
         ),
@@ -49,6 +52,7 @@ object CocktailSampler {
             instructions = "Fill 14oz glass with ice and alcohol. Fill 2/3 glass with cola and remainder with sweet & sour. Top with dash of bitters and lemon wedge.",
             image = "https://www.thecocktaildb.com/images/media/drink/l3cd7f1504818306.jpg",
             ingredients = IngredientSampler.ingredients,
+            ingredientNames = IngredientSampler.ingredients.map { it.name },
             measurements = listOf("1/2 oz", "1/2 oz", "1/2 oz", "1/2 oz", "1/2 oz", "1/2 oz", "1-2 dash ", "1 wedge ", "Garnish with"),
             isFavorite = false
         ),
@@ -61,6 +65,7 @@ object CocktailSampler {
             instructions = "Fill 14oz glass with ice and alcohol. Fill 2/3 glass with cola and remainder with sweet & sour. Top with dash of bitters and lemon wedge.",
             image = "https://www.thecocktaildb.com/images/media/drink/xuxpxt1479209317.jpg",
             ingredients = IngredientSampler.ingredients,
+            ingredientNames = IngredientSampler.ingredients.map { it.name },
             measurements = listOf("1/2 oz", "1/2 oz", "1/2 oz", "1/2 oz", "1/2 oz", "1/2 oz", "1-2 dash ", "1 wedge ", "Garnish with"),
             isFavorite = false
         ),

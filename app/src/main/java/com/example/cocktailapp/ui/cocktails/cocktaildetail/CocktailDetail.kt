@@ -34,12 +34,14 @@ fun CocktailDetail(
             .background(MaterialTheme.colorScheme.surface)
             .verticalScroll(scrollState),
     ) {
-        CocktaiilIngredientHeader(
-            onBack,
-            cocktail.title,
-            cocktail.isFavorite,
-            {flag-> cocktailDetailViewModel.onFavoriteChanged(flag) },
-        )
+        cocktail.isFavorite?.let {
+            CocktaiilIngredientHeader(
+                onBack,
+                cocktail.title,
+                it,
+                {flag-> cocktailDetailViewModel.onFavoriteChanged(flag) },
+            )
+        }
 
         CocktailIngredientSpecifics(cocktail.category)
         CocktailIngredientSpecifics(cocktail.alcoholFilter)
@@ -49,8 +51,8 @@ fun CocktailDetail(
 
         CocktailDetailSubTitle(R.string.subtitle_ingredients,color=MaterialTheme.colorScheme.secondary)
 
-        for ((i, ingredient) in cocktail.ingredients.withIndex()) {
-            CocktailDetailIngredientRow(ingredient.name, cocktail.measurements[i],)
+        for ((i, ingredient) in cocktail.ingredientNames.withIndex()) {
+            CocktailDetailIngredientRow(ingredient, cocktail.measurements[i])
         }
 
         CocktailDetailSectionSeparartor()

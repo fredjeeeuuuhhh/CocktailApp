@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -12,9 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.cocktailapp.model.Cocktail
+import com.example.cocktailapp.ui.CocktailApiState
 import com.example.cocktailapp.ui.cocktails.cocktailoverview.components.ChipSection
 import com.example.cocktailapp.ui.cocktails.cocktailoverview.components.Cocktails
-import dagger.hilt.android.lifecycle.HiltViewModel
 
 @Composable
 fun CocktailOverview(
@@ -22,7 +23,7 @@ fun CocktailOverview(
     onViewDetailClicked: (Cocktail) -> Unit,
 ) {
     val cocktailOverviewState by cocktailOverviewViewModel.uiState.collectAsState()
-    val cocktails = cocktailOverviewState.currentCocktailList
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -36,10 +37,21 @@ fun CocktailOverview(
             2.dp,
             MaterialTheme.colorScheme.outline
         )
-        Cocktails(
-            cocktails = cocktails,
-            onViewDetailClicked = onViewDetailClicked,
-        )
+        val cocktailApiState = cocktailOverviewViewModel.cocktailApiState
+        when(cocktailApiState){
+            is CocktailApiState.Loading -> {
+                Text("Loading cocktails")
+            }
+            is CocktailApiState.Error -> {
+                Text("Something went wrong while loading tasks from api")
+            }
+            is CocktailApiState.Succes ->{
+                Cocktails(
+                    cocktails = cocktailApiState.cocktails,
+                    onViewDetailClicked = onViewDetailClicked,
+                )
+            }
+        }
     }
 }
 

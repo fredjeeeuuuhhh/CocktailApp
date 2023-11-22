@@ -1,15 +1,22 @@
 package com.example.cocktailapp.ui.cocktails.cocktailoverview
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cocktailapp.data.CocktailSampler
 import com.example.cocktailapp.network.CocktailApi
+import com.example.cocktailapp.network.asDomainObjects
+import com.example.cocktailapp.ui.CocktailApiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,23 +25,32 @@ class CocktailOverviewViewModel @Inject constructor(
 ) : ViewModel() {
    // private val _savedFilterType = savedStateHandle.getStateFlow(COCKTAIL_FILTER_SAVED_STATE_KEY, ALL_TASKS)
 
-    private val _uiState = MutableStateFlow(
-        CocktailOverviewState(CocktailSampler.cocktails)
-    )
+    private val _uiState = MutableStateFlow(CocktailOverviewState(CocktailSampler.cocktails))
     val uiState: StateFlow<CocktailOverviewState> = _uiState.asStateFlow()
     //TODO get all ingredients and cocktails group by owned, display on cocktails number of owned ingredients
-    fun setFilters(filters: List<String>) {
-        savedStateHandle[COCKTAIL_FILTER_SAVED_STATE_KEY] = filters.toTypedArray()
-    }
 
+    var cocktailApiState: CocktailApiState by mutableStateOf(CocktailApiState.Loading)
+        private set
     init{
         getApiCocktails()
     }
 
+    fun setFilters(filters: List<String>) {
+        savedStateHandle[COCKTAIL_FILTER_SAVED_STATE_KEY] = filters.toTypedArray()
+    }
+
     private fun getApiCocktails() {
         viewModelScope.launch {
-            val result = CocktailApi.cocktailService.getCocktailById(11007)
-            println("cocktails-> ${result.drinks}")
+            try{
+                val result = CocktailApi.cocktailService.getCocktails("a")
+                _uiState.update {
+                    it.copy(currentCocktailList = result.drinks.asDomainObjects())
+                }
+                cocktailApiState = CocktailApiState.Succes(result.drinks.asDomainObjects())
+            }catch (e: IOException){
+                e.printStackTrace()
+                cocktailApiState=CocktailApiState.Error
+            }
         }
     }
 
