@@ -41,15 +41,15 @@ class CocktailOverviewViewModel @Inject constructor(
 
     private fun getApiCocktails() {
         viewModelScope.launch {
-            try{
+            cocktailApiState = try{
                 val result = CocktailApi.cocktailService.getCocktails("a")
                 _uiState.update {
                     it.copy(currentCocktailList = result.drinks.asDomainObjects())
                 }
-                cocktailApiState = CocktailApiState.Succes(result.drinks.asDomainObjects())
+                CocktailApiState.Succes(result.drinks.asDomainObjects())
             }catch (e: IOException){
                 e.printStackTrace()
-                cocktailApiState=CocktailApiState.Error
+                CocktailApiState.Error
             }
         }
     }

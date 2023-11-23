@@ -44,6 +44,16 @@ data class ApiCocktail(
     val strMeasure15: String?,
 )
 @Serializable
+data class ApiCocktailForSearch(
+    val strDrink: String,
+    val strDrinkThumb: String,
+    val idDrink: String,
+)
+@Serializable
+data class CocktailApiSearchResult(
+    val drinks:List<ApiCocktailForSearch>
+)
+@Serializable
 data class ApiDrinks(
     val drinks:List<ApiCocktail>
 )
@@ -56,17 +66,70 @@ fun List<ApiCocktail>.asDomainObjects() =
         alcoholFilter = it.strAlcoholic,
         typeOfGlass = it.strGlass,
         instructions = it.strInstructions,
-        image = it.strDrinkThumb,
-        ingredients = null,
+        image = it.strDrinkThumb+"/preview",
         ingredientNames =
-        listOf(it.strIngredient1,it.strIngredient2,it.strIngredient3,it.strIngredient4,it.strIngredient5,
-            it.strIngredient6,it.strIngredient7,it.strIngredient8,it.strIngredient9,it.strIngredient10,
-            it.strIngredient11,it.strIngredient12,it.strIngredient13,it.strIngredient14,it.strIngredient15
-        ).filterNotNull(),
+        listOfNotNull(
+            it.strIngredient1,
+            it.strIngredient2,
+            it.strIngredient3,
+            it.strIngredient4,
+            it.strIngredient5,
+            it.strIngredient6,
+            it.strIngredient7,
+            it.strIngredient8,
+            it.strIngredient9,
+            it.strIngredient10,
+            it.strIngredient11,
+            it.strIngredient12,
+            it.strIngredient13,
+            it.strIngredient14,
+            it.strIngredient15
+        ),
         measurements =
-        listOf(it.strMeasure1,it.strMeasure2,it.strMeasure3,it.strMeasure4,it.strMeasure5,
-            it.strMeasure6,it.strMeasure7,it.strMeasure8,it.strMeasure9,it.strMeasure10,
-            it.strMeasure11,it.strMeasure12,it.strMeasure13,it.strMeasure14,it.strMeasure15
-        ).filterNotNull(),
-        isFavorite = null,
+        listOfNotNull(
+            it.strMeasure1, it.strMeasure2, it.strMeasure3, it.strMeasure4, it.strMeasure5,
+            it.strMeasure6, it.strMeasure7, it.strMeasure8, it.strMeasure9, it.strMeasure10,
+            it.strMeasure11, it.strMeasure12, it.strMeasure13, it.strMeasure14, it.strMeasure15
+        ),
+    )}
+fun List<ApiCocktail>.asDomainObject() =
+    map { Cocktail(
+        id = it.idDrink.toInt(),
+        title = it.strDrink,
+        category = it.strCategory,
+        alcoholFilter = it.strAlcoholic,
+        typeOfGlass = it.strGlass,
+        instructions = it.strInstructions,
+        image = it.strDrinkThumb+"/preview",
+        ingredientNames =
+        listOfNotNull(
+            it.strIngredient1,
+            it.strIngredient2,
+            it.strIngredient3,
+            it.strIngredient4,
+            it.strIngredient5,
+            it.strIngredient6,
+            it.strIngredient7,
+            it.strIngredient8,
+            it.strIngredient9,
+            it.strIngredient10,
+            it.strIngredient11,
+            it.strIngredient12,
+            it.strIngredient13,
+            it.strIngredient14,
+            it.strIngredient15
+        ),
+        measurements =
+        listOfNotNull(
+            it.strMeasure1, it.strMeasure2, it.strMeasure3, it.strMeasure4, it.strMeasure5,
+            it.strMeasure6, it.strMeasure7, it.strMeasure8, it.strMeasure9, it.strMeasure10,
+            it.strMeasure11, it.strMeasure12, it.strMeasure13, it.strMeasure14, it.strMeasure15
+        ),
+    )}.first()
+
+fun List<ApiCocktailForSearch>.asDomainObjectsFromSearch() =
+    map { Cocktail(
+        id = it.idDrink.toInt(),
+        title = it.strDrink,
+        image = it.strDrinkThumb+"/preview",
     )}

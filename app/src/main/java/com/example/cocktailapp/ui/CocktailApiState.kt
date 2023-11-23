@@ -14,3 +14,15 @@ sealed interface IngredientApiState{
     object Loading: IngredientApiState
     data class Succes(val ingredients: List<Ingredient>): IngredientApiState
 }
+
+sealed interface CocktailDetailApiState{
+    object Error:CocktailDetailApiState
+    object Loading: CocktailDetailApiState
+    data class Succes(val cocktail: Cocktail): CocktailDetailApiState
+}
+
+sealed interface IngredientDetailApiState{
+    object Error: IngredientDetailApiState
+    object Loading: IngredientDetailApiState
+    data class Succes(val ingredient:Ingredient,val cocktailsContainingIngredient: List<Cocktail>): IngredientDetailApiState
+}

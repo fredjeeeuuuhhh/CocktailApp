@@ -14,6 +14,8 @@ interface CocktailApiService {
     suspend fun getCocktailById(@Query("i") id:Int):ApiDrinks
     @GET("random.php")
     suspend fun getRandomCocktail():ApiDrinks
+    @GET("filter.php")
+    suspend fun searchByIngredient(@Query("i") ingredient:String): CocktailApiSearchResult
     /*
     Response doesnt contain enough values->
     would result in getbyid vor every element in result -> EXPENSIVE!
@@ -25,8 +27,6 @@ interface CocktailApiService {
     //suspend fun filterByCategory(@Query("c") filter:String): List<ApiCocktail>
     //@GET("filter.php")
     //suspend fun filterByGlass(@Query("g") filter:String): List<ApiCocktail>
-    //@GET("filter.php")
-    //suspend fun searchByIngredient(@Query("i") ingredient:String): List<ApiCocktail>
 }
 private val json = Json {
     ignoreUnknownKeys = true

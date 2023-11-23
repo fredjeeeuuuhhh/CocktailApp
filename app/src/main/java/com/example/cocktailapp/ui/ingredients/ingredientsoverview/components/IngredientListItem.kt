@@ -36,6 +36,7 @@ fun IngredientListItem(
     onViewDetailClicked: () -> Unit,
     onOwnedStatusChanged : () -> Unit
 ){
+    if(ingredient.isOwned==null)ingredient.isOwned=false
     var isOwned by remember{ mutableStateOf(ingredient.isOwned)}
     Card(
         modifier = Modifier
@@ -81,7 +82,7 @@ fun IngredientListItem(
 
         }
         AsyncImage(
-            model = "https://"+ingredient.thumbnail,
+            model = ingredient.thumbnail,
             contentDescription = ingredient.name,
             modifier = Modifier
                 .fillMaxWidth()

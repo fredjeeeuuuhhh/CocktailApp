@@ -32,7 +32,7 @@ fun CocktailListItem(
         ),
     ) {
         AsyncImage(
-            model = cocktail.image + "/preview",
+            model = cocktail.image,
             contentDescription = cocktail.title,
             modifier = Modifier
                 .fillMaxWidth()

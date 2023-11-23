@@ -6,12 +6,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.cocktailapp.R
+import com.example.cocktailapp.ui.CocktailDetailApiState
 import com.example.cocktailapp.ui.cocktails.cocktaildetail.components.CocktaiilIngredientHeader
 import com.example.cocktailapp.ui.cocktails.cocktaildetail.components.CocktailDetailIngredientRow
 import com.example.cocktailapp.ui.cocktails.cocktaildetail.components.CocktailDetailSectionSeparartor
@@ -26,41 +28,54 @@ fun CocktailDetail(
 ) {
     val scrollState = rememberScrollState()
     val state by cocktailDetailViewModel.uiState.collectAsState()
-    val cocktail = state.currentCocktail
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
-            .verticalScroll(scrollState),
-    ) {
-        cocktail.isFavorite?.let {
-            CocktaiilIngredientHeader(
-                onBack,
-                cocktail.title,
-                it,
-                {flag-> cocktailDetailViewModel.onFavoriteChanged(flag) },
-            )
+    val cocktailDetailApiState = cocktailDetailViewModel.cocktailDetailApiState
+    when(cocktailDetailApiState) {
+        is CocktailDetailApiState.Loading -> {
+            Text("Loading the details")
         }
-
-        CocktailIngredientSpecifics(cocktail.category)
-        CocktailIngredientSpecifics(cocktail.alcoholFilter)
-        CocktailIngredientSpecifics(cocktail.typeOfGlass)
-
-        CocktailDetailSectionSeparartor()
-
-        CocktailDetailSubTitle(R.string.subtitle_ingredients,color=MaterialTheme.colorScheme.secondary)
-
-        for ((i, ingredient) in cocktail.ingredientNames.withIndex()) {
-            CocktailDetailIngredientRow(ingredient, cocktail.measurements[i])
+        is CocktailDetailApiState.Error -> {
+            Text("Something went wrong while loading cocktail details from api")
         }
+        is CocktailDetailApiState.Succes -> {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.surface)
+                    .verticalScroll(scrollState),
+            ) {
+                if(cocktailDetailApiState.cocktail.isFavorite==null)cocktailDetailApiState.cocktail.isFavorite=false
 
-        CocktailDetailSectionSeparartor()
+                CocktaiilIngredientHeader(
+                    onBack,
+                    cocktailDetailApiState.cocktail.title,
+                    cocktailDetailApiState.cocktail.isFavorite!!,
+                ) { flag -> cocktailDetailViewModel.onFavoriteChanged(flag) }
 
-        CocktailDetailSubTitle(R.string.subtitle_instructions,color= MaterialTheme.colorScheme.secondary)
+                cocktailDetailApiState.cocktail.category?.let { CocktailIngredientSpecifics(it) }
+                cocktailDetailApiState.cocktail.alcoholFilter?.let { CocktailIngredientSpecifics(it) }
+                cocktailDetailApiState.cocktail.typeOfGlass?.let { CocktailIngredientSpecifics(it) }
 
-        for ((i, instruction) in cocktail.instructions.split(". ").withIndex()) {
-            CocktailIngredientInstructionRow(i,instruction)
+                CocktailDetailSectionSeparartor()
+
+                CocktailDetailSubTitle(R.string.subtitle_ingredients,color=MaterialTheme.colorScheme.secondary)
+
+                cocktailDetailApiState.cocktail.ingredientNames?.let{
+                    for ((i, ingredient) in it.withIndex()) {
+                        cocktailDetailApiState.cocktail.measurements?.let {  CocktailDetailIngredientRow(ingredient, it[i]) }
+                    }
+                }
+
+                CocktailDetailSectionSeparartor()
+
+                CocktailDetailSubTitle(R.string.subtitle_instructions,color= MaterialTheme.colorScheme.secondary)
+                cocktailDetailApiState.cocktail.instructions?.let{
+                    for ((i, instruction) in it.split(". ").withIndex()) {
+                        CocktailIngredientInstructionRow(i,instruction)
+                    }
+                }
+            }
         }
     }
+
 }

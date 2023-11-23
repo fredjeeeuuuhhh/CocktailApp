@@ -1,6 +1,7 @@
 package com.example.cocktailapp.network
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
@@ -8,19 +9,23 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface IngredientApiService {
-    /*
-    only the names -> i want ful details->
-    would result in get by id every element-> EXPENSIVE!
-    maybe other way-> keep in mind for later
-    */
-    //@GET("list.php?i=list")
-    //suspend fun getIngredients(): ApiIngredientNames
-    @GET("lookup.php")
-    suspend fun getIngredientByName(@Query("iid") id:Int):ApiIngredientList
 
+    @GET("list.php?i=list")
+    suspend fun getIngredients(): ApiIngredientNames
+
+    @GET("lookup.php")
+    suspend fun getIngredientById(@Query("iid") id:Int):ApiIngredientLookupResult
+
+    @GET("search.php")
+    suspend fun getIngredientByName(@Query("i") name:String):ApiIngredientLookupResult
 }
 
-private val json = Json { ignoreUnknownKeys = true }
+@OptIn(ExperimentalSerializationApi::class)
+private val json = Json {
+    ignoreUnknownKeys = true
+    coerceInputValues = true
+    explicitNulls = false
+}
 
 private var retrofit: Retrofit = Retrofit
     .Builder()

@@ -14,11 +14,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.cocktailapp.model.Cocktail
+import com.example.cocktailapp.ui.IngredientDetailApiState
 import com.example.cocktailapp.ui.cocktails.cocktaildetail.components.CocktailDetailSectionSeparartor
 import com.example.cocktailapp.ui.ingredients.ingredientsdetail.components.CocktailRowItem
 import com.example.cocktailapp.ui.ingredients.ingredientsdetail.components.IngredientHeader
@@ -32,8 +35,6 @@ fun IngredientDetail(
 ){
     val scrollState = rememberScrollState()
     val state by ingredientDetailViewModel.uiState.collectAsState()
-    val ingredient = state.currentIngredient
-    val cocktails = state.cocktailsContainingIngredient
 
     Column(
         modifier = Modifier
@@ -42,36 +43,48 @@ fun IngredientDetail(
             .background(MaterialTheme.colorScheme.surface)
             .verticalScroll(scrollState),
     ){
-        ingredient.isOwned?.let {
-            IngredientHeader(
-                onBack,
-                ingredient.name,
-                it,
-                {flag -> ingredientDetailViewModel.onOwnedChanged(flag)}
-            )
-        }
+        val ingredientDetailApiState: IngredientDetailApiState = ingredientDetailViewModel.ingredientDetailApiState
+        when(ingredientDetailApiState){
+            is IngredientDetailApiState.Loading -> {
+                Text("loading data from ingredient")
+            }
+            is IngredientDetailApiState.Error -> {
+                Text("error while loading data from ingredient")
+            }
+            is IngredientDetailApiState.Succes -> {
+                if(ingredientDetailApiState.ingredient.isOwned==null)ingredientDetailApiState.ingredient.isOwned=false
+                ingredientDetailApiState.ingredient.isOwned?.let {
+                    IngredientHeader(
+                        onBack,
+                        ingredientDetailApiState.ingredient.name,
+                        it
+                    ) { flag -> ingredientDetailViewModel.onOwnedChanged(flag) }
+                }
+                ingredientDetailApiState.ingredient.containsAlcohol?.let { IngredientSpecifics("Contains alcohol: "+ if (it) "Yes" else "No") }
+                ingredientDetailApiState.ingredient.type?.let { IngredientSpecifics("Type of alcohol: $it") }
+                ingredientDetailApiState.ingredient.alcoholPercentage?.let { IngredientSpecifics("Alcohol percentage: $it%") }
 
-        IngredientSpecifics("Contains alcohol: "+ if (ingredient.containsAlcohol) "Yes" else "No")
-        IngredientSpecifics("Type of alcohol: "+ ingredient.type)
-        ingredient.alcoholPercentage?.let { IngredientSpecifics("Alcohol percentage: "+it+"%") }
+                CocktailDetailSectionSeparartor()
 
-        CocktailDetailSectionSeparartor()
+                ingredientDetailApiState.ingredient.description?.let {
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        textAlign = TextAlign.Justify,
+                    )
+                    CocktailDetailSectionSeparartor()
+                }
 
-        Text(
-            text = ingredient.description,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier
-                .fillMaxWidth(),
-            textAlign = TextAlign.Justify,
-        )
-
-        CocktailDetailSectionSeparartor()
-
-        LazyRow{
-            items(cocktails){cocktail->
-                CocktailRowItem(cocktail = cocktail, onViewDetailClicked =  {onViewDetailClicked(cocktail)})
+                LazyRow{
+                    items(ingredientDetailApiState.cocktailsContainingIngredient){cocktail->
+                        CocktailRowItem(cocktail = cocktail, onViewDetailClicked =  {onViewDetailClicked(cocktail)})
+                    }
+                }
             }
         }
+
     }
 }

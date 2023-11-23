@@ -3,7 +3,7 @@ package com.example.cocktailapp.ui
 import androidx.compose.ui.input.key.Key.Companion.F
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import com.example.cocktailapp.ui.CocktailDestinationsArgs.COCKTAIL_NAME_ARG
+import com.example.cocktailapp.ui.CocktailDestinationsArgs.COCKTAIL_ID_ARG
 import com.example.cocktailapp.ui.CocktailDestinationsArgs.INGREDIENT_NAME_ARG
 import com.example.cocktailapp.ui.CocktailScreens.COCKTAIL_DETAIL_SCREEN
 import com.example.cocktailapp.ui.CocktailScreens.COCKTAIL_SCREEN
@@ -19,13 +19,14 @@ private object CocktailScreens {
     const val RANDOM_SCREEN = "randomSelect"
 }
 object CocktailDestinationsArgs {
-    const val COCKTAIL_NAME_ARG = "cocktailName"
+
+    const val COCKTAIL_ID_ARG = "cocktailId"
     const val INGREDIENT_NAME_ARG = "ingredientName"
 }
 
 object CocktailDestinations {
     const val COCKTAIL_ROUTE = COCKTAIL_SCREEN
-    const val COCKTAIL_DETAIL_ROUTE = "$COCKTAIL_DETAIL_SCREEN/{$COCKTAIL_NAME_ARG}"
+    const val COCKTAIL_DETAIL_ROUTE = "$COCKTAIL_DETAIL_SCREEN/{$COCKTAIL_ID_ARG}"
     const val INGREDIENT_ROUTE = INGREDIENT_SCREEN
     const val INGREDIENT_DETAIL_ROUTE = "$INGREDIENT_DETAIL_SCREEN/{$INGREDIENT_NAME_ARG}"
     const val RANDOMSELECT_ROUTE = RANDOM_SCREEN
@@ -58,8 +59,8 @@ class CocktailNavigationActions(private val navController: NavHostController) {
         }
     }
 
-    fun navigateToCocktailDetail(cocktailName: String) {
-        navController.navigate("$COCKTAIL_DETAIL_SCREEN/$cocktailName")
+    fun navigateToCocktailDetail(cocktailId: Int) {
+        navController.navigate("$COCKTAIL_DETAIL_SCREEN/$cocktailId")
     }
     fun navigateToIngredientDetail(ingredientName: String) {
         navController.navigate("$INGREDIENT_DETAIL_SCREEN/$ingredientName")

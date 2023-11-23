@@ -1,6 +1,5 @@
 package com.example.cocktailapp.network
 
-import com.example.cocktailapp.model.Cocktail
 import com.example.cocktailapp.model.Ingredient
 import kotlinx.serialization.Serializable
 
@@ -8,8 +7,8 @@ import kotlinx.serialization.Serializable
 data class ApiIngredient(
     val idIngredient: String,
     val strIngredient: String,
-    val strDescription: String,
-    val strType: String,
+    val strDescription: String?,
+    val strType: String?,
     val strAlcohol: String,
     val strABV: String?,
 )
@@ -23,7 +22,7 @@ data class ApiIngredientNames(
 )
 
 @Serializable
-data class ApiIngredientList(
+data class ApiIngredientLookupResult(
     val ingredients: List<ApiIngredient>
 )
 fun List<ApiIngredient>.asDomainObjects() =
@@ -32,8 +31,25 @@ fun List<ApiIngredient>.asDomainObjects() =
         name = it.strIngredient,
         description = it.strDescription,
         type = it.strType,
-        containsAlcohol = if (it.strAlcohol=="Yes") true else false,
+        containsAlcohol = it.strAlcohol=="Yes",
         alcoholPercentage = it.strABV,
-        thumbnail = "www.thecocktaildb.com/images/ingredients/${it.strIngredient}-Small.png",
-        isOwned = null,
+        thumbnail = "${"https://"}www.thecocktaildb.com/images/ingredients/${it.strIngredient}-Small.png",
     )}
+
+fun List<ApiIngredient>.asDomainObject() =
+    map { Ingredient(
+        id = it.idIngredient.toInt(),
+        name = it.strIngredient,
+        description = it.strDescription,
+        type = it.strType,
+        containsAlcohol = it.strAlcohol=="Yes",
+        alcoholPercentage = it.strABV,
+        thumbnail = "${"https://"}www.thecocktaildb.com/images/ingredients/${it.strIngredient}-Small.png",
+    )}.first()
+
+fun List<ApiIngredientName>.asDomainObjectsWithNameOnly() =
+    map { Ingredient(
+        name = it.strIngredient1,
+        thumbnail = "${"https://"}www.thecocktaildb.com/images/ingredients/${it.strIngredient1}-Small.png",
+    )}
+
