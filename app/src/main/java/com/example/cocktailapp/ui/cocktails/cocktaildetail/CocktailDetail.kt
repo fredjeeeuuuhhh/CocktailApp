@@ -62,7 +62,7 @@ fun CocktailDetail(
 
                 cocktailDetailApiState.cocktail.ingredientNames?.let{
                     for ((i, ingredient) in it.withIndex()) {
-                        cocktailDetailApiState.cocktail.measurements?.let {  CocktailDetailIngredientRow(ingredient, it[i]) }
+                        cocktailDetailApiState.cocktail.measurements?.let {  CocktailDetailIngredientRow(ingredient, if(i<it.size) it[i] else "") }
                     }
                 }
 
@@ -76,6 +76,7 @@ fun CocktailDetail(
                 }
             }
         }
+
     }
 
 }
