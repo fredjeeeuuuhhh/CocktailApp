@@ -5,10 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.cocktailapp.data.IngredientRepository
 import com.example.cocktailapp.data.IngredientSampler
 import com.example.cocktailapp.model.Ingredient
-import com.example.cocktailapp.network.IngredientApi
-import com.example.cocktailapp.network.asDomainObjects
 import com.example.cocktailapp.network.asDomainObjectsWithNameOnly
 import com.example.cocktailapp.ui.IngredientApiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +20,9 @@ import okio.IOException
 import javax.inject.Inject
 
 @HiltViewModel
-class IngredientsOverviewViewModel @Inject constructor(): ViewModel() {
+class IngredientsOverviewViewModel @Inject constructor(
+    private val ingredientRepository: IngredientRepository
+): ViewModel() {
     private val _uiState = MutableStateFlow(IngredientsOverviewState(IngredientSampler.ingredients))
     val uiState: StateFlow<IngredientsOverviewState> = _uiState.asStateFlow()
 
@@ -39,9 +40,9 @@ class IngredientsOverviewViewModel @Inject constructor(): ViewModel() {
     private fun getApiIngredients(){
         viewModelScope.launch {
             ingredientApiState = try {
-                val result = IngredientApi.ingredientService.getIngredients()
-                _uiState.update { it.copy(currentIngredientList = result.drinks.asDomainObjectsWithNameOnly() ) }
-                IngredientApiState.Succes(result.drinks.asDomainObjectsWithNameOnly())
+                val result = ingredientRepository.getIngredients()
+                _uiState.update { it.copy(currentIngredientList = result ) }
+                IngredientApiState.Succes(result)
             }catch(e:IOException){
                 e.printStackTrace()
                 IngredientApiState.Error

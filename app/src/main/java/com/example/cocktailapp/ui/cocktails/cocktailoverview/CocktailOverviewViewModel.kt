@@ -6,9 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.cocktailapp.data.CocktailRepository
 import com.example.cocktailapp.data.CocktailSampler
-import com.example.cocktailapp.network.CocktailApi
-import com.example.cocktailapp.network.asDomainObjects
 import com.example.cocktailapp.ui.CocktailApiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,6 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CocktailOverviewViewModel @Inject constructor(
+    private val cocktailRepository: CocktailRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
    // private val _savedFilterType = savedStateHandle.getStateFlow(COCKTAIL_FILTER_SAVED_STATE_KEY, ALL_TASKS)
@@ -42,11 +42,11 @@ class CocktailOverviewViewModel @Inject constructor(
     private fun getApiCocktails() {
         viewModelScope.launch {
             cocktailApiState = try{
-                val result = CocktailApi.cocktailService.getCocktails("a")
+                val result = cocktailRepository.getCocktailsByFirstLetter("a")
                 _uiState.update {
-                    it.copy(currentCocktailList = result.drinks.asDomainObjects())
+                    it.copy(currentCocktailList = result)
                 }
-                CocktailApiState.Succes(result.drinks.asDomainObjects())
+                CocktailApiState.Succes(result)
             }catch (e: IOException){
                 e.printStackTrace()
                 CocktailApiState.Error

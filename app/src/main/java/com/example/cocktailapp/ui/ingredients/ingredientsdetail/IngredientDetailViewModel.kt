@@ -6,12 +6,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.cocktailapp.data.CocktailRepository
 import com.example.cocktailapp.data.CocktailSampler
+import com.example.cocktailapp.data.IngredientRepository
 import com.example.cocktailapp.data.IngredientSampler
 import com.example.cocktailapp.model.Cocktail
 import com.example.cocktailapp.model.Ingredient
-import com.example.cocktailapp.network.CocktailApi
-import com.example.cocktailapp.network.IngredientApi
 import com.example.cocktailapp.network.asDomainObject
 import com.example.cocktailapp.network.asDomainObjectsFromSearch
 import com.example.cocktailapp.ui.CocktailDestinationsArgs
@@ -27,6 +27,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class IngredientDetailViewModel @Inject constructor(
+    private val cocktailRepository: CocktailRepository,
+    private val ingredientRepository: IngredientRepository,
     savedStateHandle: SavedStateHandle,
 ): ViewModel() {
     private val ingredientName:String = savedStateHandle[CocktailDestinationsArgs.INGREDIENT_NAME_ARG]!!
@@ -48,17 +50,17 @@ class IngredientDetailViewModel @Inject constructor(
     private fun getIngredientDetails() {
         viewModelScope.launch {
             ingredientDetailApiState = try{
-                val ingredientResult = IngredientApi.ingredientService.getIngredientByName(ingredientName)
-                val cocktailResult = CocktailApi.cocktailService.searchByIngredient(ingredientName)
+                val ingredientResult = ingredientRepository.getIngredientByName(ingredientName)
+                val cocktailResult = cocktailRepository.searchByIngredient(ingredientName)
                 _uiState.update {
                     it.copy(
-                        currentIngredient = ingredientResult.ingredients.asDomainObject(),
-                        cocktailsContainingIngredient = cocktailResult.drinks.asDomainObjectsFromSearch()
+                        currentIngredient = ingredientResult,
+                        cocktailsContainingIngredient = cocktailResult
                     )
                 }
                 IngredientDetailApiState.Succes(
-                    ingredientResult.ingredients.asDomainObject(),
-                    cocktailsContainingIngredient = cocktailResult.drinks.asDomainObjectsFromSearch()
+                    ingredientResult,
+                    cocktailsContainingIngredient = cocktailResult
                 )
             }catch(e: IOException){
                 e.printStackTrace()

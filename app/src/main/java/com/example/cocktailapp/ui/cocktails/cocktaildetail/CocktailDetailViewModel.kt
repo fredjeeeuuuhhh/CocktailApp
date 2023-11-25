@@ -6,10 +6,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.cocktailapp.data.CocktailRepository
 import com.example.cocktailapp.data.CocktailSampler
 import com.example.cocktailapp.model.Cocktail
-import com.example.cocktailapp.network.CocktailApi
-import com.example.cocktailapp.network.asDomainObject
 import com.example.cocktailapp.ui.CocktailDestinationsArgs
 import com.example.cocktailapp.ui.CocktailDetailApiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,6 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CocktailDetailViewModel @Inject constructor(
+    private val cocktailRepository: CocktailRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val cocktailId: String = savedStateHandle[CocktailDestinationsArgs.COCKTAIL_ID_ARG]!!
@@ -42,9 +42,9 @@ class CocktailDetailViewModel @Inject constructor(
     private fun getApiCocktail() {
         viewModelScope.launch {
             cocktailDetailApiState = try {
-                val result = CocktailApi.cocktailService.getCocktailById(cocktailId.toInt())
-                _uiState.update { it.copy(currentCocktail = result.drinks.asDomainObject()) }
-                CocktailDetailApiState.Succes(result.drinks.asDomainObject())
+                val result = cocktailRepository.getCocktailById(cocktailId.toInt())
+                _uiState.update { it.copy(currentCocktail = result) }
+                CocktailDetailApiState.Succes(result)
             }catch (e: IOException){
                 e.printStackTrace()
                 CocktailDetailApiState.Error

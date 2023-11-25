@@ -1,8 +1,5 @@
 package com.example.cocktailapp.network
 
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -27,20 +24,8 @@ interface CocktailApiService {
     //suspend fun filterByCategory(@Query("c") filter:String): List<ApiCocktail>
     //@GET("filter.php")
     //suspend fun filterByGlass(@Query("g") filter:String): List<ApiCocktail>
-}
-private val json = Json {
-    ignoreUnknownKeys = true
-    coerceInputValues = true
-}
-private var retrofit: Retrofit = Retrofit
-    .Builder()
-    .addConverterFactory(
-        json.asConverterFactory("application/json".toMediaType())
-    )
-    .baseUrl("https://www.thecocktaildb.com/api/json/v1/1/")
-    .build()
-object CocktailApi{
-    val cocktailService: CocktailApiService by lazy {
-        retrofit.create(CocktailApiService::class.java)
+    companion object Factory {
+        fun create(retrofit: Retrofit): CocktailApiService = retrofit.create(CocktailApiService::class.java)
     }
 }
+
