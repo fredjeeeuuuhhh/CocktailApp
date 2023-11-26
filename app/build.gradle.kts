@@ -6,6 +6,7 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10"
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    id("com.google.devtools.ksp")
 }
 val bundleId = "com.example.cocktailapp"
 android {
@@ -81,8 +82,20 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
     //coil for image caching
     implementation("io.coil-kt:coil-compose:2.4.0")
-    
+
+    //room
+    val room_version = "2.5.0"
+    implementation("androidx.room:room-runtime:$room_version")
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation("androidx.room:room-ktx:$room_version")
+    // To use Kotlin Symbol Processing (KSP)
+    ksp("androidx.room:room-compiler:$room_version")
+
+    // optional - Test helpers
     testImplementation("junit:junit:4.13.2")
+    testImplementation("androidx.room:room-testing:$room_version")
+
+    annotationProcessor("androidx.room:room-compiler:$room_version")
 
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
