@@ -8,6 +8,10 @@ import androidx.room.PrimaryKey
 import androidx.room.Relation
 import com.example.cocktailapp.model.Cocktail
 
+/**
+ * Internal model used to represent a cocktail stored locally in a Room database. This is used inside
+ * the data layer only.
+ */
 @Entity(tableName="cocktails")
 data class dbCocktail(
     @PrimaryKey(autoGenerate=false)
