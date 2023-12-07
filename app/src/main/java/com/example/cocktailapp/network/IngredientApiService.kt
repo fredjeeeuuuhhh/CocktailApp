@@ -1,5 +1,6 @@
 package com.example.cocktailapp.network
 
+import kotlinx.coroutines.flow.flow
 import retrofit2.Retrofit
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -18,4 +19,4 @@ interface IngredientApiService {
         fun create(retrofit: Retrofit): IngredientApiService = retrofit.create(IngredientApiService::class.java)
     }
 }
-
+fun IngredientApiService.getIngredientsAsFlow() = flow { emit(getIngredients())}

@@ -7,15 +7,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cocktailapp.data.CocktailRepository
-import com.example.cocktailapp.data.CocktailSampler
 import com.example.cocktailapp.model.Cocktail
 import com.example.cocktailapp.ui.CocktailDestinationsArgs
-import com.example.cocktailapp.ui.CocktailDetailApiState
+import com.example.cocktailapp.network.CocktailDetailApiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import okio.IOException
 import javax.inject.Inject
@@ -27,32 +25,52 @@ class CocktailDetailViewModel @Inject constructor(
 ) : ViewModel() {
     private val cocktailId: String = savedStateHandle[CocktailDestinationsArgs.COCKTAIL_ID_ARG]!!
 
-    private val _uiState = MutableStateFlow(
-        CocktailDetailState(CocktailSampler.cocktails.find { cocktail: Cocktail -> cocktail.id == 15300 }!!),
-    )
-    val uiState: StateFlow<CocktailDetailState> = _uiState.asStateFlow()
-
     var cocktailDetailApiState: CocktailDetailApiState by  mutableStateOf( CocktailDetailApiState.Loading)
         private set
-
+    lateinit var uiState: StateFlow<Cocktail?>
     init{
         getApiCocktail()
     }
 
     private fun getApiCocktail() {
-        viewModelScope.launch {
-            cocktailDetailApiState = try {
-                val result = cocktailRepository.getCocktailById(cocktailId.toInt())
-                _uiState.update { it.copy(currentCocktail = result) }
-                CocktailDetailApiState.Succes(result)
-            }catch (e: IOException){
-                e.printStackTrace()
-                CocktailDetailApiState.Error
-            }
+        try{
+            uiState = cocktailRepository.getCocktailById(cocktailId.toInt())
+                .stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(5_000L),
+                    initialValue = null,
+                )
+            cocktailDetailApiState = CocktailDetailApiState.Success
+        } catch (e: IOException){
+            e.printStackTrace()
+            cocktailDetailApiState = CocktailDetailApiState.Error
         }
     }
 
     fun onFavoriteChanged(flag:Boolean) {
-        _uiState.value.currentCocktail.isFavorite=flag
+        try{
+           uiState= uiState.value?.let { cocktailRepository.updateCocktail(it.id,flag) }
+               ?.stateIn(
+                   scope = viewModelScope,
+                   started = SharingStarted.WhileSubscribed(5_000L),
+                   initialValue = uiState.value,
+               ) ?: uiState
+            save()
+        }catch (e: IOException){
+            e.printStackTrace()
+            cocktailDetailApiState = CocktailDetailApiState.Error
+        }
+
+    }
+
+    private fun save() {
+        viewModelScope.launch {
+            try{
+                uiState.value?.let { cocktailRepository.upsertCocktail(it) }
+            }catch (e: IOException){
+                e.printStackTrace()
+                cocktailDetailApiState = CocktailDetailApiState.Error
+            }
+        }
     }
 }

@@ -6,22 +6,22 @@ import androidx.room.PrimaryKey
 import com.example.cocktailapp.model.Ingredient
 
 @Entity(tableName = "ingredients")
-data class dbIngredient(
+data class DbIngredient(
     @PrimaryKey(autoGenerate = false)
     val ingredientId: Int = 0,
-    val name: String = "",
+    val name: String,
     val description: String?,
     val type: String?,
     @ColumnInfo(name = "contains_alcohol")
     val containsAlcohol: Boolean?,
     @ColumnInfo(name = "alcohol_percentage")
     val alcoholPercentage: String?,
-    val thumbnail: String = "",
+    val thumbnail: String,
     @ColumnInfo(name = "is_owned")
     val isOwned: Boolean = false,
 )
 
-fun dbIngredient.asDomainIngredient(): Ingredient {
+fun DbIngredient.asDomainIngredient(): Ingredient {
     return Ingredient(
         id = this.ingredientId,
         name = this.name,
@@ -34,8 +34,8 @@ fun dbIngredient.asDomainIngredient(): Ingredient {
     )
 }
 
-fun Ingredient.asDbIngredient(): dbIngredient {
-    return dbIngredient(
+fun Ingredient.asDbIngredient(): DbIngredient {
+    return DbIngredient(
         ingredientId = this.id!!,
         name = this.name,
         description = this.description,
@@ -47,7 +47,7 @@ fun Ingredient.asDbIngredient(): dbIngredient {
     )
 }
 
-fun List<dbIngredient>.asDomainIngredients(): List<Ingredient> {
+fun List<DbIngredient>.asDomainIngredients(): List<Ingredient> {
     val ingredientList = this.map {
        Ingredient(
             id = it.ingredientId,

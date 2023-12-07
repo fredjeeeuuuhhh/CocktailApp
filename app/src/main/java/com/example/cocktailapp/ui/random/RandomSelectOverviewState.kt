@@ -1,4 +1,4 @@
-package com.example.cocktailapp.ui.favorites
+package com.example.cocktailapp.ui.random
 
 import com.example.cocktailapp.model.Cocktail
 

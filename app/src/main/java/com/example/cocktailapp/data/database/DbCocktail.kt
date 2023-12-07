@@ -13,36 +13,51 @@ import com.example.cocktailapp.model.Cocktail
  * the data layer only.
  */
 @Entity(tableName="cocktails")
-data class dbCocktail(
+data class DbCocktail(
     @PrimaryKey(autoGenerate=false)
-    val cocktailId: Int =0,
-    val title: String = "",
+    val cocktailId: Int,
+    val title: String,
     val category: String?,
     @ColumnInfo(name = "alcohol_filter")
     val alcoholFilter: String?,
     @ColumnInfo(name = "type_of_glass")
     val typeOfGlass: String?,
     val instructions: String?,
-    val image: String = "",
+    val image: String,
     @ColumnInfo(name = "is_favorite")
-    val isFavorite: Boolean=false,
+    val isFavorite: Boolean = false,
 )
 
 @Entity(tableName="measurements")
-data class dbMeasurement(
+data class DbMeasurement(
     @PrimaryKey(autoGenerate=true)
     val id: Int =0,
     val measurementOwnerId: Int = 0,
     val measurement: String = "",
 )
+@Entity(tableName="ingredient_names")
+data class DbIngredientName(
+    @PrimaryKey(autoGenerate=true)
+    val id: Int =0,
+    val ingredientNameOwnerId: Int = 0,
+    val name: String = "",
+)
 
 data class CocktailWithMeasurements(
-    @Embedded val cocktail: dbCocktail,
+    @Embedded val cocktail: DbCocktail,
     @Relation(
         parentColumn = "cocktailId",
         entityColumn = "measurementOwnerId"
     )
-    val measurements: List<dbMeasurement>,
+    val measurements: List<DbMeasurement>,
+)
+data class CocktailWithIngredientNames(
+    @Embedded val cocktail: DbCocktail,
+    @Relation(
+        parentColumn = "cocktailId",
+        entityColumn = "ingredientNameOwnerId"
+    )
+    val ingredientNames: List<DbIngredientName>,
 )
 
 @Entity(primaryKeys = ["cocktailId", "ingredientId"])
@@ -52,27 +67,54 @@ data class CocktailIngredientCrossRef(
 )
 
 data class CocktailWithIngredients(
-    @Embedded val cocktail: dbCocktail,
+    @Embedded val cocktail: DbCocktail,
     @Relation(
         parentColumn = "cocktailId",
         entityColumn = "ingredientId",
         associateBy = Junction(CocktailIngredientCrossRef::class)
     )
-    val ingredients: List<dbIngredient>,
+    val ingredients: List<DbIngredient>,
+)
+data class IngredientWithCocktails(
+    @Embedded val cocktail: DbIngredient,
+    @Relation(
+        parentColumn = "ingredientId",
+        entityColumn = "cocktailId",
+        associateBy = Junction(CocktailIngredientCrossRef::class)
+    )
+    val ingredients: List<DbCocktail>,
 )
 
-fun dbMeasurement.asDomainMeasurement():String {
+fun DbMeasurement.asDomainMeasurement():String {
     return this.measurement
 }
-
-fun String.asDbMeasurement(cocktailId:Int): dbMeasurement {
-    return dbMeasurement(
+fun DbIngredientName.asDomainIngredientName():String {
+    return this.name
+}
+fun List<String>.asDbMeasurements(): List<DbMeasurement>{
+    return this.map {
+        it.asDbMeasurement()
+    }
+}
+fun List<String>.asDbIngredientNames(): List<DbIngredientName>{
+    return this.map {
+        it.asDbIngredientName()
+    }
+}
+fun String.asDbMeasurement(): DbMeasurement {
+    return DbMeasurement(
         measurement = this,
-        measurementOwnerId = cocktailId,
+        measurementOwnerId =0,
+    )
+}
+fun String.asDbIngredientName(): DbIngredientName {
+    return DbIngredientName(
+        name = this,
+        ingredientNameOwnerId =0,
     )
 }
 
-fun List<dbMeasurement>.asDomainMeasurements(): List<String> {
+fun List<DbMeasurement>.asDomainMeasurements(): List<String> {
     val list = {
         this.map {
             it.measurement
@@ -80,8 +122,16 @@ fun List<dbMeasurement>.asDomainMeasurements(): List<String> {
     }
     return list.invoke()
 }
+fun List<DbIngredientName>.asDomainIngredientNames(): List<String> {
+    val list = {
+        this.map {
+            it.name
+        }
+    }
+    return list.invoke()
+}
 
-fun dbCocktail.asDomainCocktail(): Cocktail {
+fun DbCocktail.asDomainCocktail(measurements: List<String>,ingredientNames: List<String>): Cocktail {
     return Cocktail(
         id = this.cocktailId,
         title = this.title,
@@ -91,12 +141,12 @@ fun dbCocktail.asDomainCocktail(): Cocktail {
         instructions = this.instructions,
         image = this.image,
         ingredients = null,
-        ingredientNames = null,//not sure yet, in mapping adding it to cocktail domain obj?
-        measurements = null,
+        ingredientNames = ingredientNames,
+        measurements = measurements,
         isFavorite = this.isFavorite,
     )
 }
-fun List<dbCocktail>.asDomainCocktails(): List<Cocktail> {
+fun List<DbCocktail>.asDomainCocktails(): List<Cocktail> {
     val list = this.map {
         Cocktail(
             id = it.cocktailId,
@@ -107,7 +157,7 @@ fun List<dbCocktail>.asDomainCocktails(): List<Cocktail> {
             instructions = it.instructions,
             image = it.image,
             ingredients = null,
-            ingredientNames = null, //not sure yet, in mapping adding it to cocktail domain obj?
+            ingredientNames = null,
             measurements = null,
             isFavorite = it.isFavorite,
         )
@@ -115,8 +165,8 @@ fun List<dbCocktail>.asDomainCocktails(): List<Cocktail> {
     return list
 }
 
-fun Cocktail.asDbCocktail(): dbCocktail {
-    return dbCocktail(
+fun Cocktail.asDbCocktail(): DbCocktail {
+    return DbCocktail(
         cocktailId = this.id,
         title = this.title,
         category = this.category,

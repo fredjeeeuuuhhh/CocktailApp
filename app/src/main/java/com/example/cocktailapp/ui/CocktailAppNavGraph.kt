@@ -20,7 +20,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.cocktailapp.R
 import com.example.cocktailapp.ui.cocktails.cocktaildetail.CocktailDetail
 import com.example.cocktailapp.ui.cocktails.cocktailoverview.CocktailOverview
-import com.example.cocktailapp.ui.favorites.RandomSelect
+import com.example.cocktailapp.ui.random.RandomSelect
 import com.example.cocktailapp.ui.ingredients.ingredientsdetail.IngredientDetail
 import com.example.cocktailapp.ui.ingredients.ingredientsoverview.IngredientsOverview
 import com.example.cocktailapp.ui.navigation.BottomNavigationBar

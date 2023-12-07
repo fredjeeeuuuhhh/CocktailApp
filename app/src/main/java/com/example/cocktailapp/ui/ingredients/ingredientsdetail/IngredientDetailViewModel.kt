@@ -7,20 +7,15 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cocktailapp.data.CocktailRepository
-import com.example.cocktailapp.data.CocktailSampler
 import com.example.cocktailapp.data.IngredientRepository
-import com.example.cocktailapp.data.IngredientSampler
 import com.example.cocktailapp.model.Cocktail
 import com.example.cocktailapp.model.Ingredient
-import com.example.cocktailapp.network.asDomainObject
-import com.example.cocktailapp.network.asDomainObjectsFromSearch
 import com.example.cocktailapp.ui.CocktailDestinationsArgs
-import com.example.cocktailapp.ui.IngredientDetailApiState
+import com.example.cocktailapp.network.IngredientDetailApiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import okio.IOException
 import javax.inject.Inject
@@ -33,45 +28,59 @@ class IngredientDetailViewModel @Inject constructor(
 ): ViewModel() {
     private val ingredientName:String = savedStateHandle[CocktailDestinationsArgs.INGREDIENT_NAME_ARG]!!
 
-    private val _uiState = MutableStateFlow(
-        IngredientDetailState(
-            IngredientSampler.ingredients.find { ingredient:Ingredient -> ingredient.id==1 }!!,
-            CocktailSampler.cocktails//all cocktails for now, has to be api call
-        )
-    )
-    val uiState: StateFlow<IngredientDetailState> = _uiState.asStateFlow()
-    var ingredientDetailApiState: IngredientDetailApiState by mutableStateOf(IngredientDetailApiState.Loading)
+    var ingredientDetailApiState: IngredientDetailApiState by mutableStateOf(
+        IngredientDetailApiState.Loading)
         private set
-
+    lateinit var uiState: StateFlow<Ingredient?>
+    lateinit var uiListState: StateFlow<List<Cocktail>>
     init{
         getIngredientDetails()
     }
 
     private fun getIngredientDetails() {
-        viewModelScope.launch {
-            ingredientDetailApiState = try{
-                val ingredientResult = ingredientRepository.getIngredientByName(ingredientName)
-                val cocktailResult = cocktailRepository.searchByIngredient(ingredientName)
-                _uiState.update {
-                    it.copy(
-                        currentIngredient = ingredientResult,
-                        cocktailsContainingIngredient = cocktailResult
-                    )
-                }
-                IngredientDetailApiState.Succes(
-                    ingredientResult,
-                    cocktailsContainingIngredient = cocktailResult
+        try{
+            uiState = ingredientRepository.getItem(ingredientName)
+                .stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(5_000L),
+                    initialValue = null
                 )
-            }catch(e: IOException){
-                e.printStackTrace()
-                IngredientDetailApiState.Error
-            }
+            uiListState = cocktailRepository.getCocktailsWithIngredient(uiState.value!!.id!!)
+                .stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(5_000L),
+                    initialValue = emptyList()
+                )
+            ingredientDetailApiState = IngredientDetailApiState.Success
+        } catch(e:IOException){
+            e.printStackTrace()
+            ingredientDetailApiState = IngredientDetailApiState.Error
         }
     }
 
-
-
     fun onOwnedChanged(flag:Boolean) {
-        _uiState.value.currentIngredient.isOwned=flag
+        try{
+            uiState= uiState.value?.let { ingredientRepository.updateIsOwned(it.id!!,flag) }
+                ?.stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(5_000L),
+                    initialValue = uiState.value,
+                ) ?: uiState
+            save()
+        }catch (e: IOException){
+            e.printStackTrace()
+           ingredientDetailApiState = IngredientDetailApiState.Error
+        }
+    }
+
+    private fun save() {
+        viewModelScope.launch {
+            try{
+                uiState.value?.let { ingredientRepository.upsert(it) }
+            }catch (e: IOException){
+                e.printStackTrace()
+                ingredientDetailApiState = IngredientDetailApiState.Error
+            }
+        }
     }
 }

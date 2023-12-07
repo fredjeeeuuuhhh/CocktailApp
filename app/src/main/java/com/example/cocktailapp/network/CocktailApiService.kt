@@ -1,5 +1,6 @@
 package com.example.cocktailapp.network
 
+import kotlinx.coroutines.flow.flow
 import retrofit2.Retrofit
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -29,3 +30,4 @@ interface CocktailApiService {
     }
 }
 
+fun CocktailApiService.getCocktailsAsFlow(firstChar:String) = flow { emit(getCocktails(firstChar))}

@@ -1,4 +1,4 @@
-package com.example.cocktailapp.ui.favorites
+package com.example.cocktailapp.ui.random
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
