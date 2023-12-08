@@ -7,6 +7,7 @@ import androidx.room.Junction
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 import com.example.cocktailapp.model.Cocktail
+import com.example.cocktailapp.model.Ingredient
 
 /**
  * Internal model used to represent a cocktail stored locally in a Room database. This is used inside
@@ -60,10 +61,10 @@ data class CocktailWithIngredientNames(
     val ingredientNames: List<DbIngredientName>,
 )
 
-@Entity(primaryKeys = ["cocktailId", "ingredientId"])
+@Entity(primaryKeys = ["cocktailId", "name"])
 data class CocktailIngredientCrossRef(
     val cocktailId: Int,
-    val ingredientId: Int,
+    val name: String,
 )
 
 data class CocktailWithIngredients(
@@ -84,7 +85,12 @@ data class IngredientWithCocktails(
     )
     val ingredients: List<DbCocktail>,
 )
-
+fun List<DbIngredientName>.asDomainIngredientsNamesOnly():List<Ingredient>{
+    return this.map { Ingredient(
+        name = it.name,
+        thumbnail = "${"https://"}www.thecocktaildb.com/images/ingredients/${it.name}-Small.png",
+    )}
+}
 fun DbMeasurement.asDomainMeasurement():String {
     return this.measurement
 }

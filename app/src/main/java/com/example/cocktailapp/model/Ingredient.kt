@@ -9,4 +9,5 @@ data class Ingredient(
     var alcoholPercentage: String?=null,
     var thumbnail: String,
     var isOwned: Boolean?=null,
+    var cocktails: List<Cocktail>?=null,
 )

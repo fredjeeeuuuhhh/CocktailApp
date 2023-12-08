@@ -28,7 +28,6 @@ fun IngredientsOverview(
             Ingredients(
                 ingredients = uiListState,
                 onViewDetailClicked = onViewDetailClicked,
-                onOwnedStatusChanged = {ingredient -> ingredientOverviewViewModel.changeOwnedStatus(ingredient)},
             )
         }
     }

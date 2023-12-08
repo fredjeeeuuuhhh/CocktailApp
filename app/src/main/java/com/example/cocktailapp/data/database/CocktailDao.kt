@@ -10,8 +10,13 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CocktailDao {
-    //wat met joined tables??
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertMeasurements(measurements: List<DbMeasurement>)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertIngredientNames(ingredientNames: List<DbIngredientName>)
+    @Insert
+    suspend fun insertCrossRef(crossRef: CocktailIngredientCrossRef)
     /**
      * Insert or update a cocktail in the database. If a cocktail already exists, replace it.
      *
@@ -40,10 +45,13 @@ interface CocktailDao {
     fun getItem(id: Int): Flow<DbCocktail>
     @Transaction
     @Query("SELECT * from cocktails WHERE cocktailId = :id")
-    fun getItemM(id: Int): CocktailWithMeasurements
+    suspend fun getItemM(id: Int): CocktailWithMeasurements
     @Transaction
     @Query("SELECT * from cocktails WHERE cocktailId = :id")
-    fun getItemI(id: Int): CocktailWithIngredientNames
+    suspend fun getItemI(id: Int): CocktailWithIngredientNames
+    @Transaction
+    @Query("SELECT * from cocktailingredientcrossref WHERE name = :name")
+    suspend fun getCocktailIdsContainingIngredientName(name: String): IngredientWithCocktails
 
     /**
      * Observes list of cocktails.
@@ -54,40 +62,29 @@ interface CocktailDao {
     fun getAllItems(): Flow<List<DbCocktail>>
     @Query("SELECT cocktailId, title, image from cocktails WHERE category = :category GROUP BY is_favorite")
     fun getAllItemsInCategory(category: String): Flow<List<DbCocktail>>
-
-
-    /**
-     * Observes a list of cocktail.
-     *
-     * @param ingredientId the cocktail that have an ingredient with the specified id.
-     * @return the cocktails with that ingredient with the specified id.
-     */
-    //TODO()
-    fun getCocktailsWithIngredient(ingredientId: Int):  Flow<List<DbCocktail>>
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMeasurements(measurements: List<DbMeasurement>)
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertIngredientNames(ingredientNames: List<DbIngredientName>)
-
-
     @Transaction
     suspend fun insertCocktailWithMeasurementsAndIngredientNames(cocktail:DbCocktail, measurements:List<DbMeasurement>,ingredientNames: List<DbIngredientName>){
-        val cocktailid = upsert(cocktail)
+        val cocktailId = upsert(cocktail)
         val measurementsWithCocktailId = measurements.map {
-            it.copy(measurementOwnerId = cocktailid)
+            it.copy(measurementOwnerId = cocktailId)
         }
         insertMeasurements(measurementsWithCocktailId)
         val ingredientNamesWithCocktailId = ingredientNames.map {
-            it.copy(ingredientNameOwnerId = cocktailid)
+            it.copy(ingredientNameOwnerId = cocktailId)
         }
         insertIngredientNames(ingredientNamesWithCocktailId)
+        for(ingredient in ingredientNames){
+            linkIngredientToCocktail(ingredient.ingredientNameOwnerId,ingredient.name)
+        }
     }
 
     @Transaction
-    suspend fun insertIngredientWithCocktailId(cocktailId:Int, ingredientId:Int){
-       //insert in cross ref
-        //get ingredient with cocktails
-        
+    suspend fun getCocktailsWithIngredient(ingredientName: String):  List<DbCocktail>{
+        return  getCocktailIdsContainingIngredientName(ingredientName).ingredients
+    }
 
+    @Transaction
+    suspend fun linkIngredientToCocktail(cocktailId:Int, ingredientName:String){
+       insertCrossRef(CocktailIngredientCrossRef(cocktailId, ingredientName))
     }
 }

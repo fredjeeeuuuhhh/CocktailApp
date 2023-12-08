@@ -20,3 +20,4 @@ interface IngredientApiService {
     }
 }
 fun IngredientApiService.getIngredientsAsFlow() = flow { emit(getIngredients())}
+fun IngredientApiService.getIngredientAsFlow(name:String) = flow{ emit(getIngredientByName(name)) }

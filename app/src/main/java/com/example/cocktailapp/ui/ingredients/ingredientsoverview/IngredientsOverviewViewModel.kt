@@ -12,7 +12,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import okio.IOException
 import javax.inject.Inject
 
@@ -26,38 +25,6 @@ class IngredientsOverviewViewModel @Inject constructor(
     lateinit var uiListState: StateFlow<List<Ingredient>>
     init{
         getApiIngredients()
-    }
-
-    fun changeOwnedStatus(ingredient: Ingredient) {
-        try{
-            val item = ingredientRepository.getItem(ingredient.name)
-                .stateIn(
-                    scope = viewModelScope,
-                    started = SharingStarted.WhileSubscribed(5_000L),
-                    initialValue = uiListState.value.first(),
-                )
-            val item2 = ingredientRepository.updateIsOwned(item.value.id!!,!item.value.isOwned!!)
-                .stateIn(
-                    scope = viewModelScope,
-                    started = SharingStarted.WhileSubscribed(5_000L),
-                    initialValue = uiListState.value.first(),
-                )
-            save(item2.value)
-        } catch(e:IOException){
-            e.printStackTrace()
-            ingredientApiState = IngredientApiState.Error
-        }
-    }
-
-    private fun save(ingredient:Ingredient) {
-        viewModelScope.launch {
-            try{
-               ingredientRepository.upsert(ingredient)
-            }catch (e: IOException){
-                e.printStackTrace()
-               ingredientApiState = IngredientApiState.Error
-            }
-        }
     }
 
     private fun getApiIngredients(){

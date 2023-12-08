@@ -31,8 +31,8 @@ class IngredientDetailViewModel @Inject constructor(
     var ingredientDetailApiState: IngredientDetailApiState by mutableStateOf(
         IngredientDetailApiState.Loading)
         private set
+
     lateinit var uiState: StateFlow<Ingredient?>
-    lateinit var uiListState: StateFlow<List<Cocktail>>
     init{
         getIngredientDetails()
     }
@@ -44,12 +44,6 @@ class IngredientDetailViewModel @Inject constructor(
                     scope = viewModelScope,
                     started = SharingStarted.WhileSubscribed(5_000L),
                     initialValue = null
-                )
-            uiListState = cocktailRepository.getCocktailsWithIngredient(uiState.value!!.id!!)
-                .stateIn(
-                    scope = viewModelScope,
-                    started = SharingStarted.WhileSubscribed(5_000L),
-                    initialValue = emptyList()
                 )
             ingredientDetailApiState = IngredientDetailApiState.Success
         } catch(e:IOException){

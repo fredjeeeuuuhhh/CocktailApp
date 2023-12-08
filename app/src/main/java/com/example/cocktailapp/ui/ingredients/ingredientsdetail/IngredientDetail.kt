@@ -33,7 +33,6 @@ fun IngredientDetail(
 ){
     val scrollState = rememberScrollState()
     val state by ingredientDetailViewModel.uiState.collectAsState()
-    val listState by ingredientDetailViewModel.uiListState.collectAsState()
 
     Column(
         modifier = Modifier
@@ -78,7 +77,7 @@ fun IngredientDetail(
                 }
 
                 LazyRow{
-                    items(listState){cocktail->
+                    items( state!!.cocktails!!){cocktail->
                         CocktailRowItem(cocktail = cocktail, onViewDetailClicked =  {onViewDetailClicked(cocktail)})
                     }
                 }

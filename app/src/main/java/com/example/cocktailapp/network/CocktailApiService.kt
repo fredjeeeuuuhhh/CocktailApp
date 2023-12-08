@@ -14,17 +14,7 @@ interface CocktailApiService {
     suspend fun getRandomCocktail():ApiDrinks
     @GET("filter.php")
     suspend fun searchByIngredient(@Query("i") ingredient:String): CocktailApiSearchResult
-    /*
-    Response doesnt contain enough values->
-    would result in getbyid vor every element in result -> EXPENSIVE!
-    maybe better way? -> keep in mind for later
-     */
-    //@GET("filter.php")
-    //suspend fun filterByAlcoholic(@Query("a") filter:String): List<ApiCocktail>
-    //@GET("filter.php")
-    //suspend fun filterByCategory(@Query("c") filter:String): List<ApiCocktail>
-    //@GET("filter.php")
-    //suspend fun filterByGlass(@Query("g") filter:String): List<ApiCocktail>
+
     companion object Factory {
         fun create(retrofit: Retrofit): CocktailApiService = retrofit.create(CocktailApiService::class.java)
     }

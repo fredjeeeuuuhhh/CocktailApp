@@ -34,12 +34,12 @@ interface IngredientDao {
     fun getItem(name: String): Flow<DbIngredient>
 
     /**
-     * Observes list of ingredients.
+     * Observes list of ingredientsNames.
      *
-     * @return allingredients.
+     * @return allingredientNames.
      */
-    @Query("SELECT * from ingredients GROUP BY is_owned")
-    fun getAllItems(): Flow<List<DbIngredient>>
+    @Query("SELECT * from ingredient_names")
+    fun getAllItems(): Flow<List<DbIngredientName>>
 
 
 }

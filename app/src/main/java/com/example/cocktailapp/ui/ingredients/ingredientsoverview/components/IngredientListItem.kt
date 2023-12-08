@@ -1,29 +1,16 @@
 package com.example.cocktailapp.ui.ingredients.ingredientsoverview.components
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircleOutline
-import androidx.compose.material.icons.filled.RemoveCircleOutline
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -34,10 +21,7 @@ import com.example.cocktailapp.model.Ingredient
 fun IngredientListItem(
     ingredient: Ingredient,
     onViewDetailClicked: () -> Unit,
-    onOwnedStatusChanged : () -> Unit
 ){
-    if(ingredient.isOwned==null)ingredient.isOwned=false
-    var isOwned by remember{ mutableStateOf(ingredient.isOwned)}
     Card(
         modifier = Modifier
             .fillMaxSize()
@@ -49,38 +33,6 @@ fun IngredientListItem(
             contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
         ),
     ) {
-        Box(
-            modifier= Modifier
-                .fillMaxWidth()
-                .height(35.dp)
-                .padding(top = 10.dp),
-            contentAlignment = Alignment.CenterEnd,
-        ){
-            if(!isOwned!!){//watch out for this make sure it is set
-                IconButton(onClick = {
-                    isOwned=true
-                    onOwnedStatusChanged()
-                }) {
-                    Icon(
-                        Icons.Filled.AddCircleOutline,
-                        "Add to owned",
-                        modifier = Modifier.size(35.dp),
-                    )
-                }
-            }else{
-                IconButton(onClick = {
-                    isOwned=false
-                    onOwnedStatusChanged()
-                }) {
-                    Icon(
-                        Icons.Filled.RemoveCircleOutline,
-                        "Add to owned",
-                        modifier = Modifier.size(35.dp),
-                    )
-                }
-            }
-
-        }
         AsyncImage(
             model = ingredient.thumbnail,
             contentDescription = ingredient.name,

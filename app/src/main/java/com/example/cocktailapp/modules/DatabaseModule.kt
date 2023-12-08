@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.cocktailapp.data.database.CocktailDao
 import com.example.cocktailapp.data.database.CocktailDatabase
+import com.example.cocktailapp.data.database.IngredientDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,4 +28,6 @@ object DatabaseModule {
 
     @Provides
     fun provideCocktailDao(database: CocktailDatabase): CocktailDao = database.cocktailDao()
+    @Provides
+    fun provideIngredientDao(database: CocktailDatabase): IngredientDao = database.ingredientDao()
 }
