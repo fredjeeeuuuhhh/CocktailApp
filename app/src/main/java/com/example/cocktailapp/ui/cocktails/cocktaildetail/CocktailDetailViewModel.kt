@@ -48,25 +48,9 @@ class CocktailDetailViewModel @Inject constructor(
     }
 
     fun onFavoriteChanged(flag:Boolean) {
-        try{
-           uiState= uiState.value?.let { cocktailRepository.updateCocktail(it.id,flag) }
-               ?.stateIn(
-                   scope = viewModelScope,
-                   started = SharingStarted.WhileSubscribed(5_000L),
-                   initialValue = uiState.value,
-               ) ?: uiState
-            save()
-        }catch (e: IOException){
-            e.printStackTrace()
-            cocktailDetailApiState = CocktailDetailApiState.Error
-        }
-
-    }
-
-    private fun save() {
         viewModelScope.launch {
             try{
-                uiState.value?.let { cocktailRepository.upsertCocktail(it) }
+               uiState.value?.let { cocktailRepository.updateCocktail(it.id,flag) }
             }catch (e: IOException){
                 e.printStackTrace()
                 cocktailDetailApiState = CocktailDetailApiState.Error

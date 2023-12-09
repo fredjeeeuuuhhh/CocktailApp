@@ -22,7 +22,7 @@ interface IngredientDao {
      * @param isOwned status to be updated
      */
     @Query("UPDATE ingredients SET is_owned = :isOwned WHERE ingredientId = :ingredientId")
-    fun updateIsOwned(ingredientId: Int, isOwned: Boolean): Flow<DbIngredient>
+    suspend fun updateIsOwned(ingredientId: Int, isOwned: Boolean)
 
     /**
      * Observes a single ingredient.

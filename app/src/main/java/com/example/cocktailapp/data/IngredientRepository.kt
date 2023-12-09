@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.onEach
 
 interface IngredientRepository {
     suspend fun upsert(item: Ingredient)
-    fun updateIsOwned(ingredientId: Int, isOwned: Boolean): Flow<Ingredient>
+    suspend fun updateIsOwned(ingredientId: Int, isOwned: Boolean)
     fun getAllItems(): Flow<List<Ingredient>>
     fun getItem(name: String): Flow<Ingredient>
     suspend fun refresh()
@@ -35,10 +35,8 @@ class OfflineIngredientsRepository(
        ingredientDao.upsert(item.asDbIngredient())
     }
 
-    override fun updateIsOwned(ingredientId: Int, isOwned: Boolean): Flow<Ingredient> {
-        return ingredientDao.updateIsOwned(ingredientId,isOwned).map {
-            it.asDomainIngredient()
-        }
+    override suspend fun updateIsOwned(ingredientId: Int, isOwned: Boolean) {
+        ingredientDao.updateIsOwned(ingredientId,isOwned)
     }
 
     //only the names
@@ -53,20 +51,20 @@ class OfflineIngredientsRepository(
     }
 
     override fun getItem(name: String): Flow<Ingredient> {
-        return  ingredientDao.getItem(name).map{
-            it.asDomainIngredient(cocktails =  cocktailDao.getCocktailsWithIngredient(name).asDomainCocktails())
-        }.onEach {
-            if(it==null){
+        return ingredientDao.getItem(name).map { ingredientEntity ->
+            ingredientEntity.asDomainIngredient(cocktails = cocktailDao.getCocktailsWithIngredient(name).asDomainCocktails())
+        }.onEach { ingredient ->
+            if (ingredient.id == null) {
                 refreshIngredient(name)
             }
         }
-
     }
+
 
     //inserting into ingredientnames
     override suspend fun refresh() {
-       ingredientApiService.getIngredientsAsFlow().collect {
-              cocktailDao.insertIngredientNames( it.drinks.map { it.strIngredient1 }.asDbIngredientNames())
+       ingredientApiService.getIngredientsAsFlow().collect { apiIngredientNames ->
+           cocktailDao.insertIngredientNames( apiIngredientNames.drinks.map { it.strIngredient1 }.asDbIngredientNames())
        }
     }
 

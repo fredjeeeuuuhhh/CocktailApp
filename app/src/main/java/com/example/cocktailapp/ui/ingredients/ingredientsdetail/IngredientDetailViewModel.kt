@@ -53,24 +53,9 @@ class IngredientDetailViewModel @Inject constructor(
     }
 
     fun onOwnedChanged(flag:Boolean) {
-        try{
-            uiState= uiState.value?.let { ingredientRepository.updateIsOwned(it.id!!,flag) }
-                ?.stateIn(
-                    scope = viewModelScope,
-                    started = SharingStarted.WhileSubscribed(5_000L),
-                    initialValue = uiState.value,
-                ) ?: uiState
-            save()
-        }catch (e: IOException){
-            e.printStackTrace()
-           ingredientDetailApiState = IngredientDetailApiState.Error
-        }
-    }
-
-    private fun save() {
         viewModelScope.launch {
             try{
-                uiState.value?.let { ingredientRepository.upsert(it) }
+                uiState.value?.let { ingredientRepository.updateIsOwned(it.id!!,flag) }
             }catch (e: IOException){
                 e.printStackTrace()
                 ingredientDetailApiState = IngredientDetailApiState.Error

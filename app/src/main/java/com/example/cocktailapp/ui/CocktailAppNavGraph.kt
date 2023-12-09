@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Liquor
 import androidx.compose.material.icons.filled.LocalBar
-import androidx.compose.material.icons.filled.QuestionMark
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -20,7 +19,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.cocktailapp.R
 import com.example.cocktailapp.ui.cocktails.cocktaildetail.CocktailDetail
 import com.example.cocktailapp.ui.cocktails.cocktailoverview.CocktailOverview
-import com.example.cocktailapp.ui.random.RandomSelect
 import com.example.cocktailapp.ui.ingredients.ingredientsdetail.IngredientDetail
 import com.example.cocktailapp.ui.ingredients.ingredientsoverview.IngredientsOverview
 import com.example.cocktailapp.ui.navigation.BottomNavigationBar
@@ -53,16 +51,8 @@ fun CocktailAppNavGraph(
             navActions.navigateToIngredients()
         },
     )
-    val favoritesMenuItem = NavigationMenuItem(
-        route = CocktailDestinations.RANDOMSELECT_ROUTE,
-        title = R.string.title_random,
-        icon = Icons.Filled.QuestionMark,
-        navigationAction = {
-            navActions.navigateToFavorites()
-        },
-    )
 
-    val menuItems = arrayOf(cocktailsMenuItem, ingredientsMenuItem, favoritesMenuItem)
+    val menuItems = arrayOf(cocktailsMenuItem, ingredientsMenuItem)
 
     NavHost(
         navController,
@@ -90,14 +80,6 @@ fun CocktailAppNavGraph(
                 )
             }
         }
-        composable(CocktailDestinations.RANDOMSELECT_ROUTE) {
-            MenuScaffold(
-                currentRoute=currentRoute,menuItems
-            ) {
-                RandomSelect()
-            }
-        }
-
         composable(CocktailDestinations.COCKTAIL_DETAIL_ROUTE) {
             CocktailDetail(
                 onBack = { navController.popBackStack() },

@@ -71,7 +71,7 @@ data class CocktailWithIngredients(
     @Embedded val cocktail: DbCocktail,
     @Relation(
         parentColumn = "cocktailId",
-        entityColumn = "ingredientId",
+        entityColumn = "name",
         associateBy = Junction(CocktailIngredientCrossRef::class)
     )
     val ingredients: List<DbIngredient>,
@@ -79,7 +79,7 @@ data class CocktailWithIngredients(
 data class IngredientWithCocktails(
     @Embedded val cocktail: DbIngredient,
     @Relation(
-        parentColumn = "ingredientId",
+        parentColumn = "name",
         entityColumn = "cocktailId",
         associateBy = Junction(CocktailIngredientCrossRef::class)
     )
@@ -180,6 +180,6 @@ fun Cocktail.asDbCocktail(): DbCocktail {
         typeOfGlass = this.typeOfGlass,
         instructions = this.instructions,
         image = this.image,
-        isFavorite = this.isFavorite!!,
+        isFavorite = this.isFavorite?:false,
     )
 }

@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -23,8 +22,8 @@ interface CocktailDao {
      * @param item the cocktail to be inserted or updated.
      * @return int of upserted cocktail
      */
-    @Upsert
-    suspend fun upsert(item: DbCocktail):Int
+    @Insert(entity = DbCocktail::class,onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(item: DbCocktail):Long
 
     /**
      * Update the favorite status of a cocktail
@@ -33,7 +32,7 @@ interface CocktailDao {
      * @param isFavorite status to be updated
      */
     @Query("UPDATE cocktails SET is_favorite = :isFavorite WHERE cocktailId = :cocktailId")
-    fun updateIsFavorite(cocktailId: Int, isFavorite: Boolean): Flow<DbCocktail>
+    suspend fun updateIsFavorite(cocktailId: Int, isFavorite: Boolean): Int
 
     /**
      * Observes a single cocktail.
@@ -45,12 +44,12 @@ interface CocktailDao {
     fun getItem(id: Int): Flow<DbCocktail>
     @Transaction
     @Query("SELECT * from cocktails WHERE cocktailId = :id")
-    suspend fun getItemM(id: Int): CocktailWithMeasurements
+    fun getItemM(id: Int): CocktailWithMeasurements
     @Transaction
     @Query("SELECT * from cocktails WHERE cocktailId = :id")
-    suspend fun getItemI(id: Int): CocktailWithIngredientNames
+    fun getItemI(id: Int): CocktailWithIngredientNames
     @Transaction
-    @Query("SELECT * from cocktailingredientcrossref WHERE name = :name")
+    @Query("SELECT * from ingredients WHERE name = :name")
     suspend fun getCocktailIdsContainingIngredientName(name: String): IngredientWithCocktails
 
     /**
@@ -58,23 +57,23 @@ interface CocktailDao {
      *
      * @return all cocktails.
      */
-    @Query("SELECT cocktailId, title, image from cocktails GROUP BY is_favorite")
+    @Query("SELECT * from cocktails ORDER BY is_favorite DESC")
     fun getAllItems(): Flow<List<DbCocktail>>
-    @Query("SELECT cocktailId, title, image from cocktails WHERE category = :category GROUP BY is_favorite")
+    @Query("SELECT * from cocktails WHERE category = :category ORDER BY is_favorite DESC")
     fun getAllItemsInCategory(category: String): Flow<List<DbCocktail>>
     @Transaction
     suspend fun insertCocktailWithMeasurementsAndIngredientNames(cocktail:DbCocktail, measurements:List<DbMeasurement>,ingredientNames: List<DbIngredientName>){
-        val cocktailId = upsert(cocktail)
+        val cocktailId = insert(cocktail)
         val measurementsWithCocktailId = measurements.map {
-            it.copy(measurementOwnerId = cocktailId)
+            it.copy(measurementOwnerId = cocktailId.toInt())
         }
         insertMeasurements(measurementsWithCocktailId)
         val ingredientNamesWithCocktailId = ingredientNames.map {
-            it.copy(ingredientNameOwnerId = cocktailId)
+            it.copy(ingredientNameOwnerId = cocktailId.toInt())
         }
         insertIngredientNames(ingredientNamesWithCocktailId)
         for(ingredient in ingredientNames){
-            linkIngredientToCocktail(ingredient.ingredientNameOwnerId,ingredient.name)
+            linkIngredientToCocktail(cocktailId.toInt(),ingredient.name)
         }
     }
 

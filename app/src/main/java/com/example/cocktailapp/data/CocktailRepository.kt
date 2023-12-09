@@ -17,11 +17,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 
 interface CocktailRepository{
-    suspend fun upsertCocktail(cocktail:Cocktail)
-    suspend fun updateCocktail(cocktailId:Int, isFavorite:Boolean):Flow<Cocktail>
+    suspend fun insertCocktail(cocktail:Cocktail)
+    suspend fun updateCocktail(cocktailId:Int, isFavorite:Boolean)
     fun getAllCocktails(): Flow<List<Cocktail>>
-    suspend fun getCocktailById(id: Int): Flow<Cocktail>
-    suspend fun getRandomCocktail(randomId: Int): Flow<Cocktail>
+    fun getCocktailById(id: Int): Flow<Cocktail>
     suspend fun refresh()
 }
 
@@ -29,7 +28,7 @@ class OfflineCocktailsRepository(
     private val cocktailDao: CocktailDao,
     private val cocktailApiService: CocktailApiService
 ): CocktailRepository{
-    override suspend fun upsertCocktail(cocktail: Cocktail) {
+    override suspend fun insertCocktail(cocktail: Cocktail) {
         cocktailDao.insertCocktailWithMeasurementsAndIngredientNames(
             cocktail.asDbCocktail(),
             cocktail.measurements!!.asDbMeasurements(),
@@ -37,13 +36,8 @@ class OfflineCocktailsRepository(
         )
     }
 
-    override suspend fun updateCocktail(cocktailId: Int, isFavorite: Boolean): Flow<Cocktail> {
+    override suspend fun updateCocktail(cocktailId: Int, isFavorite: Boolean) {
         cocktailDao.updateIsFavorite(cocktailId,isFavorite)
-        val m =  cocktailDao.getItemM(cocktailId).measurements.asDomainMeasurements()
-        val i:List<String> = cocktailDao.getItemI(cocktailId).ingredientNames.asDomainIngredientNames()
-        return  cocktailDao.getItem(cocktailId).map {
-            it.asDomainCocktail(m,i)
-        }
     }
 
     override fun getAllCocktails(): Flow<List<Cocktail>> {
@@ -56,29 +50,22 @@ class OfflineCocktailsRepository(
         }
     }
 
-    override suspend fun getCocktailById(id: Int): Flow<Cocktail> {
+    override fun getCocktailById(id: Int): Flow<Cocktail> {
 
-        val m =  cocktailDao.getItemM(id).measurements.asDomainMeasurements()
-        val i:List<String> = cocktailDao.getItemI(id).ingredientNames.asDomainIngredientNames()
+        val measurements =  cocktailDao.getItemM(id).measurements.asDomainMeasurements()
+        val ingredientNames:List<String> = cocktailDao.getItemI(id).ingredientNames.asDomainIngredientNames()
         return  cocktailDao.getItem(id).map {
-            it.asDomainCocktail(m,i)
-        }
-    }
-
-    override suspend fun getRandomCocktail(randomId:Int): Flow<Cocktail> {
-        val m =  cocktailDao.getItemM(randomId).measurements.asDomainMeasurements()
-        val i:List<String> = cocktailDao.getItemI(randomId).ingredientNames.asDomainIngredientNames()
-        return  cocktailDao.getItem(randomId).map {
-            it.asDomainCocktail(m,i)
+            it.asDomainCocktail(measurements,ingredientNames)
         }
     }
 
     override suspend fun refresh() {
-        val abc = "abcdefghijklmnopqrstuvwxyz"
+        //"bcdefghijklmnopqrstuvwxyz"
+        val abc = "a"
         for(char in abc){
             cocktailApiService.getCocktailsAsFlow(char.toString()).collect {
                 for (cocktail in it.drinks.asDomainObjects()){
-                    upsertCocktail(cocktail)
+                    insertCocktail(cocktail)
                 }
             }
         }
