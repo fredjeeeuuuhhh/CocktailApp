@@ -28,6 +28,8 @@ fun CocktailDetail(
 ) {
     val scrollState = rememberScrollState()
     val state by cocktailDetailViewModel.uiState.collectAsState()
+    val measurementsListState by cocktailDetailViewModel.uiMeasurementListState.collectAsState()
+    val ingredientListState by cocktailDetailViewModel.uiIngredientNameListState.collectAsState()
 
     val cocktailDetailApiState = cocktailDetailViewModel.cocktailDetailApiState
     when(cocktailDetailApiState) {
@@ -44,32 +46,32 @@ fun CocktailDetail(
                     .background(MaterialTheme.colorScheme.surface)
                     .verticalScroll(scrollState),
             ) {
-                if(state?.isFavorite==null)state?.isFavorite=false
+                if(state.isFavorite ==null) state.isFavorite =false
 
                 CocktaiilIngredientHeader(
                     onBack,
-                    state!!.title,
-                    state!!.isFavorite!!,
+                    state.title,
+                    state.isFavorite!!,
                 ) { flag -> cocktailDetailViewModel.onFavoriteChanged(flag) }
 
-                state!!.category?.let { CocktailIngredientSpecifics(it) }
-                state!!.alcoholFilter?.let { CocktailIngredientSpecifics(it) }
-                state!!.typeOfGlass?.let { CocktailIngredientSpecifics(it) }
+                state.category?.let { CocktailIngredientSpecifics(it) }
+                state.alcoholFilter?.let { CocktailIngredientSpecifics(it) }
+                state.typeOfGlass?.let { CocktailIngredientSpecifics(it) }
 
                 CocktailDetailSectionSeparartor()
 
                 CocktailDetailSubTitle(R.string.subtitle_ingredients,color=MaterialTheme.colorScheme.secondary)
 
-                state!!.ingredientNames?.let{
+                ingredientListState.let{
                     for ((i, ingredient) in it.withIndex()) {
-                        state!!.measurements?.let {  CocktailDetailIngredientRow(ingredient, if(i<it.size) it[i] else "") }
+                        measurementsListState.let {  CocktailDetailIngredientRow(ingredient, if(i<it.size) it[i] else "") }
                     }
                 }
 
                 CocktailDetailSectionSeparartor()
 
                 CocktailDetailSubTitle(R.string.subtitle_instructions,color= MaterialTheme.colorScheme.secondary)
-                state!!.instructions?.let{
+                state.instructions?.let{
                     for ((i, instruction) in it.split(". ").withIndex()) {
                         CocktailIngredientInstructionRow(i,instruction)
                     }

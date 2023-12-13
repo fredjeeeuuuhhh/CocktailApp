@@ -3,7 +3,6 @@ package com.example.cocktailapp.data.database
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.cocktailapp.model.Cocktail
 import com.example.cocktailapp.model.Ingredient
 
 @Entity(tableName = "ingredients")
@@ -22,17 +21,16 @@ data class DbIngredient(
     val isOwned: Boolean = false,
 )
 
-fun DbIngredient.asDomainIngredient(cocktails :List<Cocktail> = emptyList()): Ingredient {
+fun DbIngredient?.asDomainIngredient(): Ingredient {
     return Ingredient(
-        id = this.ingredientId,
-        name = this.name,
-        description = this.description,
-        type = this.type,
-        containsAlcohol = this.containsAlcohol,
-        alcoholPercentage = this.alcoholPercentage,
-        thumbnail = this.thumbnail,
-        isOwned = this.isOwned,
-        cocktails = cocktails,
+        id = this?.ingredientId,
+        name = this?.name ?: "test",
+        description = this?.description,
+        type = this?.type,
+        containsAlcohol = this?.containsAlcohol,
+        alcoholPercentage = this?.alcoholPercentage,
+        thumbnail = this?.thumbnail ?: "test",
+        isOwned = this?.isOwned,
     )
 }
 
@@ -45,7 +43,7 @@ fun Ingredient.asDbIngredient(): DbIngredient {
         containsAlcohol = this.containsAlcohol,
         alcoholPercentage = this.alcoholPercentage,
         thumbnail = this.thumbnail,
-        isOwned = this.isOwned!!,
+        isOwned = this.isOwned?:false,
     )
 }
 

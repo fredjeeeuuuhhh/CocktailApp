@@ -5,7 +5,11 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import com.example.cocktailapp.model.Cocktail
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
 @Dao
 interface CocktailDao {
@@ -44,13 +48,11 @@ interface CocktailDao {
     fun getItem(id: Int): Flow<DbCocktail>
     @Transaction
     @Query("SELECT * from cocktails WHERE cocktailId = :id")
-    fun getItemM(id: Int): CocktailWithMeasurements
+    suspend fun getItemM(id: Int): CocktailWithMeasurements
     @Transaction
     @Query("SELECT * from cocktails WHERE cocktailId = :id")
-    fun getItemI(id: Int): CocktailWithIngredientNames
-    @Transaction
-    @Query("SELECT * from ingredients WHERE name = :name")
-    suspend fun getCocktailIdsContainingIngredientName(name: String): IngredientWithCocktails
+    suspend fun getItemI(id: Int): CocktailWithIngredientNames
+
 
     /**
      * Observes list of cocktails.
@@ -77,13 +79,26 @@ interface CocktailDao {
         }
     }
 
-    @Transaction
-    suspend fun getCocktailsWithIngredient(ingredientName: String):  List<DbCocktail>{
-        return  getCocktailIdsContainingIngredientName(ingredientName).ingredients
-    }
+
+
+
 
     @Transaction
     suspend fun linkIngredientToCocktail(cocktailId:Int, ingredientName:String){
        insertCrossRef(CocktailIngredientCrossRef(cocktailId, ingredientName))
+    }
+
+    @Query("SELECT * from cocktailingredientcrossref  WHERE name = :ingredientName")
+    suspend fun getCocktailsWithIngredient(ingredientName: String):  List<CocktailIngredientCrossRef>
+    @Query("SELECT * from cocktails  WHERE cocktailId = :id")
+    suspend fun getCocktailById(id: Int): DbCocktail
+    @Transaction
+    suspend fun getItemsCocktails(name: String): List<DbCocktail> {
+        val cocktails = emptyList<DbCocktail>()
+        val list = getCocktailsWithIngredient(name)
+        for(id in list.map { it.cocktailId }) {
+            cocktails.plus(getCocktailById(id))
+        }
+        return cocktails
     }
 }

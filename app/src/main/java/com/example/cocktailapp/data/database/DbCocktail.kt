@@ -77,13 +77,13 @@ data class CocktailWithIngredients(
     val ingredients: List<DbIngredient>,
 )
 data class IngredientWithCocktails(
-    @Embedded val cocktail: DbIngredient,
+    @Embedded val ingredient: DbIngredient,
     @Relation(
         parentColumn = "name",
         entityColumn = "cocktailId",
         associateBy = Junction(CocktailIngredientCrossRef::class)
     )
-    val ingredients: List<DbCocktail>,
+    val cocktails: List<DbCocktail>,
 )
 fun List<DbIngredientName>.asDomainIngredientsNamesOnly():List<Ingredient>{
     return this.map { Ingredient(
@@ -137,7 +137,7 @@ fun List<DbIngredientName>.asDomainIngredientNames(): List<String> {
     return list.invoke()
 }
 
-fun DbCocktail.asDomainCocktail(measurements: List<String>,ingredientNames: List<String>): Cocktail {
+fun DbCocktail.asDomainCocktail(): Cocktail {
     return Cocktail(
         id = this.cocktailId,
         title = this.title,
@@ -147,8 +147,8 @@ fun DbCocktail.asDomainCocktail(measurements: List<String>,ingredientNames: List
         instructions = this.instructions,
         image = this.image,
         ingredients = null,
-        ingredientNames = ingredientNames,
-        measurements = measurements,
+        ingredientNames = emptyList(),
+        measurements = emptyList(),
         isFavorite = this.isFavorite,
     )
 }

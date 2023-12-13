@@ -5,12 +5,16 @@
     <string name="title_random">Random</string>
     <string name="subtitle_ingredients">Ingredients</string>
     <string name="subtitle_instructions">Instructions</string>
-    <string name="label_all">All</string>
     <string name="no_cocktails_all">No cocktails to display</string>
-    <string name="chip_label_favorites">Favorites</string>
-    <string name="chip_label_category">Category</string>
-    <string name="chip_label_glass">Glass</string>
-    <string name="chip_label_alcoholic_filter">Alcoholic filter</string>
-
-
+    <string name="cat_ordinary_drink">Ordinary Drink</string>
+    <string name="cat_cocktail">Cocktail</string>
+    <string name="cat_shake">Shake</string>
+    <string name="cat_other">Other / Unknown</string>
+    <string name="cat_cocoa">Cocoa</string>
+    <string name="cat_shot">Shot</string>
+    <string name="cat_coffee_tea">Coffee / Tea</string>
+    <string name="cat_liqueur">Homemade Liqueur"</string>
+    <string name="cat_punch">Punch / Party Drink</string>
+    <string name="cat_beer">Beer</string>
+    <string name="cat_soft_drink">Soft drink</string>
 </resources>

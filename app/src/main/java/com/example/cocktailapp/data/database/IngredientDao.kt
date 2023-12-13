@@ -38,7 +38,7 @@ interface IngredientDao {
      *
      * @return allingredientNames.
      */
-    @Query("SELECT * from ingredient_names")
+    @Query("SELECT DISTINCT * from ingredient_names ")
     fun getAllItems(): Flow<List<DbIngredientName>>
 
 

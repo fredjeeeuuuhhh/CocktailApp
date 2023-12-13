@@ -33,7 +33,7 @@ fun IngredientDetail(
 ){
     val scrollState = rememberScrollState()
     val state by ingredientDetailViewModel.uiState.collectAsState()
-
+    val listState = ingredientDetailViewModel.uiListState
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -50,21 +50,21 @@ fun IngredientDetail(
                 Text("error while loading data from ingredient")
             }
             is IngredientDetailApiState.Success -> {
-                if(state!!.isOwned==null)state!!.isOwned = false
-                state!!.isOwned?.let {
+                if(state.isOwned==null) state.isOwned = false
+                state.isOwned?.let {
                     IngredientHeader(
                         onBack,
-                        state!!.name,
+                        state.name,
                         it
                     ) { flag -> ingredientDetailViewModel.onOwnedChanged(flag) }
                 }
-                state!!.containsAlcohol?.let { IngredientSpecifics("Contains alcohol: "+ if (it) "Yes" else "No") }
-                state!!.type?.let { IngredientSpecifics("Type of alcohol: $it") }
-                state!!.alcoholPercentage?.let { IngredientSpecifics("Alcohol percentage: $it%") }
+                state.containsAlcohol?.let { IngredientSpecifics("Contains alcohol: "+ if (it) "Yes" else "No") }
+                state.type?.let { IngredientSpecifics("Type of alcohol: $it") }
+                state.alcoholPercentage?.let { IngredientSpecifics("Alcohol percentage: $it%") }
 
                 CocktailDetailSectionSeparartor()
 
-                state!!.description?.let {
+                state.description?.let {
                     Text(
                         text = it,
                         style = MaterialTheme.typography.bodyMedium,
@@ -77,7 +77,7 @@ fun IngredientDetail(
                 }
 
                 LazyRow{
-                    items( state!!.cocktails!!){cocktail->
+                    items(listState){cocktail->
                         CocktailRowItem(cocktail = cocktail, onViewDetailClicked =  {onViewDetailClicked(cocktail)})
                     }
                 }

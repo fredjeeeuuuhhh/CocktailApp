@@ -1,5 +1,6 @@
 package com.example.cocktailapp.ui.cocktails.cocktailoverview
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -14,7 +15,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
 
@@ -39,6 +43,19 @@ class CocktailOverviewViewModel @Inject constructor(
 
     fun setFilters(filters: List<String>) {
         savedStateHandle[COCKTAIL_FILTER_SAVED_STATE_KEY] = filters.toTypedArray()
+
+        try{
+            uiListState =  cocktailRepository.getCocktailsByCategory(filters)
+                .stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(5_000L),
+                    initialValue = emptyList()
+                )
+            cocktailApiState = CocktailApiState.Success
+        }catch (e: IOException){
+            e.printStackTrace()
+            cocktailApiState = CocktailApiState.Error
+        }
     }
 
     private fun getRepoCocktails() {

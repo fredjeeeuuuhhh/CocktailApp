@@ -1,5 +1,6 @@
 package com.example.cocktailapp.ui.ingredients.ingredientsdetail
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -15,6 +16,7 @@ import com.example.cocktailapp.network.IngredientDetailApiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import okio.IOException
@@ -32,9 +34,31 @@ class IngredientDetailViewModel @Inject constructor(
         IngredientDetailApiState.Loading)
         private set
 
-    lateinit var uiState: StateFlow<Ingredient?>
+    lateinit var uiState: StateFlow<Ingredient>
+    //lateinit var uiListState: StateFlow<List<Cocktail>>
+    var uiListState: List<Cocktail> by mutableStateOf(
+        emptyList()
+    )
+        private set
     init{
         getIngredientDetails()
+        getIngredientsCocktails()
+    }
+
+    private fun getIngredientsCocktails() {
+        viewModelScope.launch {
+            try{
+                uiListState = ingredientRepository.getCocktailsForIngredient(ingredientName)
+                for(c in uiListState){
+                    Log.d("tag",c.toString())
+                }
+                ingredientDetailApiState = IngredientDetailApiState.Success
+            } catch(e:IOException){
+                e.printStackTrace()
+                ingredientDetailApiState = IngredientDetailApiState.Error
+            }
+        }
+
     }
 
     private fun getIngredientDetails() {
@@ -43,7 +67,7 @@ class IngredientDetailViewModel @Inject constructor(
                 .stateIn(
                     scope = viewModelScope,
                     started = SharingStarted.WhileSubscribed(5_000L),
-                    initialValue = null
+                    initialValue = Ingredient(0,"","","",null,"","",null)
                 )
             ingredientDetailApiState = IngredientDetailApiState.Success
         } catch(e:IOException){
@@ -55,7 +79,7 @@ class IngredientDetailViewModel @Inject constructor(
     fun onOwnedChanged(flag:Boolean) {
         viewModelScope.launch {
             try{
-                uiState.value?.let { ingredientRepository.updateIsOwned(it.id!!,flag) }
+                uiState.value.let { ingredientRepository.updateIsOwned(it.id!!,flag) }
             }catch (e: IOException){
                 e.printStackTrace()
                 ingredientDetailApiState = IngredientDetailApiState.Error

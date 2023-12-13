@@ -24,12 +24,45 @@ class CocktailDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val cocktailId: String = savedStateHandle[CocktailDestinationsArgs.COCKTAIL_ID_ARG]!!
-
     var cocktailDetailApiState: CocktailDetailApiState by  mutableStateOf( CocktailDetailApiState.Loading)
         private set
-    lateinit var uiState: StateFlow<Cocktail?>
+    lateinit var uiState: StateFlow<Cocktail>
+    lateinit var uiMeasurementListState: StateFlow<List<String>>
+    lateinit var uiIngredientNameListState: StateFlow<List<String>>
     init{
         getApiCocktail()
+        getMeasurements()
+        getIngredientNames()
+    }
+
+    private fun getIngredientNames() {
+        try{
+            uiIngredientNameListState = cocktailRepository.getCocktailIngredientNames(cocktailId.toInt())
+                .stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(5_000L),
+                    initialValue = emptyList(),
+                )
+            cocktailDetailApiState = CocktailDetailApiState.Success
+        }catch(e: IOException){
+            e.printStackTrace()
+            cocktailDetailApiState = CocktailDetailApiState.Error
+        }
+    }
+
+    private fun getMeasurements() {
+        try{
+            uiMeasurementListState = cocktailRepository.getCocktailMeasurements(cocktailId.toInt())
+                .stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(5_000L),
+                    initialValue = emptyList(),
+                )
+            cocktailDetailApiState = CocktailDetailApiState.Success
+        }catch(e: IOException){
+            e.printStackTrace()
+            cocktailDetailApiState = CocktailDetailApiState.Error
+        }
     }
 
     private fun getApiCocktail() {
@@ -38,10 +71,10 @@ class CocktailDetailViewModel @Inject constructor(
                 .stateIn(
                     scope = viewModelScope,
                     started = SharingStarted.WhileSubscribed(5_000L),
-                    initialValue = null,
+                    initialValue = Cocktail(1,"","","","","","", emptyList(),emptyList()),
                 )
             cocktailDetailApiState = CocktailDetailApiState.Success
-        } catch (e: IOException){
+        }catch(e: IOException){
             e.printStackTrace()
             cocktailDetailApiState = CocktailDetailApiState.Error
         }
@@ -50,7 +83,7 @@ class CocktailDetailViewModel @Inject constructor(
     fun onFavoriteChanged(flag:Boolean) {
         viewModelScope.launch {
             try{
-               uiState.value?.let { cocktailRepository.updateCocktail(it.id,flag) }
+                uiState.value.let { cocktailRepository.updateCocktail(it.id,flag) }
             }catch (e: IOException){
                 e.printStackTrace()
                 cocktailDetailApiState = CocktailDetailApiState.Error
