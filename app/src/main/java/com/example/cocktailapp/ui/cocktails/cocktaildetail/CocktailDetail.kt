@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.cocktailapp.R
 import com.example.cocktailapp.ui.CocktailDetailApiState
 import com.example.cocktailapp.ui.cocktails.cocktaildetail.components.CocktaiilIngredientHeader
@@ -24,7 +24,7 @@ import com.example.cocktailapp.ui.cocktails.cocktaildetail.components.CocktailIn
 @Composable
 fun CocktailDetail(
     onBack: () -> Unit,
-    cocktailDetailViewModel: CocktailDetailViewModel = hiltViewModel()
+    cocktailDetailViewModel: CocktailDetailViewModel = viewModel(factory = CocktailDetailViewModel.Factory)
 ) {
     val scrollState = rememberScrollState()
     val state by cocktailDetailViewModel.uiState.collectAsState()

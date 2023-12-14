@@ -4,7 +4,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.cocktailapp.model.Ingredient
 import com.example.cocktailapp.ui.IngredientApiState
 import com.example.cocktailapp.ui.ingredients.ingredientsoverview.components.Ingredients
@@ -12,7 +12,7 @@ import com.example.cocktailapp.ui.ingredients.ingredientsoverview.components.Ing
 
 @Composable
 fun IngredientsOverview(
-    ingredientOverviewViewModel: IngredientsOverviewViewModel = hiltViewModel(),
+    ingredientOverviewViewModel: IngredientsOverviewViewModel = viewModel(factory = IngredientsOverviewViewModel.Factory),
     onViewDetailClicked: (Ingredient) -> Unit,
 ) {
     val ingredientOverviewState by ingredientOverviewViewModel.uiState.collectAsState()

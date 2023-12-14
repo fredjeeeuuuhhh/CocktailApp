@@ -1,6 +1,5 @@
 package com.example.cocktailapp.network
 
-import retrofit2.Retrofit
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -24,8 +23,6 @@ interface CocktailApiService {
     //suspend fun filterByCategory(@Query("c") filter:String): List<ApiCocktail>
     //@GET("filter.php")
     //suspend fun filterByGlass(@Query("g") filter:String): List<ApiCocktail>
-    companion object Factory {
-        fun create(retrofit: Retrofit): CocktailApiService = retrofit.create(CocktailApiService::class.java)
-    }
+
 }
 

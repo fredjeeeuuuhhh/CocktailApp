@@ -11,7 +11,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.cocktailapp.model.Cocktail
 import com.example.cocktailapp.ui.CocktailApiState
 import com.example.cocktailapp.ui.cocktails.cocktailoverview.components.ChipSection
@@ -19,7 +19,7 @@ import com.example.cocktailapp.ui.cocktails.cocktailoverview.components.Cocktail
 
 @Composable
 fun CocktailOverview(
-    cocktailOverviewViewModel: CocktailOverviewViewModel = hiltViewModel(),
+    cocktailOverviewViewModel: CocktailOverviewViewModel = viewModel(factory = CocktailOverviewViewModel.Factory),
     onViewDetailClicked: (Cocktail) -> Unit,
 ) {
     val cocktailOverviewState by cocktailOverviewViewModel.uiState.collectAsState()

@@ -1,11 +1,13 @@
 package com.example.cocktailapp
 
 import android.app.Application
-import dagger.hilt.android.HiltAndroidApp
+import com.example.cocktailapp.data.AppContainer
+import com.example.cocktailapp.data.DefaultAppContainer
 
-@HiltAndroidApp
 class CocktailApplication : Application() {
+    lateinit var container: AppContainer
     override fun onCreate() {
         super.onCreate()
+        container = DefaultAppContainer(context = applicationContext)
     }
 }

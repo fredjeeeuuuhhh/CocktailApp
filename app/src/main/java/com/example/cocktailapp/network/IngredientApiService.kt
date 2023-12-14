@@ -1,6 +1,5 @@
 package com.example.cocktailapp.network
 
-import retrofit2.Retrofit
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -14,8 +13,6 @@ interface IngredientApiService {
 
     @GET("search.php")
     suspend fun getIngredientByName(@Query("i") name:String):ApiIngredientLookupResult
-    companion object Factory {
-        fun create(retrofit: Retrofit): IngredientApiService = retrofit.create(IngredientApiService::class.java)
-    }
+
 }
 

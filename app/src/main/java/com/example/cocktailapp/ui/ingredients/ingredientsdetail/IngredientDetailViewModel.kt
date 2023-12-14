@@ -5,28 +5,27 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.cocktailapp.CocktailApplication
 import com.example.cocktailapp.data.CocktailRepository
 import com.example.cocktailapp.data.CocktailSampler
 import com.example.cocktailapp.data.IngredientRepository
 import com.example.cocktailapp.data.IngredientSampler
-import com.example.cocktailapp.model.Cocktail
 import com.example.cocktailapp.model.Ingredient
-import com.example.cocktailapp.network.asDomainObject
-import com.example.cocktailapp.network.asDomainObjectsFromSearch
 import com.example.cocktailapp.ui.CocktailDestinationsArgs
 import com.example.cocktailapp.ui.IngredientDetailApiState
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import okio.IOException
-import javax.inject.Inject
 
-@HiltViewModel
-class IngredientDetailViewModel @Inject constructor(
+class IngredientDetailViewModel(
     private val cocktailRepository: CocktailRepository,
     private val ingredientRepository: IngredientRepository,
     savedStateHandle: SavedStateHandle,
@@ -73,5 +72,22 @@ class IngredientDetailViewModel @Inject constructor(
 
     fun onOwnedChanged(flag:Boolean) {
         _uiState.value.currentIngredient.isOwned=flag
+    }
+
+    // object to tell the android framework how to handle the parameter of the viewmodel
+    companion object {
+        private var Instance: IngredientDetailViewModel? = null
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                if (Instance == null) {
+                    val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as CocktailApplication)
+                    val ingredientRepository = application.container.ingredientRepository
+                    val cocktailRepository = application.container.cocktailRepository
+                    val savedStateHandle = createSavedStateHandle()
+                    Instance = IngredientDetailViewModel(ingredientRepository = ingredientRepository, cocktailRepository = cocktailRepository, savedStateHandle = savedStateHandle)
+                }
+                Instance!!
+            }
+        }
     }
 }
