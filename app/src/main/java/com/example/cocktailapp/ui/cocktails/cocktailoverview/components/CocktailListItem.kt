@@ -11,6 +11,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.cocktailapp.model.Cocktail
@@ -25,6 +26,7 @@ fun CocktailListItem(
         modifier = Modifier
             .fillMaxSize()
             .padding(10.dp)
+            .testTag("CocktailCard")
             .clickable { onViewDetailClicked(cocktail) },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
