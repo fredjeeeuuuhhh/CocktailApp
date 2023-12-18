@@ -12,18 +12,15 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.cocktailapp.CocktailApplication
 import com.example.cocktailapp.data.CocktailRepository
-import com.example.cocktailapp.data.CocktailSampler
 import com.example.cocktailapp.model.Cocktail
 import com.example.cocktailapp.ui.CocktailDestinationsArgs
 import com.example.cocktailapp.ui.CocktailDetailApiState
-import com.example.cocktailapp.ui.cocktails.cocktailoverview.CocktailOverviewViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import okio.IOException
-
 
 class CocktailDetailViewModel (
     private val cocktailRepository: CocktailRepository,
@@ -31,9 +28,7 @@ class CocktailDetailViewModel (
 ) : ViewModel() {
     private val cocktailId: String = savedStateHandle[CocktailDestinationsArgs.COCKTAIL_ID_ARG]!!
 
-    private val _uiState = MutableStateFlow(
-        CocktailDetailState(CocktailSampler.cocktails.find { cocktail: Cocktail -> cocktail.id == 15300 }!!),
-    )
+    private val _uiState = MutableStateFlow( CocktailDetailState(null) )
     val uiState: StateFlow<CocktailDetailState> = _uiState.asStateFlow()
 
     var cocktailDetailApiState: CocktailDetailApiState by  mutableStateOf( CocktailDetailApiState.Loading)
@@ -45,19 +40,20 @@ class CocktailDetailViewModel (
 
     private fun getApiCocktail() {
         viewModelScope.launch {
-            cocktailDetailApiState = try {
-                val result = cocktailRepository.getCocktailById(cocktailId.toInt())
-                _uiState.update { it.copy(currentCocktail = result) }
-                CocktailDetailApiState.Succes(result)
-            }catch (e: IOException){
-                e.printStackTrace()
-                CocktailDetailApiState.Error
-            }
+            cocktailRepository.getCocktailById(cocktailId.toInt())
+                .catch {exception->
+                    exception.printStackTrace()
+                    cocktailDetailApiState =   CocktailDetailApiState.Error
+                }
+                .collect{cocktail->
+                    cocktailDetailApiState = CocktailDetailApiState.Succes(cocktail)
+                    _uiState.update { it.copy(currentCocktail = cocktail) }
+                }
         }
     }
 
     fun onFavoriteChanged(flag:Boolean) {
-        _uiState.value.currentCocktail.isFavorite=flag
+        _uiState.value.currentCocktail!!.isFavorite=flag
     }
 
     companion object {

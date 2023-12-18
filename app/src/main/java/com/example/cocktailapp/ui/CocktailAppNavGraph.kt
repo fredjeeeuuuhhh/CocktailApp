@@ -18,7 +18,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.cocktailapp.R
 import com.example.cocktailapp.ui.cocktails.cocktaildetail.CocktailDetail
-import com.example.cocktailapp.ui.cocktails.cocktailoverview.CocktailOverview
+import com.example.cocktailapp.ui.cocktails.cocktailoverview.CocktailScreen
 import com.example.cocktailapp.ui.ingredients.ingredientsdetail.IngredientDetail
 import com.example.cocktailapp.ui.ingredients.ingredientsoverview.IngredientsOverview
 import com.example.cocktailapp.ui.navigation.BottomNavigationBar
@@ -61,7 +61,7 @@ fun CocktailAppNavGraph(
             MenuScaffold(
                 currentRoute=currentRoute,menuItems
             ) {
-                CocktailOverview(
+                CocktailScreen(
                     onViewDetailClicked = { cocktail -> navActions.navigateToCocktailDetail(cocktail.id) },
                 )
             }

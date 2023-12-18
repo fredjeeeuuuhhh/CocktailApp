@@ -18,5 +18,6 @@
     <string name="cat_punch">Punch / Party Drink</string>
     <string name="cat_beer">Beer</string>
     <string name="cat_soft_drink">Soft drink</string>
+    <string name="filter_all">Alle</string>
 
 </resources>

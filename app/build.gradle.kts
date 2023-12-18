@@ -76,7 +76,8 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
     //coil for image caching
     implementation("io.coil-kt:coil-compose:2.5.0")
-    
+    implementation("eu.bambooapps:compose-material3-pullrefresh:1.0.0")
+
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     

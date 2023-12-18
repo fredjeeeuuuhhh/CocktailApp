@@ -12,18 +12,17 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.cocktailapp.CocktailApplication
 import com.example.cocktailapp.data.CocktailRepository
-import com.example.cocktailapp.data.CocktailSampler
 import com.example.cocktailapp.data.IngredientRepository
-import com.example.cocktailapp.data.IngredientSampler
-import com.example.cocktailapp.model.Ingredient
 import com.example.cocktailapp.ui.CocktailDestinationsArgs
 import com.example.cocktailapp.ui.IngredientDetailApiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import okio.IOException
+
 
 class IngredientDetailViewModel(
     private val cocktailRepository: CocktailRepository,
@@ -32,12 +31,7 @@ class IngredientDetailViewModel(
 ): ViewModel() {
     private val ingredientName:String = savedStateHandle[CocktailDestinationsArgs.INGREDIENT_NAME_ARG]!!
 
-    private val _uiState = MutableStateFlow(
-        IngredientDetailState(
-            IngredientSampler.ingredients.find { ingredient:Ingredient -> ingredient.id==1 }!!,
-            CocktailSampler.cocktails//all cocktails for now, has to be api call
-        )
-    )
+    private val _uiState = MutableStateFlow(IngredientDetailState(null,null))
     val uiState: StateFlow<IngredientDetailState> = _uiState.asStateFlow()
     var ingredientDetailApiState: IngredientDetailApiState by mutableStateOf(IngredientDetailApiState.Loading)
         private set
@@ -48,30 +42,25 @@ class IngredientDetailViewModel(
 
     private fun getIngredientDetails() {
         viewModelScope.launch {
-            ingredientDetailApiState = try{
-                val ingredientResult = ingredientRepository.getIngredientByName(ingredientName)
-                val cocktailResult = cocktailRepository.searchByIngredient(ingredientName)
-                _uiState.update {
-                    it.copy(
-                        currentIngredient = ingredientResult,
-                        cocktailsContainingIngredient = cocktailResult
+            ingredientRepository.getIngredientByName(ingredientName)
+                .combine(cocktailRepository.searchByIngredient(ingredientName)){
+                    ingredients,cocktails ->
+                    ingredientDetailApiState = IngredientDetailApiState.Succes(
+                        ingredients,
+                        cocktails,
                     )
+                    _uiState.update { it.copy(currentIngredient =  ingredients, cocktailsContainingIngredient = cocktails) }
                 }
-                IngredientDetailApiState.Succes(
-                    ingredientResult,
-                    cocktailsContainingIngredient = cocktailResult
-                )
-            }catch(e: IOException){
-                e.printStackTrace()
-                IngredientDetailApiState.Error
-            }
+                .catch {exception->
+                    exception.printStackTrace()
+                    ingredientDetailApiState = IngredientDetailApiState.Error
+                }
+                .collect{}
+
         }
     }
-
-
-
     fun onOwnedChanged(flag:Boolean) {
-        _uiState.value.currentIngredient.isOwned=flag
+        _uiState.value.currentIngredient!!.isOwned=flag
     }
 
     // object to tell the android framework how to handle the parameter of the viewmodel
