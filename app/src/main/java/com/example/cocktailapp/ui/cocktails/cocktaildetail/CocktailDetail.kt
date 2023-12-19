@@ -13,7 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.cocktailapp.R
-import com.example.cocktailapp.network.CocktailDetailApiState
+import com.example.cocktailapp.ui.CocktailDetailApiState
 import com.example.cocktailapp.ui.cocktails.cocktaildetail.components.CocktaiilIngredientHeader
 import com.example.cocktailapp.ui.cocktails.cocktaildetail.components.CocktailDetailIngredientRow
 import com.example.cocktailapp.ui.cocktails.cocktaildetail.components.CocktailDetailSectionSeparartor
@@ -28,8 +28,6 @@ fun CocktailDetail(
 ) {
     val scrollState = rememberScrollState()
     val state by cocktailDetailViewModel.uiState.collectAsState()
-    val measurementsListState by cocktailDetailViewModel.uiMeasurementListState.collectAsState()
-    val ingredientListState by cocktailDetailViewModel.uiIngredientNameListState.collectAsState()
 
     val cocktailDetailApiState = cocktailDetailViewModel.cocktailDetailApiState
     when(cocktailDetailApiState) {
@@ -39,39 +37,39 @@ fun CocktailDetail(
         is CocktailDetailApiState.Error -> {
             Text("Something went wrong while loading cocktail details from api")
         }
-        is CocktailDetailApiState.Success -> {
+        is CocktailDetailApiState.Succes -> {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(MaterialTheme.colorScheme.surface)
                     .verticalScroll(scrollState),
             ) {
-                if(state.isFavorite ==null) state.isFavorite =false
+                if(cocktailDetailApiState.cocktail.isFavorite==null)cocktailDetailApiState.cocktail.isFavorite=false
 
                 CocktaiilIngredientHeader(
                     onBack,
-                    state.title,
-                    state.isFavorite!!,
+                    cocktailDetailApiState.cocktail.title,
+                    cocktailDetailApiState.cocktail.isFavorite!!,
                 ) { flag -> cocktailDetailViewModel.onFavoriteChanged(flag) }
 
-                state.category?.let { CocktailIngredientSpecifics(it) }
-                state.alcoholFilter?.let { CocktailIngredientSpecifics(it) }
-                state.typeOfGlass?.let { CocktailIngredientSpecifics(it) }
+                cocktailDetailApiState.cocktail.category?.let { CocktailIngredientSpecifics(it) }
+                cocktailDetailApiState.cocktail.alcoholFilter?.let { CocktailIngredientSpecifics(it) }
+                cocktailDetailApiState.cocktail.typeOfGlass?.let { CocktailIngredientSpecifics(it) }
 
                 CocktailDetailSectionSeparartor()
 
                 CocktailDetailSubTitle(R.string.subtitle_ingredients,color=MaterialTheme.colorScheme.secondary)
 
-                ingredientListState.let{
+                cocktailDetailApiState.cocktail.ingredientNames?.let{
                     for ((i, ingredient) in it.withIndex()) {
-                        measurementsListState.let {  CocktailDetailIngredientRow(ingredient, if(i<it.size) it[i] else "") }
+                        cocktailDetailApiState.cocktail.measurements?.let {  CocktailDetailIngredientRow(ingredient, if(i<it.size) it[i] else "") }
                     }
                 }
 
                 CocktailDetailSectionSeparartor()
 
                 CocktailDetailSubTitle(R.string.subtitle_instructions,color= MaterialTheme.colorScheme.secondary)
-                state.instructions?.let{
+                cocktailDetailApiState.cocktail.instructions?.let{
                     for ((i, instruction) in it.split(". ").withIndex()) {
                         CocktailIngredientInstructionRow(i,instruction)
                     }

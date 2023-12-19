@@ -8,11 +8,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.cocktailapp.model.Ingredient
+import com.example.cocktailapp.ui.ingredients.ingredientsoverview.components.IngredientListItem
 
 @Composable
 fun Ingredients(
     ingredients: List<Ingredient>,
     onViewDetailClicked: (Ingredient) -> Unit,
+    onOwnedStatusChanged: (Ingredient) -> Unit,
 ){
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
@@ -22,6 +24,7 @@ fun Ingredients(
             IngredientListItem(
                 ingredient = ingredient,
                 onViewDetailClicked = { onViewDetailClicked(ingredient) },
+                onOwnedStatusChanged = { onOwnedStatusChanged(ingredient) }
             )
         }
     }
