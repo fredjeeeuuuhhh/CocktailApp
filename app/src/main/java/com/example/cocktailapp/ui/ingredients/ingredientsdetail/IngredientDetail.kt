@@ -27,10 +27,10 @@ import com.example.cocktailapp.ui.ingredients.ingredientsdetail.components.Ingre
 
 @Composable
 fun IngredientDetail(
-    onBack: ()-> Unit,
+    onBack: () -> Unit,
     ingredientDetailViewModel: IngredientDetailViewModel = viewModel(factory = IngredientDetailViewModel.Factory),
     onViewDetailClicked: (Cocktail) -> Unit,
-){
+) {
     val scrollState = rememberScrollState()
     val state by ingredientDetailViewModel.uiState.collectAsState()
 
@@ -40,9 +40,9 @@ fun IngredientDetail(
             .padding(horizontal = 10.dp)
             .background(MaterialTheme.colorScheme.surface)
             .verticalScroll(scrollState),
-    ){
+    ) {
         val ingredientDetailApiState: IngredientDetailApiState = ingredientDetailViewModel.ingredientDetailApiState
-        when(ingredientDetailApiState){
+        when (ingredientDetailApiState) {
             is IngredientDetailApiState.Loading -> {
                 Text("loading data from ingredient")
             }
@@ -50,15 +50,15 @@ fun IngredientDetail(
                 Text("error while loading data from ingredient")
             }
             is IngredientDetailApiState.Succes -> {
-                if(ingredientDetailApiState.ingredient.isOwned==null)ingredientDetailApiState.ingredient.isOwned=false
+                if (ingredientDetailApiState.ingredient.isOwned == null)ingredientDetailApiState.ingredient.isOwned = false
                 ingredientDetailApiState.ingredient.isOwned?.let {
                     IngredientHeader(
                         onBack,
                         ingredientDetailApiState.ingredient.name,
-                        it
+                        it,
                     ) { flag -> ingredientDetailViewModel.onOwnedChanged(flag) }
                 }
-                ingredientDetailApiState.ingredient.containsAlcohol?.let { IngredientSpecifics("Contains alcohol: "+ if (it) "Yes" else "No") }
+                ingredientDetailApiState.ingredient.containsAlcohol?.let { IngredientSpecifics("Contains alcohol: " + if (it) "Yes" else "No") }
                 ingredientDetailApiState.ingredient.type?.let { IngredientSpecifics("Type of alcohol: $it") }
                 ingredientDetailApiState.ingredient.alcoholPercentage?.let { IngredientSpecifics("Alcohol percentage: $it%") }
 
@@ -76,13 +76,12 @@ fun IngredientDetail(
                     CocktailDetailSectionSeparartor()
                 }
 
-                LazyRow{
-                    items(ingredientDetailApiState.cocktailsContainingIngredient){cocktail->
-                        CocktailRowItem(cocktail = cocktail, onViewDetailClicked =  {onViewDetailClicked(cocktail)})
+                LazyRow {
+                    items(ingredientDetailApiState.cocktailsContainingIngredient) { cocktail ->
+                        CocktailRowItem(cocktail = cocktail, onViewDetailClicked = { onViewDetailClicked(cocktail) })
                     }
                 }
             }
         }
-
     }
 }

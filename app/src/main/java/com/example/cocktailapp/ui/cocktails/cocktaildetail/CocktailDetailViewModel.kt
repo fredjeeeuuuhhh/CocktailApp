@@ -21,38 +21,44 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class CocktailDetailViewModel (
+class CocktailDetailViewModel(
     private val cocktailRepository: CocktailRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val cocktailId: String = savedStateHandle[CocktailDestinationsArgs.COCKTAIL_ID_ARG]!!
 
-    private val _uiState = MutableStateFlow( CocktailDetailState(null) )
+    private val _uiState = MutableStateFlow(CocktailDetailState(null))
     val uiState: StateFlow<CocktailDetailState> = _uiState.asStateFlow()
 
-    var cocktailDetailApiState: CocktailDetailApiState by  mutableStateOf( CocktailDetailApiState.Loading)
+    var cocktailDetailApiState: CocktailDetailApiState by mutableStateOf(CocktailDetailApiState.Loading)
         private set
 
-    init{
+    init {
         getApiCocktail()
     }
 
     private fun getApiCocktail() {
         viewModelScope.launch {
             cocktailRepository.getCocktailById(cocktailId.toInt())
-                .catch {exception->
+                .catch { exception ->
                     exception.printStackTrace()
-                    cocktailDetailApiState =   CocktailDetailApiState.Error
+                    cocktailDetailApiState = CocktailDetailApiState.Error
                 }
-                .collect{cocktail->
+                .collect { cocktail ->
                     cocktailDetailApiState = CocktailDetailApiState.Succes(cocktail)
                     _uiState.update { it.copy(currentCocktail = cocktail) }
                 }
         }
     }
 
-    fun onFavoriteChanged(flag:Boolean) {
-        _uiState.value.currentCocktail!!.isFavorite=flag
+    fun onFavoriteChanged(flag: Boolean) {
+        viewModelScope.launch {
+            cocktailRepository.updateIsFavorite(cocktailId.toInt(), flag)
+                .catch { exception ->
+                    exception.printStackTrace()
+                    cocktailDetailApiState = CocktailDetailApiState.Error
+                }.collect {}
+        }
     }
 
     companion object {

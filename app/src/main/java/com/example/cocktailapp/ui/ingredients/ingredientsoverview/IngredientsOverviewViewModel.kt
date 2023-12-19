@@ -19,28 +19,27 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-
-class IngredientsOverviewViewModel (
-    private val ingredientRepository: IngredientRepository
-): ViewModel() {
+class IngredientsOverviewViewModel(
+    private val ingredientRepository: IngredientRepository,
+) : ViewModel() {
     private val _uiState = MutableStateFlow(IngredientsOverviewState(false, null))
     val uiState: StateFlow<IngredientsOverviewState> = _uiState.asStateFlow()
 
     var ingredientApiState: IngredientApiState by mutableStateOf(IngredientApiState.Loading)
         private set
-    init{
+    init {
         getApiIngredients()
     }
 
-    private fun getApiIngredients(){
+    private fun getApiIngredients() {
         viewModelScope.launch {
             ingredientRepository.getIngredients()
-                .catch { exception->
+                .catch { exception ->
                     exception.printStackTrace()
                     ingredientApiState = IngredientApiState.Error
                 }
-                .collect{ingredients->
-                    ingredientApiState =  IngredientApiState.Succes(ingredients)
+                .collect { ingredients ->
+                    ingredientApiState = IngredientApiState.Succes(ingredients)
                     _uiState.update { it.copy(currentIngredientList = ingredients) }
                 }
         }
@@ -51,7 +50,7 @@ class IngredientsOverviewViewModel (
             it.copy(isRefreshing = true)
         }
         viewModelScope.launch {
-           ingredientRepository.getIngredients()
+            ingredientRepository.getIngredients()
                 .catch {
                     _uiState.update {
                         it.copy(isRefreshing = false)
@@ -59,7 +58,7 @@ class IngredientsOverviewViewModel (
                 }
                 .collect { ingredients ->
                     ingredientApiState = IngredientApiState.Succes(
-                       ingredients,
+                        ingredients,
                     )
                     _uiState.update {
                         it.copy(currentIngredientList = ingredients, isRefreshing = false)
@@ -68,10 +67,14 @@ class IngredientsOverviewViewModel (
         }
     }
     fun changeOwnedStatus(ingredient: Ingredient) {
-        val ing = _uiState.value.currentIngredientList!!.find { i->i.name==ingredient.name }
-        ing?.isOwned=(!ing?.isOwned!!)
+        viewModelScope.launch {
+            ingredientRepository.updateIsOwned(ingredient.name, ingredient.isOwned ?: false)
+                .catch { exception ->
+                    exception.printStackTrace()
+                    ingredientApiState = IngredientApiState.Error
+                }.collect {}
+        }
     }
-
 
     // object to tell the android framework how to handle the parameter of the viewmodel
     companion object {

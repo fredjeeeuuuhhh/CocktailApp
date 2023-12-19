@@ -7,7 +7,6 @@ import androidx.room.PrimaryKey
 data class DbIngredient(
     @PrimaryKey(autoGenerate = false)
     var ingredientName: String,
-    var ingredientId: Int?,
     var description: String?,
     var type: String?,
     var containsAlcohol: Boolean?,

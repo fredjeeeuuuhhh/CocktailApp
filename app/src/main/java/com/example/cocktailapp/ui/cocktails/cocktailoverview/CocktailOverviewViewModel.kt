@@ -34,7 +34,7 @@ class CocktailOverviewViewModel (
 
     private fun getApiCocktails() {
         viewModelScope.launch {
-            cocktailRepository.getCocktailsByFirstLetter("a")
+            cocktailRepository.getAll()
                 .catch{ exception ->
                     exception.printStackTrace()
                     cocktailApiState = CocktailApiState.Error
@@ -54,7 +54,7 @@ class CocktailOverviewViewModel (
             it.copy(isRefreshing = true)
         }
         viewModelScope.launch {
-            cocktailRepository.getCocktailsByFirstLetter("a")
+            cocktailRepository.getAll()
                 .catch {
                     _uiState.update {
                         it.copy(isRefreshing = false)

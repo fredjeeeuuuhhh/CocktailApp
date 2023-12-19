@@ -1,10 +1,11 @@
 package com.example.cocktailapp.di
 
 import android.content.Context
-import com.example.cocktailapp.local.cocktails.CocktailApiRepository
+import com.example.cocktailapp.local.CocktailDB
 import com.example.cocktailapp.local.cocktails.CocktailRepository
-import com.example.cocktailapp.local.ingredients.IngredientApiRepository
+import com.example.cocktailapp.local.cocktails.OfflineCocktailRepository
 import com.example.cocktailapp.local.ingredients.IngredientRepository
+import com.example.cocktailapp.local.ingredients.OfflineIngredientRepository
 import com.example.cocktailapp.network.CocktailApiService
 import com.example.cocktailapp.network.IngredientApiService
 import com.example.cocktailapp.network.NetworkConnectionInterceptor
@@ -19,41 +20,40 @@ interface AppContainer {
     val cocktailRepository: CocktailRepository
     val ingredientRepository: IngredientRepository
 }
+
 @OptIn(ExperimentalSerializationApi::class)
-class DefaultAppContainer(private val context: Context): AppContainer {
+class DefaultAppContainer(private val context: Context) : AppContainer {
 
     private val networkCheck = NetworkConnectionInterceptor(context)
     private val client = OkHttpClient.Builder()
         .addInterceptor(networkCheck)
         .build()
 
-   private val Json = Json {
+    private val json = Json {
         ignoreUnknownKeys = true
         coerceInputValues = true
         explicitNulls = false
     }
-    private  val BASE_URL = "https://www.thecocktaildb.com/api/json/v1/1/"
+    private val BASE_URL = "https://www.thecocktaildb.com/api/json/v1/1/"
     private val retrofit = Retrofit.Builder()
         .addConverterFactory(
-            Json.asConverterFactory("application/json".toMediaType()),
+            json.asConverterFactory("application/json".toMediaType()),
         )
         .baseUrl(BASE_URL)
         .client(client)
         .build()
 
-
-
     private val cocktailRetrofitService: CocktailApiService by lazy {
         retrofit.create(CocktailApiService::class.java)
     }
     override val cocktailRepository: CocktailRepository by lazy {
-        CocktailApiRepository(cocktailRetrofitService)
+        OfflineCocktailRepository(CocktailDB.getDatabase(context).cocktailDao(), cocktailRetrofitService)
     }
 
     private val ingredientRetrofitService: IngredientApiService by lazy {
         retrofit.create(IngredientApiService::class.java)
     }
     override val ingredientRepository: IngredientRepository by lazy {
-        IngredientApiRepository(ingredientRetrofitService)
+        OfflineIngredientRepository(CocktailDB.getDatabase(context).IngredientDao(), ingredientRetrofitService)
     }
 }

@@ -15,6 +15,6 @@ class Converters {
     @TypeConverter
     fun fieldToStrings(field: String): List<String> {
         val listType = object : TypeToken<List<String>>() {}.type
-        return gson.fromJson(field,listType)
+        return gson.fromJson(field, listType)
     }
 }

@@ -18,8 +18,8 @@ data class DbCocktail(
     var isFavorite: Boolean,
 )
 
-@Entity(primaryKeys = ["cocktailId","ingredientName"])
-data class DbCocktailDbIngredientCrossRef(
-    var cocktailId: Int,
-    var ingredientName: String,
+@Entity(primaryKeys = ["cocktailId", "ingredientName"])
+data class CrossRef(
+    val cocktailId: Int,
+    val ingredientName: String,
 )

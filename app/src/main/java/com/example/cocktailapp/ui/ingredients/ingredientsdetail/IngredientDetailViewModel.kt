@@ -23,44 +23,48 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-
 class IngredientDetailViewModel(
     private val cocktailRepository: CocktailRepository,
     private val ingredientRepository: IngredientRepository,
     savedStateHandle: SavedStateHandle,
-): ViewModel() {
-    private val ingredientName:String = savedStateHandle[CocktailDestinationsArgs.INGREDIENT_NAME_ARG]!!
+) : ViewModel() {
+    private val ingredientName: String = savedStateHandle[CocktailDestinationsArgs.INGREDIENT_NAME_ARG]!!
 
-    private val _uiState = MutableStateFlow(IngredientDetailState(null,null))
+    private val _uiState = MutableStateFlow(IngredientDetailState(null, null))
     val uiState: StateFlow<IngredientDetailState> = _uiState.asStateFlow()
     var ingredientDetailApiState: IngredientDetailApiState by mutableStateOf(IngredientDetailApiState.Loading)
         private set
 
-    init{
+    init {
         getIngredientDetails()
     }
 
     private fun getIngredientDetails() {
         viewModelScope.launch {
             ingredientRepository.getIngredientByName(ingredientName)
-                .combine(cocktailRepository.searchByIngredient(ingredientName)){
-                    ingredients,cocktails ->
+                .combine(cocktailRepository.searchByIngredient(ingredientName)) {
+                        ingredients, cocktails ->
                     ingredientDetailApiState = IngredientDetailApiState.Succes(
                         ingredients,
                         cocktails,
                     )
-                    _uiState.update { it.copy(currentIngredient =  ingredients, cocktailsContainingIngredient = cocktails) }
+                    _uiState.update { it.copy(currentIngredient = ingredients, cocktailsContainingIngredient = cocktails) }
                 }
-                .catch {exception->
+                .catch { exception ->
                     exception.printStackTrace()
                     ingredientDetailApiState = IngredientDetailApiState.Error
                 }
-                .collect{}
-
+                .collect {}
         }
     }
-    fun onOwnedChanged(flag:Boolean) {
-        _uiState.value.currentIngredient!!.isOwned=flag
+    fun onOwnedChanged(flag: Boolean) {
+        viewModelScope.launch {
+            ingredientRepository.updateIsOwned(ingredientName,flag)
+            .catch {exception ->
+                exception.printStackTrace()
+                ingredientDetailApiState = IngredientDetailApiState.Error
+            }.collect{}
+        }
     }
 
     // object to tell the android framework how to handle the parameter of the viewmodel
