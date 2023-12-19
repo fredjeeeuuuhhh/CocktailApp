@@ -5,6 +5,7 @@
     <string name="title_random">Random</string>
     <string name="subtitle_ingredients">Ingredients</string>
     <string name="subtitle_instructions">Instructions</string>
+    <string name="label_all">All</string>
     <string name="no_cocktails_all">No cocktails to display</string>
     <string name="cat_ordinary_drink">Ordinary Drink</string>
     <string name="cat_cocktail">Cocktail</string>
@@ -17,4 +18,6 @@
     <string name="cat_punch">Punch / Party Drink</string>
     <string name="cat_beer">Beer</string>
     <string name="cat_soft_drink">Soft drink</string>
+    <string name="filter_all">Alle</string>
+
 </resources>

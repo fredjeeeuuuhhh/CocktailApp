@@ -17,7 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.cocktailapp.model.Cocktail
 import com.example.cocktailapp.network.IngredientDetailApiState
 import com.example.cocktailapp.ui.cocktails.cocktaildetail.components.CocktailDetailSectionSeparartor
@@ -28,7 +28,7 @@ import com.example.cocktailapp.ui.ingredients.ingredientsdetail.components.Ingre
 @Composable
 fun IngredientDetail(
     onBack: ()-> Unit,
-    ingredientDetailViewModel: IngredientDetailViewModel = hiltViewModel(),
+    ingredientDetailViewModel: IngredientDetailViewModel = viewModel(factory = IngredientDetailViewModel.Factory),
     onViewDetailClicked: (Cocktail) -> Unit,
 ){
     val scrollState = rememberScrollState()

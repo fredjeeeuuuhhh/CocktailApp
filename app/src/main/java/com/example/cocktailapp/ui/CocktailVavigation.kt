@@ -38,6 +38,8 @@ class CocktailNavigationActions(private val navController: NavHostController) {
         navigateToMenuItem(CocktailDestinations.INGREDIENT_ROUTE)
     }
 
+
+
     fun navigateToMenuItem(route: String) {
         navController.navigate(route) {
             F

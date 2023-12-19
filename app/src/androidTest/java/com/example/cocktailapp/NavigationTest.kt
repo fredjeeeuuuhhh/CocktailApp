@@ -1,40 +1,30 @@
 package com.example.cocktailapp
 
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
-import androidx.test.core.app.ApplicationProvider
-import androidx.test.filters.SmallTest
 import com.example.cocktailapp.ui.CocktailAppNavGraph
-import dagger.hilt.android.testing.HiltAndroidRule
-import dagger.hilt.android.testing.HiltAndroidTest
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
-@HiltAndroidTest
-@SmallTest
 class NavigationTest {
-
     @get:Rule
-    var hiltRule = HiltAndroidRule(this)
-    @get:Rule(order = 1)
-    val composeTestRule = createAndroidComposeRule<HiltTestActivity>()
-    private val activity get() = composeTestRule.activity
-
+    val composeTestRule = createComposeRule()
     lateinit var navController: TestNavHostController
 
     @Before
-    fun setUp() {
-        hiltRule.inject() // Inject dependencies using Hilt
+    fun setupAppNavHost() {
         composeTestRule.setContent {
-            navController = TestNavHostController(ApplicationProvider.getApplicationContext())
+            navController = TestNavHostController(LocalContext.current)
             navController.navigatorProvider.addNavigator(ComposeNavigator())
             CocktailAppNavGraph(navController = navController)
         }
@@ -42,14 +32,60 @@ class NavigationTest {
 
     @Test
     fun verifyStartDestination() {
-        composeTestRule.onNodeWithText(activity.getString(R.string.title_cocktails)).assertIsDisplayed()
-        composeTestRule.onNodeWithText(activity.getString(R.string.title_ingredients)).assertIsDisplayed()
+        composeTestRule
+            .onNodeWithText("Cocktails")
+            .assertIsDisplayed()
+        composeTestRule
+            .onNodeWithText("Ingredients")
+            .assertIsDisplayed()
     }
 
     @Test
     fun navigateToIngredients() {
-        composeTestRule.onNodeWithContentDescription(activity.getString(R.string.title_ingredients)).performClick()
-        composeTestRule.onNodeWithText(activity.getString(R.string.title_cocktails)).assertIsDisplayed()
-        composeTestRule.onNodeWithText(activity.getString(R.string.title_ingredients)).assertIsDisplayed()
+        composeTestRule
+            .onNodeWithText("Ingredients")
+            .performClick()
+        composeTestRule
+            .onNodeWithText("Cocktails")
+            .assertIsDisplayed()
+        composeTestRule
+            .onNodeWithText("Ingredients")
+            .assertIsDisplayed()
     }
+
+    @Test
+    fun navigateToFirstCocktailCard() {
+        composeTestRule
+            .onAllNodesWithTag("CocktailCard")[0].performClick()
+        composeTestRule
+            .onNodeWithText("Instructions")
+            .assertIsDisplayed()
+        composeTestRule
+            .onNodeWithText("Ingredients")
+            .assertDoesNotExist()
+        composeTestRule
+            .onNodeWithText("Cocktails")
+            .assertDoesNotExist()
+    }
+
+    @Test
+    fun navigateToFirstIngredientCard() {
+        composeTestRule
+            .onNodeWithText("Ingredients")
+            .performClick()
+        composeTestRule
+            .onAllNodesWithTag("IngredientCard")[0].performClick()
+        composeTestRule
+        composeTestRule
+            .onNodeWithText("Ingredients")
+            .assertDoesNotExist()
+        composeTestRule
+            .onNodeWithText("Cocktails")
+            .assertDoesNotExist()
+
+    }
+
+
+
+
 }
