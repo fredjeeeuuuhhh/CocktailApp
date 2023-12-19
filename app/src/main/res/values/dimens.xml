@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <dimen name="drawer_width">160dp</dimen>
+    <dimen name="drawer_padding_content">8dp</dimen>
+    <dimen name="drawer_padding_header">8dp</dimen>
+</resources>

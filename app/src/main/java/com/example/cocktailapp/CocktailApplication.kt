@@ -1,8 +1,8 @@
 package com.example.cocktailapp
 
 import android.app.Application
-import com.example.cocktailapp.data.AppContainer
-import com.example.cocktailapp.data.DefaultAppContainer
+import com.example.cocktailapp.di.AppContainer
+import com.example.cocktailapp.di.DefaultAppContainer
 
 class CocktailApplication : Application() {
     lateinit var container: AppContainer

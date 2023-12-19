@@ -11,8 +11,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.cocktailapp.CocktailApplication
-import com.example.cocktailapp.data.CocktailRepository
-import com.example.cocktailapp.model.Cocktail
+import com.example.cocktailapp.local.cocktails.CocktailRepository
 import com.example.cocktailapp.ui.CocktailDestinationsArgs
 import com.example.cocktailapp.ui.CocktailDetailApiState
 import kotlinx.coroutines.flow.MutableStateFlow

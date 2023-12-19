@@ -1,4 +1,4 @@
-package com.example.cocktailapp.data
+package com.example.cocktailapp.local.cocktails
 
 import com.example.cocktailapp.model.Cocktail
 import com.example.cocktailapp.network.CocktailApiService
@@ -15,7 +15,7 @@ interface CocktailRepository{
 }
 class CocktailApiRepository(
     private val cocktailApiService: CocktailApiService
-): CocktailRepository{
+): CocktailRepository {
     override suspend fun getCocktailsByFirstLetter(firstLetter: String): Flow<List<Cocktail>> = flow{
         emit(cocktailApiService.getCocktails(firstLetter).drinks.asDomainObjects())
     }

@@ -1,4 +1,4 @@
-package com.example.cocktailapp.data
+package com.example.cocktailapp.local.ingredients
 
 import com.example.cocktailapp.model.Ingredient
 import com.example.cocktailapp.network.IngredientApiService
@@ -14,7 +14,7 @@ interface IngredientRepository {
 }
 class IngredientApiRepository(
     private val ingredientApiService: IngredientApiService
-): IngredientRepository{
+): IngredientRepository {
     override suspend fun getIngredients(): Flow<List<Ingredient>> = flow{
         emit( ingredientApiService.getIngredients().drinks.asDomainObjectsWithNameOnly() )
     }
