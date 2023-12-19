@@ -71,17 +71,13 @@ class IngredientDetailViewModel(
 
     // object to tell the android framework how to handle the parameter of the viewmodel
     companion object {
-        private var Instance: IngredientDetailViewModel? = null
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                if (Instance == null) {
-                    val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as CocktailApplication)
-                    val ingredientRepository = application.container.ingredientRepository
-                    val cocktailRepository = application.container.cocktailRepository
-                    val savedStateHandle = createSavedStateHandle()
-                    Instance = IngredientDetailViewModel(ingredientRepository = ingredientRepository, cocktailRepository = cocktailRepository, savedStateHandle = savedStateHandle)
-                }
-                Instance!!
+                val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as CocktailApplication)
+                val ingredientRepository = application.container.ingredientRepository
+                val cocktailRepository = application.container.cocktailRepository
+                val savedStateHandle = createSavedStateHandle()
+                IngredientDetailViewModel(ingredientRepository = ingredientRepository, cocktailRepository = cocktailRepository, savedStateHandle = savedStateHandle)
             }
         }
     }

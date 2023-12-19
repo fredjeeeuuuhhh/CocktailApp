@@ -35,12 +35,12 @@ class CocktailDetailViewModel(
         private set
 
     init {
-        Log.i("vm inspection", "AboutViewModel init")
+        Log.i("vm inspection", cocktailId)
         getApiCocktail()
     }
     override fun onCleared() {
         super.onCleared()
-        Log.i("vm inspection", "AboutViewModel cleared")
+        Log.i("vm inspection", cocktailId)
     }
     private fun getApiCocktail() {
         viewModelScope.launch {
@@ -67,16 +67,12 @@ class CocktailDetailViewModel(
     }
 
     companion object {
-        private var Instance: CocktailDetailViewModel? = null
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                if (Instance == null) {
-                    val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as CocktailApplication)
-                    val cocktailRepository = application.container.cocktailRepository
-                    val savedStateHandle = createSavedStateHandle()
-                    Instance = CocktailDetailViewModel(cocktailRepository = cocktailRepository, savedStateHandle = savedStateHandle)
-                }
-                Instance!!
+                val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as CocktailApplication)
+                val cocktailRepository = application.container.cocktailRepository
+                val savedStateHandle = createSavedStateHandle()
+                CocktailDetailViewModel(cocktailRepository = cocktailRepository, savedStateHandle = savedStateHandle)
             }
         }
     }
