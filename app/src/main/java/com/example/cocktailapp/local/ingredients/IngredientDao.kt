@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -12,8 +11,8 @@ interface IngredientDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertIngredients(ingredients: List<DbIngredient>)
 
-    @Upsert
-    suspend fun upsertIngredient(ingredient: DbIngredient)
+    @Query("UPDATE DbIngredient SET description = :desc, containsAlcohol = :alcohol, alcoholPercentage = :percentage, type = :type WHERE ingredientName = :name")
+    suspend fun updateIngredient(name: String, desc: String, alcohol: Boolean, percentage: String, type: String)
 
     @Query("UPDATE dbingredient SET isOwned = :isOwned WHERE ingredientname LIKE :ingredientName")
     suspend fun updateIsOwned(ingredientName: String, isOwned: Boolean)

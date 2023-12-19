@@ -1,5 +1,6 @@
 package com.example.cocktailapp.local.ingredients
 
+import android.util.Log
 import com.example.cocktailapp.model.Ingredient
 import com.example.cocktailapp.network.IngredientApiService
 import com.example.cocktailapp.network.asDomainImgredientNameOnly
@@ -37,7 +38,8 @@ class OfflineIngredientRepository(
         try {
             val ingredients = ingredientApiService.getIngredientByName(name).ingredients.map { it.asDomainIngredient() }
             ingredients.forEach {
-                ingredientDao.upsertIngredient(it.asDbIngredient())
+                Log.i("'test", it.toString())
+                ingredientDao.updateIngredient(it.name, it.description ?: "", it.containsAlcohol ?: false, it.alcoholPercentage ?: "", it.type ?: "")
             }
         } catch (exception: IOException) {
             exception.printStackTrace()

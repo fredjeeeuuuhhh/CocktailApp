@@ -1,5 +1,6 @@
 package com.example.cocktailapp.ui.cocktails.cocktaildetail
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -34,9 +35,13 @@ class CocktailDetailViewModel(
         private set
 
     init {
+        Log.i("vm inspection", "AboutViewModel init")
         getApiCocktail()
     }
-
+    override fun onCleared() {
+        super.onCleared()
+        Log.i("vm inspection", "AboutViewModel cleared")
+    }
     private fun getApiCocktail() {
         viewModelScope.launch {
             cocktailRepository.getCocktailById(cocktailId.toInt())

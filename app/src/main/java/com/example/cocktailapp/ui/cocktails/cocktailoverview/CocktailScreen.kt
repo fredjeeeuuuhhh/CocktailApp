@@ -8,8 +8,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,25 +34,25 @@ fun CocktailScreen(
     val cocktailOverviewState by cocktailOverviewViewModel.uiState.collectAsState()
     val cocktailApiState = cocktailOverviewViewModel.cocktailApiState
     val pullRefreshState = rememberPullRefreshState(cocktailOverviewState.isRefreshing, onRefresh = cocktailOverviewViewModel::refreshCocktails)
-   Box(
+    Box(
         modifier = Modifier
             .pullRefresh(pullRefreshState)
             .fillMaxWidth(),
     ) {
-       when(cocktailApiState){
-           is CocktailApiState.Loading -> {
-               Text("Loading cocktails")
-           }
-           is CocktailApiState.Error -> {
-               Text("Something went wrong while loading tasks from api")
-           }
-           is CocktailApiState.Succes ->{
-               SupplementsOverview(
-                   cocktails = cocktailApiState.cocktails,
-                   onViewDetailClicked = onViewDetailClicked,
-               )
-           }
-       }
+        when (cocktailApiState) {
+            is CocktailApiState.Loading -> {
+                Text("Loading cocktails")
+            }
+            is CocktailApiState.Error -> {
+                Text("Something went wrong while loading tasks from api")
+            }
+            is CocktailApiState.Succes -> {
+                SupplementsOverview(
+                    cocktails = cocktailApiState.cocktails,
+                    onViewDetailClicked = onViewDetailClicked,
+                )
+            }
+        }
 
         PullRefreshIndicator(
             refreshing = cocktailOverviewState.isRefreshing,
@@ -61,14 +61,13 @@ fun CocktailScreen(
                 .padding(top = 20.dp)
                 .align(Alignment.TopCenter),
         )
-
     }
 }
 
 @Composable
 fun SupplementsOverview(
     cocktails: List<Cocktail>,
-    onViewDetailClicked: (Cocktail) -> Unit
+    onViewDetailClicked: (Cocktail) -> Unit,
 ) {
     val filters = mutableMapOf<String, (Cocktail) -> Boolean>(
         stringResource(R.string.filter_all) to { true },
@@ -81,7 +80,7 @@ fun SupplementsOverview(
 
     FilterChipsView(filters, currentFilter, { currentFilter = it }) {
         Cocktails(
-           cocktails.filter(filters[currentFilter]!!),
+            cocktails.filter(filters[currentFilter]!!),
             onViewDetailClicked,
         )
     }

@@ -19,23 +19,23 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class CocktailOverviewViewModel (
+class CocktailOverviewViewModel(
     private val cocktailRepository: CocktailRepository,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(CocktailOverviewState(false,null))
+    private val _uiState = MutableStateFlow(CocktailOverviewState(false, null))
     val uiState: StateFlow<CocktailOverviewState> = _uiState.asStateFlow()
 
     var cocktailApiState: CocktailApiState by mutableStateOf(CocktailApiState.Loading)
         private set
-    init{
+    init {
         getApiCocktails()
     }
 
     private fun getApiCocktails() {
         viewModelScope.launch {
             cocktailRepository.getAll()
-                .catch{ exception ->
+                .catch { exception ->
                     exception.printStackTrace()
                     cocktailApiState = CocktailApiState.Error
                 }
@@ -46,7 +46,6 @@ class CocktailOverviewViewModel (
                     _uiState.update { it.copy(currentCocktailList = cocktails) }
                 }
         }
-
     }
 
     fun refreshCocktails() {
@@ -61,8 +60,8 @@ class CocktailOverviewViewModel (
                     }
                 }
                 .collect { cocktails ->
-                   cocktailApiState = CocktailApiState.Succes(
-                       cocktails,
+                    cocktailApiState = CocktailApiState.Succes(
+                        cocktails,
                     )
                     _uiState.update {
                         it.copy(currentCocktailList = cocktails, isRefreshing = false)

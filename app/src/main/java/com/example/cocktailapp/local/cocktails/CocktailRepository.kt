@@ -23,7 +23,8 @@ class OfflineCocktailRepository(
     private val cocktailDao: CocktailDao,
     private val cocktailApiService: CocktailApiService,
 ) : CocktailRepository {
-    private val characters = listOf("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z")
+    // private val characters = listOf("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z")
+    private val characters = listOf("a")
     override fun getAll(): Flow<List<Cocktail>> {
         return cocktailDao.getAll().map { cocktails ->
             cocktails.map {
@@ -71,7 +72,7 @@ class OfflineCocktailRepository(
             characters.forEach { character ->
                 val cocktails = cocktailApiService.getCocktails(character).drinks?.asDomainObjects()
                     ?.map { it.asDbCocktail() }
-                if(cocktails!=null){
+                if (cocktails != null) {
                     cocktailDao.insertCocktails(cocktails)
                     cocktails.forEach {
                         it.ingredientNames.forEach { string ->

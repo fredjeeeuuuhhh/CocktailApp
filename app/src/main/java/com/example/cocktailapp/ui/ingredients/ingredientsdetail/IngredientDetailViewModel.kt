@@ -1,5 +1,6 @@
 package com.example.cocktailapp.ui.ingredients.ingredientsdetail
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -41,6 +42,7 @@ class IngredientDetailViewModel(
 
     private fun getIngredientDetails() {
         viewModelScope.launch {
+            Log.i("name", ingredientName)
             ingredientRepository.getIngredientByName(ingredientName)
                 .combine(cocktailRepository.searchByIngredient(ingredientName)) {
                         ingredients, cocktails ->
@@ -59,11 +61,11 @@ class IngredientDetailViewModel(
     }
     fun onOwnedChanged(flag: Boolean) {
         viewModelScope.launch {
-            ingredientRepository.updateIsOwned(ingredientName,flag)
-            .catch {exception ->
-                exception.printStackTrace()
-                ingredientDetailApiState = IngredientDetailApiState.Error
-            }.collect{}
+            ingredientRepository.updateIsOwned(ingredientName, flag)
+                .catch { exception ->
+                    exception.printStackTrace()
+                    ingredientDetailApiState = IngredientDetailApiState.Error
+                }.collect {}
         }
     }
 

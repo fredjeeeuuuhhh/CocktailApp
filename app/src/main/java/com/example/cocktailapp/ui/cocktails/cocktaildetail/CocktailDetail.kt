@@ -24,13 +24,13 @@ import com.example.cocktailapp.ui.cocktails.cocktaildetail.components.CocktailIn
 @Composable
 fun CocktailDetail(
     onBack: () -> Unit,
-    cocktailDetailViewModel: CocktailDetailViewModel = viewModel(factory = CocktailDetailViewModel.Factory)
+    cocktailDetailViewModel: CocktailDetailViewModel = viewModel(factory = CocktailDetailViewModel.Factory),
 ) {
     val scrollState = rememberScrollState()
     val state by cocktailDetailViewModel.uiState.collectAsState()
 
     val cocktailDetailApiState = cocktailDetailViewModel.cocktailDetailApiState
-    when(cocktailDetailApiState) {
+    when (cocktailDetailApiState) {
         is CocktailDetailApiState.Loading -> {
             Text("Loading the details")
         }
@@ -44,7 +44,7 @@ fun CocktailDetail(
                     .background(MaterialTheme.colorScheme.surface)
                     .verticalScroll(scrollState),
             ) {
-                if(cocktailDetailApiState.cocktail.isFavorite==null)cocktailDetailApiState.cocktail.isFavorite=false
+                if (cocktailDetailApiState.cocktail.isFavorite == null)cocktailDetailApiState.cocktail.isFavorite = false
 
                 CocktaiilIngredientHeader(
                     onBack,
@@ -58,25 +58,23 @@ fun CocktailDetail(
 
                 CocktailDetailSectionSeparartor()
 
-                CocktailDetailSubTitle(R.string.subtitle_ingredients,color=MaterialTheme.colorScheme.secondary)
+                CocktailDetailSubTitle(R.string.subtitle_ingredients, color = MaterialTheme.colorScheme.secondary)
 
-                cocktailDetailApiState.cocktail.ingredientNames?.let{
+                cocktailDetailApiState.cocktail.ingredientNames?.let {
                     for ((i, ingredient) in it.withIndex()) {
-                        cocktailDetailApiState.cocktail.measurements?.let {  CocktailDetailIngredientRow(ingredient, if(i<it.size) it[i] else "") }
+                        cocktailDetailApiState.cocktail.measurements?.let { CocktailDetailIngredientRow(ingredient, if (i < it.size) it[i] else "") }
                     }
                 }
 
                 CocktailDetailSectionSeparartor()
 
-                CocktailDetailSubTitle(R.string.subtitle_instructions,color= MaterialTheme.colorScheme.secondary)
-                cocktailDetailApiState.cocktail.instructions?.let{
+                CocktailDetailSubTitle(R.string.subtitle_instructions, color = MaterialTheme.colorScheme.secondary)
+                cocktailDetailApiState.cocktail.instructions?.let {
                     for ((i, instruction) in it.split(". ").withIndex()) {
-                        CocktailIngredientInstructionRow(i,instruction)
+                        CocktailIngredientInstructionRow(i, instruction)
                     }
                 }
             }
         }
-
     }
-
 }

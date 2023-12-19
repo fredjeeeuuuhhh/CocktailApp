@@ -74,7 +74,8 @@ fun CocktailAppNavGraph(
     ) {
         composable(CocktailDestinations.COCKTAIL_ROUTE) {
             MenuScaffold(
-                currentRoute=currentRoute,menuItems,
+                currentRoute = currentRoute,
+                menuItems,
                 navigationType = navigationType,
             ) {
                 CocktailScreen(
@@ -84,19 +85,19 @@ fun CocktailAppNavGraph(
         }
         composable(CocktailDestinations.INGREDIENT_ROUTE) {
             MenuScaffold(
-                currentRoute=currentRoute,menuItems,
+                currentRoute = currentRoute,
+                menuItems,
                 navigationType = navigationType,
             ) {
                 IngredientsOverview(
                     onViewDetailClicked = { ingredient ->
                         navActions.navigateToIngredientDetail(
-                            ingredient.name
+                            ingredient.name,
                         )
                     },
                 )
             }
         }
-
 
         composable(CocktailDestinations.COCKTAIL_DETAIL_ROUTE) {
             CocktailDetail(
@@ -107,19 +108,19 @@ fun CocktailAppNavGraph(
         composable(CocktailDestinations.INGREDIENT_DETAIL_ROUTE) {
             IngredientDetail(
                 onBack = { navController.popBackStack() },
-                onViewDetailClicked = {cocktail -> navActions.navigateToCocktailDetail(cocktail.id)}
+                onViewDetailClicked = { cocktail -> navActions.navigateToCocktailDetail(cocktail.id) },
             )
         }
     }
 }
 
 @Composable
-fun MenuScaffold(currentRoute: String, menuItems: Array<NavigationMenuItem>, navigationType: NavigationType,content: @Composable () -> Unit  ) {
+fun MenuScaffold(currentRoute: String, menuItems: Array<NavigationMenuItem>, navigationType: NavigationType, content: @Composable () -> Unit) {
     if (navigationType == NavigationType.NAVIGATION_DRAWER) {
         PermanentNavigationDrawer(drawerContent = {
             PermanentDrawerSheet(Modifier.width(dimensionResource(R.dimen.drawer_width))) {
                 NavigationDrawerContent(
-                   currentRoute,
+                    currentRoute,
                     menuItems,
                     modifier = Modifier
                         .wrapContentWidth()
@@ -129,13 +130,13 @@ fun MenuScaffold(currentRoute: String, menuItems: Array<NavigationMenuItem>, nav
                 )
             }
         }) {
-            Scaffold{ innerPadding ->
+            Scaffold { innerPadding ->
                 Column(Modifier.padding(innerPadding)) {
                     content()
                 }
             }
         }
-    }else if (navigationType == NavigationType.BOTTOM_BAR){
+    } else if (navigationType == NavigationType.BOTTOM_BAR) {
         Scaffold(
             bottomBar = {
                 BottomNavigationBar(currentRoute, menuItems)
@@ -145,8 +146,7 @@ fun MenuScaffold(currentRoute: String, menuItems: Array<NavigationMenuItem>, nav
                 content()
             }
         }
-
-    }else{
+    } else {
         Row {
             AnimatedVisibility(visible = navigationType == NavigationType.NAVIGATION_RAIL) {
                 TaskNavigationRail(
@@ -154,13 +154,11 @@ fun MenuScaffold(currentRoute: String, menuItems: Array<NavigationMenuItem>, nav
                     menuItems,
                 )
             }
-            Scaffold{ innerPadding ->
+            Scaffold { innerPadding ->
                 Column(Modifier.padding(innerPadding)) {
                     content()
                 }
             }
         }
-
     }
 }
-
