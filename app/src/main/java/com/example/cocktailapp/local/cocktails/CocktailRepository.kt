@@ -64,7 +64,7 @@ class OfflineCocktailRepository(
         workManager.getWorkInfoByIdFlow(wifiGetCocktailByIdID)
     override fun getCocktailById(id: Int): Flow<Cocktail> {
         val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
-        val inputData = Data.Builder().putString("id", id.toString()).build()
+        val inputData = Data.Builder().putInt("id", id).build()
         val requestBuilder = OneTimeWorkRequestBuilder<WifiGetCocktailByIdWorker>()
         val request = requestBuilder.setInputData(inputData).setConstraints(constraints).build()
         workManager.enqueue(request)

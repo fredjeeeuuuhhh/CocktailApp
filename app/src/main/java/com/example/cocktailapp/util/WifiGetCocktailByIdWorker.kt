@@ -12,9 +12,9 @@ class WifiGetCocktailByIdWorker(context: Context, params: WorkerParameters, priv
     override suspend fun doWork(): Result {
         return withContext(Dispatchers.IO) {
             return@withContext try {
-                val cocktailId = inputData.getString("id")
-                cocktailId?.let { id ->
-                    cocktailRepository.getCocktailByIdInWorker(id.toInt())
+                val cocktailId = inputData.getInt("id",0)
+                if(cocktailId != 0){
+                    cocktailRepository.getCocktailByIdInWorker(cocktailId)
                     Result.success()
                 }
                 Result.failure()
