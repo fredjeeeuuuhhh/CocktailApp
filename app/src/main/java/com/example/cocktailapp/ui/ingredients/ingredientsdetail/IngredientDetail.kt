@@ -67,8 +67,10 @@ fun IngredientDetail(
                 ingredientDetailApiState.ingredient.alcoholPercentage?.let { percentage ->
                     IngredientSpecifics(label = stringResource(id = R.string.percentage, percentage))
                 }
+                if(!(ingredientDetailApiState.ingredient.containsAlcohol == null && ingredientDetailApiState.ingredient.type == null && ingredientDetailApiState.ingredient.alcoholPercentage == null)){
+                    CocktailDetailSectionSeparartor()
+                }
 
-                CocktailDetailSectionSeparartor()
 
                 ingredientDetailApiState.ingredient.description?.let { description ->
                     Text(
