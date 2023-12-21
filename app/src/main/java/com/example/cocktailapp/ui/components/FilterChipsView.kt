@@ -1,4 +1,4 @@
-package com.example.cocktailapp.ui.cocktails.cocktailoverview.components
+package com.example.cocktailapp.ui.components
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement

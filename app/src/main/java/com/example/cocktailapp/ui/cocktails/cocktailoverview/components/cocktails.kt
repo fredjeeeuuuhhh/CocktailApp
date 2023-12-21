@@ -18,13 +18,13 @@ fun Cocktails(
 ) {
     val lazyGridState = LazyGridState()
     Divider(
-       Modifier,
-       2.dp,
-       MaterialTheme.colorScheme.outline
+        Modifier,
+        2.dp,
+        MaterialTheme.colorScheme.outline,
     )
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
-        state = lazyGridState
+        state = lazyGridState,
     ) {
         items(cocktails) { cocktail ->
             CocktailListItem(

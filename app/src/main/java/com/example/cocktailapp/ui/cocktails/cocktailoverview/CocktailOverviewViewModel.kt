@@ -29,6 +29,9 @@ class CocktailOverviewViewModel(
     var cocktailApiState: CocktailApiState by mutableStateOf(CocktailApiState.Loading)
         private set
     init {
+        viewModelScope.launch{
+            cocktailRepository.refreshCocktails()
+        }
         getApiCocktails()
     }
 

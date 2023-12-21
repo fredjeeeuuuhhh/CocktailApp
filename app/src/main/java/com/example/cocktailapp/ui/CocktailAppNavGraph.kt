@@ -29,7 +29,7 @@ import com.example.cocktailapp.R
 import com.example.cocktailapp.ui.cocktails.cocktaildetail.CocktailDetail
 import com.example.cocktailapp.ui.cocktails.cocktailoverview.CocktailScreen
 import com.example.cocktailapp.ui.ingredients.ingredientsdetail.IngredientDetail
-import com.example.cocktailapp.ui.ingredients.ingredientsoverview.IngredientsOverview
+import com.example.cocktailapp.ui.ingredients.ingredientsoverview.IngredientsScreen
 import com.example.cocktailapp.ui.navigation.BottomNavigationBar
 import com.example.cocktailapp.ui.navigation.NavigationDrawerContent
 import com.example.cocktailapp.ui.navigation.NavigationMenuItem
@@ -89,7 +89,7 @@ fun CocktailAppNavGraph(
                 menuItems,
                 navigationType = navigationType,
             ) {
-                IngredientsOverview(
+                IngredientsScreen(
                     onViewDetailClicked = { ingredient ->
                         navActions.navigateToIngredientDetail(
                             ingredient.name,

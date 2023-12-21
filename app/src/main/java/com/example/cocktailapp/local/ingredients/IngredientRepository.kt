@@ -1,6 +1,5 @@
 package com.example.cocktailapp.local.ingredients
 
-import android.util.Log
 import com.example.cocktailapp.local.cocktails.CocktailDao
 import com.example.cocktailapp.model.Ingredient
 import com.example.cocktailapp.network.IngredientApiService
@@ -9,7 +8,6 @@ import com.example.cocktailapp.network.asDomainIngredient
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import java.io.IOException
 
 interface IngredientRepository {
@@ -28,10 +26,6 @@ class OfflineIngredientRepository(
         return ingredientDao.getAll().map { ingredients ->
             ingredients.map {
                 it.toDomainIngredient()
-            }
-        }.onEach { ingredients ->
-            if (ingredients.isEmpty()) {
-                refreshIngredients()
             }
         }
     }
@@ -58,7 +52,9 @@ class OfflineIngredientRepository(
     override suspend fun refreshIngredients() {
         try {
             val ingredients = ingredientApiService.getIngredients().drinks.map { it.strIngredient1.asDomainImgredientNameOnly().asDbIngredient() }
-            ingredientDao.insertIngredients(ingredients)
+            ingredients.forEach { ingredient ->
+                ingredientDao.insertIngredientIfNotExisting(ingredient)
+            }
         } catch (exception: IOException) {
             exception.printStackTrace()
         }

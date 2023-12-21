@@ -1,4 +1,4 @@
-package com.example.cocktailapp.ui.cocktails.components
+package com.example.cocktailapp.ui.components
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -16,11 +16,11 @@ import androidx.compose.ui.unit.isUnspecified
 
 @Composable
 fun AutoResizedText(
-    text:String,
+    text: String,
     style: TextStyle = MaterialTheme.typography.bodyMedium,
     modifier: Modifier = Modifier,
     color: Color = style.color,
-){
+) {
     var resizedTextStyle by remember { mutableStateOf(style) }
     var shouldDraw by remember { mutableStateOf(false) }
     val defaultFontSize = MaterialTheme.typography.bodyMedium.fontSize
@@ -29,26 +29,26 @@ fun AutoResizedText(
         text = text,
         color = color,
         modifier = modifier.drawWithContent {
-             if(shouldDraw){
-                 drawContent()
-             }
+            if (shouldDraw) {
+                drawContent()
+            }
         },
         softWrap = false,
         textAlign = TextAlign.Center,
         style = resizedTextStyle,
-        onTextLayout = {result->
-            if(result.didOverflowWidth){
-                if(style.fontSize.isUnspecified){
+        onTextLayout = { result ->
+            if (result.didOverflowWidth) {
+                if (style.fontSize.isUnspecified) {
                     resizedTextStyle = resizedTextStyle.copy(
-                        fontSize = defaultFontSize
+                        fontSize = defaultFontSize,
                     )
                 }
                 resizedTextStyle = resizedTextStyle.copy(
-                    fontSize = resizedTextStyle.fontSize*0.95
+                    fontSize = resizedTextStyle.fontSize * 0.95,
                 )
-            }else{
+            } else {
                 shouldDraw = true
             }
-        }
+        },
     )
 }

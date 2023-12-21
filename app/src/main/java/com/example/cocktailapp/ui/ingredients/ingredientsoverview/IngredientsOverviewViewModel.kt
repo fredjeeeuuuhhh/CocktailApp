@@ -27,6 +27,9 @@ class IngredientsOverviewViewModel(
     var ingredientApiState: IngredientApiState by mutableStateOf(IngredientApiState.Loading)
         private set
     init {
+        viewModelScope.launch {
+            ingredientRepository.refreshIngredients()
+        }
         getApiIngredients()
     }
 

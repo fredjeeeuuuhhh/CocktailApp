@@ -10,7 +10,18 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CocktailDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertCocktails(cocktails: List<DbCocktail>)
+    suspend fun insertCocktail(cocktail: DbCocktail)
+
+    @Transaction
+    suspend fun insertCocktailIfNotExisting(cocktail: DbCocktail) {
+        val existingCocktail = getCocktailById(cocktail.cocktailId)
+        if (existingCocktail == null) {
+            insertCocktail(cocktail)
+        }
+    }
+
+    @Query("SELECT * FROM dbcocktail WHERE cocktailId = :id")
+    suspend fun getCocktailById(id: Int): DbCocktail
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertCrossRef(ref: CrossRef)

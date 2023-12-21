@@ -4,15 +4,25 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface IngredientDao {
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertIngredients(ingredients: List<DbIngredient>)
 
-    @Insert(onConflict = OnConflictStrategy.NONE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertIngredient(ingredient: DbIngredient)
+
+    @Transaction
+    suspend fun insertIngredientIfNotExisting(ingredient: DbIngredient) {
+        val existingIngredient = getIngredientByName(ingredient.ingredientName)
+        if (existingIngredient == null) {
+            insertIngredient(ingredient)
+        }
+    }
+
+    @Query("SELECT * FROM dbingredient WHERE ingredientname LIKE :name")
+    suspend fun getIngredientByName(name: String): DbIngredient
 
     @Query("UPDATE DbIngredient SET description = :desc, containsAlcohol = :alcohol, alcoholPercentage = :percentage, type = :type WHERE ingredientName LIKE :name")
     suspend fun updateIngredient(name: String, desc: String, alcohol: Boolean, percentage: String, type: String)

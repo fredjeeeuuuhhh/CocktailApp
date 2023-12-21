@@ -1,6 +1,5 @@
 package com.example.cocktailapp.local.cocktails
 
-import android.util.Log
 import com.example.cocktailapp.local.ingredients.IngredientDao
 import com.example.cocktailapp.local.ingredients.asDbIngredient
 import com.example.cocktailapp.model.Cocktail
@@ -37,10 +36,6 @@ class OfflineCocktailRepository(
             cocktails.map {
                 it.toDomainCocktail()
             }
-        }.onEach { cocktails ->
-            if (cocktails.isEmpty()) {
-                refreshCocktails()
-            }
         }
     }
 
@@ -49,11 +44,10 @@ class OfflineCocktailRepository(
             ?.first()?.ingredientNames
 
         if (ingredientsNames != null) {
-            ingredientsNames.forEach {
-                val ingredient = ingredientApiService.getIngredientByName(it).ingredients.map { it.asDomainIngredient() }.first().asDbIngredient()
-                Log.i("sg", ingredient.toString())
-                ingredientDao.insertIngredient(ingredient)
-                cocktailDao.insertCrossRef(CrossRef(id, it))
+            ingredientsNames.forEach { ingredientName ->
+                val ingredient = ingredientApiService.getIngredientByName(ingredientName).ingredients.map { it.asDomainIngredient() }.first().asDbIngredient()
+                ingredientDao.insertIngredientIfNotExisting(ingredient)
+                cocktailDao.insertCrossRef(CrossRef(id, ingredientName))
             }
         }
 
@@ -81,7 +75,9 @@ class OfflineCocktailRepository(
     private suspend fun searchByIngredientFromApi(ingredientName: String) {
         try {
             val cocktails = cocktailApiService.searchByIngredient(ingredientName).drinks.asDomainObjectsFromSearch().map { it.asDbCocktail() }
-            cocktailDao.insertCocktails(cocktails)
+            cocktails.forEach {cocktail ->
+                cocktailDao.insertCocktailIfNotExisting(cocktail)
+            }
         } catch (exception: IOException) {
             exception.printStackTrace()
         }
@@ -92,7 +88,9 @@ class OfflineCocktailRepository(
                 val cocktails = cocktailApiService.getCocktails(character).drinks?.asDomainObjects()
                     ?.map { it.asDbCocktail() }
                 if (cocktails != null) {
-                    cocktailDao.insertCocktails(cocktails)
+                    cocktails.forEach {cocktail ->
+                        cocktailDao.insertCocktailIfNotExisting(cocktail)
+                    }
                     cocktails.forEach {
                         it.ingredientNames.forEach { string ->
                             cocktailDao.insertCrossRef(CrossRef(it.cocktailId, string))

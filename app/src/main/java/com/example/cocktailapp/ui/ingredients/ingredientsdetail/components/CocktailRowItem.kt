@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.cocktailapp.model.Cocktail
-import com.example.cocktailapp.ui.cocktails.components.AutoResizedText
+import com.example.cocktailapp.ui.components.AutoResizedText
 
 @Composable
 fun CocktailRowItem(

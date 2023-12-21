@@ -19,14 +19,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.cocktailapp.R
 import com.example.cocktailapp.model.Cocktail
-import com.example.cocktailapp.ui.cocktails.components.AutoResizedText
+import com.example.cocktailapp.ui.components.AutoResizedText
 
 @Composable
 fun CocktailListItem(
@@ -54,10 +53,10 @@ fun CocktailListItem(
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
-        ){
+        ) {
             Row(
                 modifier = Modifier
-                    .background(Color.Black)
+                    .background(MaterialTheme.colorScheme.inverseSurface)
                     .padding(dimensionResource(id = R.dimen.padding_extra_small)),
             ) {
                 if (cocktail.ingredientNames != null) {
@@ -71,15 +70,14 @@ fun CocktailListItem(
                 }
             }
         }
-
-
-        AutoResizedText(
-            text = cocktail.title,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier
-                .padding(30.dp)
-                .fillMaxWidth(),
-            color = MaterialTheme.colorScheme.onSecondary,
-        )
+        Row(
+            modifier = Modifier.fillMaxSize().padding(vertical = 8.dp),
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            AutoResizedText(
+                text = cocktail.title,
+                style = MaterialTheme.typography.bodyLarge,
+            )
+        }
     }
 }

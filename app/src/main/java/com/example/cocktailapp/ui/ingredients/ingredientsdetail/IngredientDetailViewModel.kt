@@ -1,6 +1,5 @@
 package com.example.cocktailapp.ui.ingredients.ingredientsdetail
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -42,21 +41,22 @@ class IngredientDetailViewModel(
 
     private fun getIngredientDetails() {
         viewModelScope.launch {
-            Log.i("name", ingredientName)
             ingredientRepository.getIngredientByName(ingredientName)
                 .combine(cocktailRepository.searchByIngredient(ingredientName)) {
                         ingredients, cocktails ->
+                    Pair(ingredients, cocktails)
+                }
+                .catch { exception ->
+                    exception.printStackTrace()
+                    ingredientDetailApiState = IngredientDetailApiState.Error
+                }
+                .collect { (ingredients, cocktails) ->
                     ingredientDetailApiState = IngredientDetailApiState.Succes(
                         ingredients,
                         cocktails,
                     )
                     _uiState.update { it.copy(currentIngredient = ingredients, cocktailsContainingIngredient = cocktails) }
                 }
-                .catch { exception ->
-                    exception.printStackTrace()
-                    ingredientDetailApiState = IngredientDetailApiState.Error
-                }
-                .collect {}
         }
     }
     fun onOwnedChanged(flag: Boolean) {
@@ -69,7 +69,6 @@ class IngredientDetailViewModel(
         }
     }
 
-    // object to tell the android framework how to handle the parameter of the viewmodel
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {

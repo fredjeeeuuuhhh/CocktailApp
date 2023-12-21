@@ -20,7 +20,7 @@ import com.example.cocktailapp.R
 import com.example.cocktailapp.model.Cocktail
 import com.example.cocktailapp.ui.CocktailApiState
 import com.example.cocktailapp.ui.cocktails.cocktailoverview.components.Cocktails
-import com.example.cocktailapp.ui.cocktails.cocktailoverview.components.FilterChipsView
+import com.example.cocktailapp.ui.components.FilterChipsView
 import eu.bambooapps.material3.pullrefresh.PullRefreshIndicator
 import eu.bambooapps.material3.pullrefresh.pullRefresh
 import eu.bambooapps.material3.pullrefresh.rememberPullRefreshState
@@ -73,7 +73,7 @@ fun SupplementsOverview(
         stringResource(R.string.filter_all) to { true },
     )
 
-    for (category in cocktails.map { it.category?:"" }.distinct())
+    for (category in cocktails.map { it.category ?: "" }.distinct())
         filters += category to { it.category == category }
 
     var currentFilter by rememberSaveable { mutableStateOf(filters.toList()[0].first) }
