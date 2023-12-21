@@ -1,5 +1,12 @@
 package com.example.cocktailapp.local.cocktails
 
+import android.content.Context
+import androidx.work.Constraints
+import androidx.work.Data
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.example.cocktailapp.local.ingredients.IngredientDao
 import com.example.cocktailapp.local.ingredients.asDbIngredient
 import com.example.cocktailapp.model.Cocktail
@@ -8,19 +15,27 @@ import com.example.cocktailapp.network.IngredientApiService
 import com.example.cocktailapp.network.asDomainIngredient
 import com.example.cocktailapp.network.asDomainObjects
 import com.example.cocktailapp.network.asDomainObjectsFromSearch
+import com.example.cocktailapp.util.WifiGetCocktailByIdWorker
+import com.example.cocktailapp.util.WifiRefreshCocktailWorker
+import com.example.cocktailapp.util.WifiSearchByIngredientWorker
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
-import java.io.IOException
+import java.util.UUID
 
 interface CocktailRepository {
     fun getAll(): Flow<List<Cocktail>>
-    suspend fun getCocktailById(id: Int): Flow<Cocktail>
-    suspend fun searchByIngredient(ingredientName: String): Flow<List<Cocktail>>
-
+    fun getCocktailById(id: Int): Flow<Cocktail>
+    fun searchByIngredient(ingredientName: String): Flow<List<Cocktail>>
     suspend fun updateIsFavorite(cocktailId: Int, isFavorite: Boolean): Flow<Void>
     suspend fun refreshCocktails()
+    suspend fun refreshCocktailsInWorker()
+    suspend fun getCocktailByIdInWorker(id: Int)
+    suspend fun searchByIngredientInWorker(ingredientName: String)
+
+    var wifiWorkRefreshCocktailInfo: Flow<WorkInfo>
+    var wifiSearchByIngredientInfo: Flow<WorkInfo>
+    var wifiGetCocktailByIdInfo: Flow<WorkInfo>
 }
 
 class OfflineCocktailRepository(
@@ -28,7 +43,9 @@ class OfflineCocktailRepository(
     private val ingredientDao: IngredientDao,
     private val ingredientApiService: IngredientApiService,
     private val cocktailApiService: CocktailApiService,
+    context: Context,
 ) : CocktailRepository {
+    private val workManager = WorkManager.getInstance(context)
     private val characters = listOf("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z")
     override fun getAll(): Flow<List<Cocktail>> {
         return cocktailDao.getAll().map { cocktails ->
@@ -38,7 +55,27 @@ class OfflineCocktailRepository(
         }
     }
 
-    override suspend fun getCocktailById(id: Int): Flow<Cocktail> {
+    override suspend fun updateIsFavorite(cocktailId: Int, isFavorite: Boolean): Flow<Void> = flow {
+        cocktailDao.updateIsFavorite(cocktailId, isFavorite)
+    }
+
+    private var wifiGetCocktailByIdID = UUID(1, 2)
+    override var wifiGetCocktailByIdInfo: Flow<WorkInfo> =
+        workManager.getWorkInfoByIdFlow(wifiGetCocktailByIdID)
+    override fun getCocktailById(id: Int): Flow<Cocktail> {
+        val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+        val inputData = Data.Builder().putString("id", id.toString()).build()
+        val requestBuilder = OneTimeWorkRequestBuilder<WifiGetCocktailByIdWorker>()
+        val request = requestBuilder.setInputData(inputData).setConstraints(constraints).build()
+        workManager.enqueue(request)
+        wifiGetCocktailByIdID = request.id
+        wifiGetCocktailByIdInfo = workManager.getWorkInfoByIdFlow(request.id)
+
+        return cocktailDao.getById(id).map {
+            it.toDomainCocktail()
+        }
+    }
+    override suspend fun getCocktailByIdInWorker(id: Int) {
         val ingredientsNames = cocktailApiService.getCocktailById(id).drinks?.asDomainObjects()
             ?.first()?.ingredientNames
 
@@ -49,56 +86,60 @@ class OfflineCocktailRepository(
                 cocktailDao.insertCrossRef(CrossRef(id, ingredientName))
             }
         }
-
-        return cocktailDao.getById(id).map {
-            it.toDomainCocktail()
-        }
     }
 
-    override suspend fun searchByIngredient(ingredientName: String): Flow<List<Cocktail>> {
+    private var wifiSearchByIngredientID = UUID(1, 2)
+    override var wifiSearchByIngredientInfo: Flow<WorkInfo> =
+        workManager.getWorkInfoByIdFlow(wifiSearchByIngredientID)
+
+    override fun searchByIngredient(ingredientName: String): Flow<List<Cocktail>> {
+        val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+        val inputData = Data.Builder().putString("ingredientName", ingredientName).build()
+        val requestBuilder = OneTimeWorkRequestBuilder<WifiSearchByIngredientWorker>()
+        val request = requestBuilder.setInputData(inputData).setConstraints(constraints).build()
+        workManager.enqueue(request)
+        wifiSearchByIngredientID = request.id
+        wifiSearchByIngredientInfo = workManager.getWorkInfoByIdFlow(request.id)
         return cocktailDao.getByIngredient(ingredientName).map { cocktails ->
             cocktails.map {
                 it.toDomainCocktail()
             }
-        }.onEach { cocktails ->
-            if (cocktails.isEmpty()) {
-                searchByIngredientFromApi(ingredientName)
-            }
         }
     }
 
-    override suspend fun updateIsFavorite(cocktailId: Int, isFavorite: Boolean): Flow<Void> = flow {
-        cocktailDao.updateIsFavorite(cocktailId, isFavorite)
-    }
-
-    private suspend fun searchByIngredientFromApi(ingredientName: String) {
-        try {
-            val cocktails = cocktailApiService.searchByIngredient(ingredientName).drinks.asDomainObjectsFromSearch().map { it.asDbCocktail() }
-            cocktails.forEach {cocktail ->
-                cocktailDao.insertCocktailIfNotExisting(cocktail)
-            }
-        } catch (exception: IOException) {
-            exception.printStackTrace()
+    override suspend fun searchByIngredientInWorker(ingredientName: String) {
+        val cocktails = cocktailApiService.searchByIngredient(ingredientName).drinks.asDomainObjectsFromSearch().map { it.asDbCocktail() }
+        cocktails.forEach { cocktail ->
+            cocktailDao.insertCocktailIfNotExisting(cocktail)
         }
     }
+
     override suspend fun refreshCocktails() {
-        try {
-            characters.forEach { character ->
-                val cocktails = cocktailApiService.getCocktails(character).drinks?.asDomainObjects()
-                    ?.map { it.asDbCocktail() }
-                if (cocktails != null) {
-                    cocktails.forEach {cocktail ->
-                        cocktailDao.insertCocktailIfNotExisting(cocktail)
-                    }
-                    cocktails.forEach {
-                        it.ingredientNames.forEach { string ->
-                            cocktailDao.insertCrossRef(CrossRef(it.cocktailId, string))
-                        }
+        val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+        val requestBuilder = OneTimeWorkRequestBuilder<WifiRefreshCocktailWorker>()
+        val request = requestBuilder.setConstraints(constraints).build()
+        workManager.enqueue(request)
+        wifiWorkRefreshCocktailID = request.id
+        wifiWorkRefreshCocktailInfo = workManager.getWorkInfoByIdFlow(request.id)
+    }
+    private var wifiWorkRefreshCocktailID = UUID(1, 2)
+    override var wifiWorkRefreshCocktailInfo: Flow<WorkInfo> =
+        workManager.getWorkInfoByIdFlow(wifiWorkRefreshCocktailID)
+
+    override suspend fun refreshCocktailsInWorker() {
+        characters.forEach { character ->
+            val cocktails = cocktailApiService.getCocktails(character).drinks?.asDomainObjects()
+                ?.map { it.asDbCocktail() }
+            if (cocktails != null) {
+                cocktails.forEach { cocktail ->
+                    cocktailDao.insertCocktailIfNotExisting(cocktail)
+                }
+                cocktails.forEach {
+                    it.ingredientNames.forEach { string ->
+                        cocktailDao.insertCrossRef(CrossRef(it.cocktailId, string))
                     }
                 }
             }
-        } catch (exception: IOException) {
-            exception.printStackTrace()
         }
     }
 }
