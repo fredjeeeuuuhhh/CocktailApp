@@ -18,7 +18,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-
+import androidx.compose.ui.res.stringResource
+import com.example.cocktailapp.R
 
 @Composable
 fun IngredientHeader(
@@ -40,7 +41,7 @@ fun IngredientHeader(
         ) {
             Icon(
                 Icons.Filled.ArrowBack,
-                contentDescription = "Close dialog",
+                contentDescription = stringResource(id = R.string.arrow_back),
                 tint = MaterialTheme.colorScheme.primary,
             )
         }
@@ -52,24 +53,23 @@ fun IngredientHeader(
 
         IconButton(
             onClick = {
-                selected=!selected
+                selected = !selected
                 onIsOwnedChanged(!isOwned)
             },
         ) {
-            if(selected){
+            if (selected) {
                 Icon(
                     Icons.Filled.RemoveCircleOutline,
-                    contentDescription = "Close dialog",
+                    contentDescription = stringResource(id = R.string.ingredient_not_owned),
                     tint = MaterialTheme.colorScheme.primary,
                 )
-            }else{
+            } else {
                 Icon(
                     Icons.Filled.AddCircleOutline,
-                    contentDescription = "Close dialog",
+                    contentDescription = stringResource(id = R.string.ingredient_owned),
                     tint = MaterialTheme.colorScheme.primary,
                 )
             }
-
         }
     }
 }

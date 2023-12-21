@@ -8,11 +8,6 @@ interface IngredientApiService {
     @GET("list.php?i=list")
     suspend fun getIngredients(): ApiIngredientNames
 
-    @GET("lookup.php")
-    suspend fun getIngredientById(@Query("iid") id:Int):ApiIngredientLookupResult
-
     @GET("search.php")
-    suspend fun getIngredientByName(@Query("i") name:String):ApiIngredientLookupResult
-
+    suspend fun getIngredientByName(@Query("i") name: String): ApiIngredientLookupResult
 }
-

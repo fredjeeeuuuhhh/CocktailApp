@@ -3,10 +3,12 @@
     <dimen name="drawer_width">160dp</dimen>
     <dimen name="drawer_padding_content">8dp</dimen>
     <dimen name="drawer_padding_header">8dp</dimen>
-
     <dimen name="padding_extra_small">4dp</dimen>
     <dimen name="padding_small">8dp</dimen>
     <dimen name="padding_medium">12dp</dimen>
     <dimen name="padding_large">16dp</dimen>
     <dimen name="padding_extra_large">20dp</dimen>
+    <dimen name="cocktail_detail_icon">35dp</dimen>
+    <dimen name="separatot_thickness">3dp</dimen>
+    <dimen name="cocktail_card_ingredient_width">160dp</dimen>
 </resources>

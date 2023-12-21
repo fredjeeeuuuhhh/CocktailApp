@@ -1,6 +1,5 @@
 package com.example.cocktailapp.ui.cocktails.cocktaildetail
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -15,11 +14,7 @@ import com.example.cocktailapp.CocktailApplication
 import com.example.cocktailapp.local.cocktails.CocktailRepository
 import com.example.cocktailapp.ui.CocktailDestinationsArgs
 import com.example.cocktailapp.ui.CocktailDetailApiState
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class CocktailDetailViewModel(
@@ -28,20 +23,13 @@ class CocktailDetailViewModel(
 ) : ViewModel() {
     private val cocktailId: String = savedStateHandle[CocktailDestinationsArgs.COCKTAIL_ID_ARG]!!
 
-    private val _uiState = MutableStateFlow(CocktailDetailState(null))
-    val uiState: StateFlow<CocktailDetailState> = _uiState.asStateFlow()
-
     var cocktailDetailApiState: CocktailDetailApiState by mutableStateOf(CocktailDetailApiState.Loading)
         private set
 
     init {
-        Log.i("vm inspection", cocktailId)
         getApiCocktail()
     }
-    override fun onCleared() {
-        super.onCleared()
-        Log.i("vm inspection", cocktailId)
-    }
+
     private fun getApiCocktail() {
         viewModelScope.launch {
             cocktailRepository.getCocktailById(cocktailId.toInt())
@@ -51,7 +39,6 @@ class CocktailDetailViewModel(
                 }
                 .collect { cocktail ->
                     cocktailDetailApiState = CocktailDetailApiState.Succes(cocktail)
-                    _uiState.update { it.copy(currentCocktail = cocktail) }
                 }
         }
     }

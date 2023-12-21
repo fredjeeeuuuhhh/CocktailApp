@@ -23,13 +23,13 @@ class CocktailOverviewViewModel(
     private val cocktailRepository: CocktailRepository,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(CocktailOverviewState(false, null))
+    private val _uiState = MutableStateFlow(CocktailOverviewState())
     val uiState: StateFlow<CocktailOverviewState> = _uiState.asStateFlow()
 
     var cocktailApiState: CocktailApiState by mutableStateOf(CocktailApiState.Loading)
         private set
     init {
-        viewModelScope.launch{
+        viewModelScope.launch {
             cocktailRepository.refreshCocktails()
         }
         getApiCocktails()
@@ -46,7 +46,6 @@ class CocktailOverviewViewModel(
                     cocktailApiState = CocktailApiState.Succes(
                         cocktails,
                     )
-                    _uiState.update { it.copy(currentCocktailList = cocktails) }
                 }
         }
     }
@@ -55,25 +54,27 @@ class CocktailOverviewViewModel(
         _uiState.update {
             it.copy(isRefreshing = true)
         }
+        cocktailApiState = CocktailApiState.Loading
         viewModelScope.launch {
             cocktailRepository.getAll()
-                .catch {
+                .catch { exception ->
+                    exception.printStackTrace()
                     _uiState.update {
                         it.copy(isRefreshing = false)
                     }
+                    cocktailApiState = CocktailApiState.Error
                 }
                 .collect { cocktails ->
                     cocktailApiState = CocktailApiState.Succes(
                         cocktails,
                     )
                     _uiState.update {
-                        it.copy(currentCocktailList = cocktails, isRefreshing = false)
+                        it.copy(isRefreshing = false)
                     }
                 }
         }
     }
 
-    // object to tell the android framework how to handle the parameter of the viewmodel
     companion object {
         private var Instance: CocktailOverviewViewModel? = null
         val Factory: ViewModelProvider.Factory = viewModelFactory {

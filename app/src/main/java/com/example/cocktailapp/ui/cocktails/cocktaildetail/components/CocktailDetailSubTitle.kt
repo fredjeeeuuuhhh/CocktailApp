@@ -8,21 +8,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
+import com.example.cocktailapp.R
 
 @Composable
 fun CocktailDetailSubTitle(
     @StringRes label: Int,
     align: TextAlign = TextAlign.Start,
     color: Color,
-){
+) {
     Text(
         text = stringResource(id = label),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(5.dp),
+            .padding(dimensionResource(id = R.dimen.padding_extra_small)),
         color = color,
         style = MaterialTheme.typography.titleLarge,
         textAlign = align,

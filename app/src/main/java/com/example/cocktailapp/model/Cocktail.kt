@@ -10,6 +10,6 @@ data class Cocktail(
     var image: String,
     var ingredientNames: List<String>? = null,
     var measurements: List<String>? = null,
-    var isFavorite: Boolean? = null,
+    var isFavorite: Boolean = false,
     var nrOwnedIngredients: Int = 0,
 )

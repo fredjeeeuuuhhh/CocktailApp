@@ -20,7 +20,7 @@ fun NavigationDrawerContent(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-        menuItems.forEach {screen->
+        menuItems.forEach { screen ->
             NavigationDrawerItem(
                 selected = screen.route == currentRoute,
                 label = {

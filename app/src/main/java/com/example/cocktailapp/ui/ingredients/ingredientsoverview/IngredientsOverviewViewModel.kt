@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 class IngredientsOverviewViewModel(
     private val ingredientRepository: IngredientRepository,
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(IngredientsOverviewState(false, null))
+    private val _uiState = MutableStateFlow(IngredientsOverviewState())
     val uiState: StateFlow<IngredientsOverviewState> = _uiState.asStateFlow()
 
     var ingredientApiState: IngredientApiState by mutableStateOf(IngredientApiState.Loading)
@@ -42,7 +42,6 @@ class IngredientsOverviewViewModel(
                 }
                 .collect { ingredients ->
                     ingredientApiState = IngredientApiState.Succes(ingredients)
-                    _uiState.update { it.copy(currentIngredientList = ingredients) }
                 }
         }
     }
@@ -51,19 +50,22 @@ class IngredientsOverviewViewModel(
         _uiState.update {
             it.copy(isRefreshing = true)
         }
+        ingredientApiState = IngredientApiState.Loading
         viewModelScope.launch {
             ingredientRepository.getIngredients()
-                .catch {
+                .catch {exception->
+                    exception.printStackTrace()
                     _uiState.update {
                         it.copy(isRefreshing = false)
                     }
+                    ingredientApiState = IngredientApiState.Error
                 }
                 .collect { ingredients ->
                     ingredientApiState = IngredientApiState.Succes(
                         ingredients,
                     )
                     _uiState.update {
-                        it.copy(currentIngredientList = ingredients, isRefreshing = false)
+                        it.copy(isRefreshing = false)
                     }
                 }
         }

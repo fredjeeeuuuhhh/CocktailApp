@@ -11,8 +11,9 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.dimensionResource
 import coil.compose.AsyncImage
+import com.example.cocktailapp.R
 import com.example.cocktailapp.model.Cocktail
 import com.example.cocktailapp.ui.components.AutoResizedText
 
@@ -20,14 +21,15 @@ import com.example.cocktailapp.ui.components.AutoResizedText
 fun CocktailRowItem(
     cocktail: Cocktail,
     onViewDetailClicked: (Cocktail) -> Unit,
-){
+) {
     Card(
         modifier = Modifier
-            .padding(10.dp).width(160.dp)
+            .padding(dimensionResource(id = R.dimen.padding_medium))
+            .width(dimensionResource(id = R.dimen.cocktail_card_ingredient_width))
             .clickable { onViewDetailClicked(cocktail) },
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(dimensionResource(id = R.dimen.padding_large)),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondary
+            containerColor = MaterialTheme.colorScheme.secondary,
         ),
     ) {
         AsyncImage(
@@ -35,13 +37,13 @@ fun CocktailRowItem(
             contentDescription = cocktail.title,
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(1f),
+                .aspectRatio(ratio = 1f),
         )
 
         AutoResizedText(
-            text =  cocktail.title,
+            text = cocktail.title,
             style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(10.dp).fillMaxWidth(),
+            modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)).fillMaxWidth(),
             color = MaterialTheme.colorScheme.onSecondary,
         )
     }

@@ -30,6 +30,6 @@ fun DbCocktail.toDomainCocktail(): Cocktail {
         ingredientNames = ingredientNames,
         measurements = measurements,
         isFavorite = isFavorite,
-        nrOwnedIngredients = nrOfOwnedIngredients
+        nrOwnedIngredients = nrOfOwnedIngredients,
     )
 }

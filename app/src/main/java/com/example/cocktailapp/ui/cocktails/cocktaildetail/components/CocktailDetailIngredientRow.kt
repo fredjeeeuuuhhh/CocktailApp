@@ -12,26 +12,33 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import coil.compose.AsyncImage
+import com.example.cocktailapp.R
 
 @Composable
 fun CocktailDetailIngredientRow(
-    ingredientName:String,
-    measurement:String,
-){
+    ingredientName: String,
+    measurement: String,
+) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier.fillMaxWidth().padding(start = 5.dp, end = 10.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                start = dimensionResource(id = R.dimen.padding_extra_small),
+                end = dimensionResource(id = R.dimen.padding_small),
+            ),
     ) {
         Box() {
             Row {
                 AsyncImage(
-                    model = "https://www.thecocktaildb.com/images/ingredients/$ingredientName-Small.png",
+                    model = stringResource(R.string.ingredient_thumbnail, ingredientName),
                     contentDescription = ingredientName,
                     modifier = Modifier
-                        .width(35.dp)
-                        .height(35.dp)
+                        .width(dimensionResource(id = R.dimen.cocktail_detail_icon))
+                        .height(dimensionResource(id = R.dimen.cocktail_detail_icon))
                         .aspectRatio(1f),
                 )
                 Text(

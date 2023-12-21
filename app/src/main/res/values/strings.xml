@@ -2,22 +2,29 @@
     <string name="app_name" translatable="false">CocktailApp</string>
     <string name="title_cocktails">Cocktails</string>
     <string name="title_ingredients">Ingredients</string>
-    <string name="title_random">Random</string>
     <string name="subtitle_ingredients">Ingredients</string>
     <string name="subtitle_instructions">Instructions</string>
-    <string name="label_all">All</string>
-    <string name="no_cocktails_all">No cocktails to display</string>
-    <string name="cat_ordinary_drink">Ordinary Drink</string>
-    <string name="cat_cocktail">Cocktail</string>
-    <string name="cat_shake">Shake</string>
-    <string name="cat_other">Other / Unknown</string>
-    <string name="cat_cocoa">Cocoa</string>
-    <string name="cat_shot">Shot</string>
-    <string name="cat_coffee_tea">Coffee / Tea</string>
-    <string name="cat_liqueur">Homemade Liqueur"</string>
-    <string name="cat_punch">Punch / Party Drink</string>
-    <string name="cat_beer">Beer</string>
-    <string name="cat_soft_drink">Soft drink</string>
-    <string name="filter_all">Alle</string>
-
+    <string name="filter_all">All</string>
+    <string name="ingredient_thumbnail">https://www.thecocktaildb.com/images/ingredients/%s-Small.png</string>
+    <string name="star_favorite">Favorite</string>
+    <string name="bullet">Bullet point</string>
+    <string name="loading_details">Loading data from cocktail</string>
+    <string name="error_details">Something went wrong while retrieving data from cocktail</string>
+    <string name="cocktail_tag">CocktailCard</string>
+    <string name="icon_locked">Locked</string>
+    <string name="icon_unlocked">Unlocked</string>
+    <string name="loading_cocktail_overview">Loading cocktails</string>
+    <string name="error_cocktail_overview">Something went wrong while retrieving cocktails</string>
+    <string name="arrow_back">Arrow back</string>
+    <string name="ingredient_not_owned">Not owned</string>
+    <string name="ingredient_owned">Owned</string>
+    <string name="loading_details_ingredient">Loading data from ingredient</string>
+    <string name="error_details_ingredient">Something went wrong while retrieving data from ingredient</string>
+    <string name="contains_alcohol">Contains alcohol: %s</string>
+    <string name="type">Type of alcohol: %s</string>
+    <string name="percentage">Alcohol percentage: %s%</string>
+    <string name="ingredient_tag">IngredientCard</string>
+    <string name="alphabet">a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z</string>
+    <string name="loading_ingredient_overview">Loading ingredients</string>
+    <string name="error_ingredient_overview">Something went wrong while retrieving ingredients</string>
 </resources>

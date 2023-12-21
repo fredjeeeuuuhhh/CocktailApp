@@ -62,47 +62,59 @@ data class ApiDrinks(
 )
 
 fun List<ApiCocktail>.asDomainObjects() =
-    map {
+    map { apiCocktail ->
         Cocktail(
-            id = it.idDrink.toInt(),
-            title = it.strDrink,
-            category = it.strCategory,
-            alcoholFilter = it.strAlcoholic,
-            typeOfGlass = it.strGlass,
-            instructions = it.strInstructions,
-            image = it.strDrinkThumb + "/preview",
+            id = apiCocktail.idDrink.toInt(),
+            title = apiCocktail.strDrink,
+            category = apiCocktail.strCategory,
+            alcoholFilter = apiCocktail.strAlcoholic,
+            typeOfGlass = apiCocktail.strGlass,
+            instructions = apiCocktail.strInstructions,
+            image = apiCocktail.strDrinkThumb + "/preview",
             ingredientNames =
             listOfNotNull(
-                it.strIngredient1,
-                it.strIngredient2,
-                it.strIngredient3,
-                it.strIngredient4,
-                it.strIngredient5,
-                it.strIngredient6,
-                it.strIngredient7,
-                it.strIngredient8,
-                it.strIngredient9,
-                it.strIngredient10,
-                it.strIngredient11,
-                it.strIngredient12,
-                it.strIngredient13,
-                it.strIngredient14,
-                it.strIngredient15,
+                apiCocktail.strIngredient1,
+                apiCocktail.strIngredient2,
+                apiCocktail.strIngredient3,
+                apiCocktail.strIngredient4,
+                apiCocktail.strIngredient5,
+                apiCocktail.strIngredient6,
+                apiCocktail.strIngredient7,
+                apiCocktail.strIngredient8,
+                apiCocktail.strIngredient9,
+                apiCocktail.strIngredient10,
+                apiCocktail.strIngredient11,
+                apiCocktail.strIngredient12,
+                apiCocktail.strIngredient13,
+                apiCocktail.strIngredient14,
+                apiCocktail.strIngredient15,
             ),
             measurements =
             listOfNotNull(
-                it.strMeasure1, it.strMeasure2, it.strMeasure3, it.strMeasure4, it.strMeasure5,
-                it.strMeasure6, it.strMeasure7, it.strMeasure8, it.strMeasure9, it.strMeasure10,
-                it.strMeasure11, it.strMeasure12, it.strMeasure13, it.strMeasure14, it.strMeasure15,
+                apiCocktail.strMeasure1,
+                apiCocktail.strMeasure2,
+                apiCocktail.strMeasure3,
+                apiCocktail.strMeasure4,
+                apiCocktail.strMeasure5,
+                apiCocktail.strMeasure6,
+                apiCocktail.strMeasure7,
+                apiCocktail.strMeasure8,
+                apiCocktail.strMeasure9,
+                apiCocktail.strMeasure10,
+                apiCocktail.strMeasure11,
+                apiCocktail.strMeasure12,
+                apiCocktail.strMeasure13,
+                apiCocktail.strMeasure14,
+                apiCocktail.strMeasure15,
             ),
         )
     }
 
 fun List<ApiCocktailForSearch>.asDomainObjectsFromSearch() =
-    map {
+    map { apiCocktail ->
         Cocktail(
-            id = it.idDrink.toInt(),
-            title = it.strDrink,
-            image = it.strDrinkThumb + "/preview",
+            id = apiCocktail.idDrink.toInt(),
+            title = apiCocktail.strDrink,
+            image = apiCocktail.strDrinkThumb + "/preview",
         )
     }

@@ -13,7 +13,7 @@ fun TaskNavigationRail(currentRoute: String, menuItems: Array<NavigationMenuItem
         menuItems.forEach { screen ->
             NavigationRailItem(
                 selected = screen.route == currentRoute,
-                onClick =  screen.navigationAction,
+                onClick = screen.navigationAction,
                 icon = {
                     Icon(
                         imageVector = screen.icon,

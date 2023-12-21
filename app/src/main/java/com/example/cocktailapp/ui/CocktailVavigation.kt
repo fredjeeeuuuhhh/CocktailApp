@@ -17,7 +17,6 @@ private object CocktailScreens {
     const val INGREDIENT_DETAIL_SCREEN = "detailIngredient"
 }
 object CocktailDestinationsArgs {
-
     const val COCKTAIL_ID_ARG = "cocktailId"
     const val INGREDIENT_NAME_ARG = "ingredientName"
 }

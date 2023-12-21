@@ -18,9 +18,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.example.cocktailapp.R
 
 @Composable
-fun CocktaiilIngredientHeader(
+fun CocktailIngredientHeader(
     onBack: () -> Unit,
     title: String,
     isFavorite: Boolean,
@@ -37,7 +39,7 @@ fun CocktaiilIngredientHeader(
         ) {
             Icon(
                 Icons.Filled.ArrowBack,
-                contentDescription = "Close dialog",
+                contentDescription = stringResource(id = R.string.star_favorite),
                 tint = MaterialTheme.colorScheme.primary,
             )
         }
@@ -57,13 +59,13 @@ fun CocktaiilIngredientHeader(
             if (selected) {
                 Icon(
                     Icons.Filled.Star,
-                    contentDescription = "Close dialog",
+                    contentDescription = stringResource(id = R.string.star_favorite),
                     tint = MaterialTheme.colorScheme.primary,
                 )
             } else {
                 Icon(
                     Icons.Filled.StarOutline,
-                    contentDescription = "Close dialog",
+                    contentDescription = stringResource(id = R.string.star_favorite),
                     tint = MaterialTheme.colorScheme.primary,
                 )
             }

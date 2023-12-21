@@ -40,7 +40,7 @@ fun ApiIngredient.asDomainIngredient(): Ingredient {
         name = strIngredient,
         description = strDescription,
         type = strType,
-        containsAlcohol = strAlcohol == "True",
+        containsAlcohol = strAlcohol == "Yes",
         alcoholPercentage = strABV,
         thumbnail = "https://www.thecocktaildb.com/images/ingredients/$strIngredient-Small.png",
         isOwned = false,

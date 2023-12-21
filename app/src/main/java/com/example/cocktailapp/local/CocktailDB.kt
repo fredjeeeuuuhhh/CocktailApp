@@ -30,7 +30,6 @@ abstract class CocktailDB : RoomDatabase() {
         private var Instance: CocktailDB? = null
 
         fun getDatabase(context: Context): CocktailDB {
-            // if the Instance is not null, return it, otherwise create a new database instance.
             return Instance ?: synchronized(this) {
                 Room.databaseBuilder(context, CocktailDB::class.java, "cocktail_database")
                     .fallbackToDestructiveMigration()

@@ -41,10 +41,10 @@ fun IngredientsScreen(
     ) {
         when (ingredientApiState) {
             is IngredientApiState.Loading -> {
-                Text("Loading ingredients from api")
+                Text(text = stringResource(id = R.string.loading_ingredient_overview))
             }
             is IngredientApiState.Error -> {
-                Text("Error while retrieving ingredients from api")
+                Text(text = stringResource(id = R.string.error_ingredient_overview))
             }
             is IngredientApiState.Succes -> {
                 IngredientsOverview(
@@ -71,8 +71,8 @@ fun IngredientsOverview(
     val filters = mutableMapOf<String, (Ingredient) -> Boolean>(
         stringResource(R.string.filter_all) to { true },
     )
-    val characters = listOf("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z")
-    for (char in characters)
+
+    for (char in stringResource(id = R.string.alphabet).split(","))
         filters += char to { it.name.first().lowercaseChar() == char.first() }
 
     var currentFilter by rememberSaveable { mutableStateOf(filters.toList()[0].first) }

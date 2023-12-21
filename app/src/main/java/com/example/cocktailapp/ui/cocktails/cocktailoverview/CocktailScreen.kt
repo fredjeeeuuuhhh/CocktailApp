@@ -13,8 +13,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.cocktailapp.R
 import com.example.cocktailapp.model.Cocktail
@@ -41,10 +41,10 @@ fun CocktailScreen(
     ) {
         when (cocktailApiState) {
             is CocktailApiState.Loading -> {
-                Text("Loading cocktails")
+                Text(text = stringResource(id = R.string.loading_cocktail_overview))
             }
             is CocktailApiState.Error -> {
-                Text("Something went wrong while loading tasks from api")
+                Text(text = stringResource(id = R.string.error_cocktail_overview))
             }
             is CocktailApiState.Succes -> {
                 SupplementsOverview(
@@ -58,7 +58,7 @@ fun CocktailScreen(
             refreshing = cocktailOverviewState.isRefreshing,
             state = pullRefreshState,
             modifier = Modifier
-                .padding(top = 20.dp)
+                .padding(top = dimensionResource(id = R.dimen.padding_extra_large))
                 .align(Alignment.TopCenter),
         )
     }

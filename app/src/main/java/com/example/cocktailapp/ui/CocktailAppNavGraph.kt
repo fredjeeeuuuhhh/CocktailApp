@@ -75,24 +75,28 @@ fun CocktailAppNavGraph(
         composable(CocktailDestinations.COCKTAIL_ROUTE) {
             MenuScaffold(
                 currentRoute = currentRoute,
-                menuItems,
+                menuItems = menuItems,
                 navigationType = navigationType,
             ) {
                 CocktailScreen(
-                    onViewDetailClicked = { cocktail -> navActions.navigateToCocktailDetail(cocktail.id) },
+                    onViewDetailClicked = { cocktail ->
+                        navActions.navigateToCocktailDetail(
+                            cocktailId = cocktail.id
+                        )
+                    },
                 )
             }
         }
         composable(CocktailDestinations.INGREDIENT_ROUTE) {
             MenuScaffold(
                 currentRoute = currentRoute,
-                menuItems,
+                menuItems = menuItems,
                 navigationType = navigationType,
             ) {
                 IngredientsScreen(
                     onViewDetailClicked = { ingredient ->
                         navActions.navigateToIngredientDetail(
-                            ingredient.name,
+                            ingredientName = ingredient.name,
                         )
                     },
                 )
@@ -108,7 +112,11 @@ fun CocktailAppNavGraph(
         composable(CocktailDestinations.INGREDIENT_DETAIL_ROUTE) {
             IngredientDetail(
                 onBack = { navController.popBackStack() },
-                onViewDetailClicked = { cocktail -> navActions.navigateToCocktailDetail(cocktail.id) },
+                onViewDetailClicked = { cocktail ->
+                    navActions.navigateToCocktailDetail(
+                        cocktailId = cocktail.id
+                    )
+                },
             )
         }
     }
@@ -120,8 +128,8 @@ fun MenuScaffold(currentRoute: String, menuItems: Array<NavigationMenuItem>, nav
         PermanentNavigationDrawer(drawerContent = {
             PermanentDrawerSheet(Modifier.width(dimensionResource(R.dimen.drawer_width))) {
                 NavigationDrawerContent(
-                    currentRoute,
-                    menuItems,
+                    currentRoute = currentRoute,
+                    menuItems = menuItems,
                     modifier = Modifier
                         .wrapContentWidth()
                         .fillMaxHeight()
@@ -139,7 +147,10 @@ fun MenuScaffold(currentRoute: String, menuItems: Array<NavigationMenuItem>, nav
     } else if (navigationType == NavigationType.BOTTOM_BAR) {
         Scaffold(
             bottomBar = {
-                BottomNavigationBar(currentRoute, menuItems)
+                BottomNavigationBar(
+                    currentRoute = currentRoute,
+                    menuItems = menuItems
+                )
             },
         ) { innerPadding ->
             Column(Modifier.padding(innerPadding)) {
@@ -151,7 +162,7 @@ fun MenuScaffold(currentRoute: String, menuItems: Array<NavigationMenuItem>, nav
             AnimatedVisibility(visible = navigationType == NavigationType.NAVIGATION_RAIL) {
                 TaskNavigationRail(
                     currentRoute = currentRoute,
-                    menuItems,
+                    menuItems = menuItems,
                 )
             }
             Scaffold { innerPadding ->

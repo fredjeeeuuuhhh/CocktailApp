@@ -6,11 +6,12 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.dimensionResource
+import com.example.cocktailapp.R
 
 @Composable
-fun CocktailDetailSectionSeparartor(){
-    Spacer(modifier = Modifier.padding(6.dp))
-    Divider(color = MaterialTheme.colorScheme.outline, thickness = 3.dp)
-    Spacer(modifier = Modifier.padding(6.dp))
+fun CocktailDetailSectionSeparartor() {
+    Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small)))
+    Divider(color = MaterialTheme.colorScheme.outline, thickness = dimensionResource(id = R.dimen.separatot_thickness))
+    Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small)))
 }

@@ -21,7 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import coil.compose.AsyncImage
 import com.example.cocktailapp.R
 import com.example.cocktailapp.model.Cocktail
@@ -35,10 +35,10 @@ fun CocktailListItem(
     Card(
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp)
-            .testTag("CocktailCard")
+            .padding(dimensionResource(id = R.dimen.padding_medium))
+            .testTag(tag = stringResource(R.string.cocktail_tag))
             .clickable { onViewDetailClicked(cocktail) },
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(dimensionResource(id = R.dimen.padding_large)),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.secondary,
         ),
@@ -48,7 +48,7 @@ fun CocktailListItem(
             contentDescription = cocktail.title,
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(1f),
+                .aspectRatio(ratio = 1f),
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -61,17 +61,17 @@ fun CocktailListItem(
             ) {
                 if (cocktail.ingredientNames != null) {
                     if (cocktail.ingredientNames!!.size == 0 || cocktail.ingredientNames!!.size != cocktail.nrOwnedIngredients) {
-                        Text("${cocktail.nrOwnedIngredients}/${cocktail.ingredientNames!!.size}")
-                        Icon(imageVector = Icons.Filled.Lock, contentDescription = "locked")
+                        Text(text = "${cocktail.nrOwnedIngredients}/${cocktail.ingredientNames!!.size}")
+                        Icon(imageVector = Icons.Filled.Lock, contentDescription = stringResource(R.string.icon_locked))
                     } else {
-                        Text("${cocktail.nrOwnedIngredients}/${cocktail.ingredientNames!!.size}")
-                        Icon(imageVector = Icons.Filled.LockOpen, contentDescription = "unlocked")
+                        Text(text = "${cocktail.nrOwnedIngredients}/${cocktail.ingredientNames!!.size}")
+                        Icon(imageVector = Icons.Filled.LockOpen, contentDescription = stringResource(R.string.icon_unlocked))
                     }
                 }
             }
         }
         Row(
-            modifier = Modifier.fillMaxSize().padding(vertical = 8.dp),
+            modifier = Modifier.fillMaxSize().padding(dimensionResource(id = R.dimen.padding_small)),
             horizontalArrangement = Arrangement.Center,
         ) {
             AutoResizedText(

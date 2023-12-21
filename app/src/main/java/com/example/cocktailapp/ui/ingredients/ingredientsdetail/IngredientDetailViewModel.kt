@@ -15,12 +15,8 @@ import com.example.cocktailapp.local.cocktails.CocktailRepository
 import com.example.cocktailapp.local.ingredients.IngredientRepository
 import com.example.cocktailapp.ui.CocktailDestinationsArgs
 import com.example.cocktailapp.ui.IngredientDetailApiState
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class IngredientDetailViewModel(
@@ -30,8 +26,6 @@ class IngredientDetailViewModel(
 ) : ViewModel() {
     private val ingredientName: String = savedStateHandle[CocktailDestinationsArgs.INGREDIENT_NAME_ARG]!!
 
-    private val _uiState = MutableStateFlow(IngredientDetailState(null, null))
-    val uiState: StateFlow<IngredientDetailState> = _uiState.asStateFlow()
     var ingredientDetailApiState: IngredientDetailApiState by mutableStateOf(IngredientDetailApiState.Loading)
         private set
 
@@ -55,7 +49,6 @@ class IngredientDetailViewModel(
                         ingredients,
                         cocktails,
                     )
-                    _uiState.update { it.copy(currentIngredient = ingredients, cocktailsContainingIngredient = cocktails) }
                 }
         }
     }

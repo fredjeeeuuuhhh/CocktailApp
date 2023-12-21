@@ -23,10 +23,10 @@ class MainActivity : ComponentActivity() {
             CocktailAppTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color =  MaterialTheme.colorScheme.background,
+                    color = MaterialTheme.colorScheme.background,
                 ) {
                     val windowSize = calculateWindowSizeClass(activity = this)
-                    when(windowSize.widthSizeClass){
+                    when (windowSize.widthSizeClass) {
                         WindowWidthSizeClass.Compact -> {
                             CocktailAppNavGraph()
                         }
@@ -45,5 +45,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-

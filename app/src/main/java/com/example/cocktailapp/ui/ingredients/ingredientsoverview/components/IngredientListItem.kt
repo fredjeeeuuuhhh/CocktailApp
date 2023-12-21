@@ -12,12 +12,12 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import coil.compose.AsyncImage
+import com.example.cocktailapp.R
 import com.example.cocktailapp.model.Ingredient
 import com.example.cocktailapp.ui.components.AutoResizedText
 
@@ -29,10 +29,10 @@ fun IngredientListItem(
     Card(
         modifier = Modifier
             .fillMaxSize()
-            .padding(4.dp)
-            .testTag("IngredientCard")
+            .padding(dimensionResource(id = R.dimen.padding_extra_small))
+            .testTag(stringResource(id = R.string.ingredient_tag))
             .clickable { onViewDetailClicked() },
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(dimensionResource(id = R.dimen.padding_large)),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant,
             contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -44,11 +44,13 @@ fun IngredientListItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(1f)
-                .padding(top = 4.dp),
+                .padding(top = dimensionResource(id = R.dimen.padding_extra_small)),
         )
         Row(
-            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
             horizontalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = dimensionResource(id = R.dimen.padding_extra_small)),
         ) {
             AutoResizedText(text = ingredient.name)
         }
