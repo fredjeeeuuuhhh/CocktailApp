@@ -47,13 +47,13 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
         retrofit.create(CocktailApiService::class.java)
     }
     override val cocktailRepository: CocktailRepository by lazy {
-        OfflineCocktailRepository(CocktailDB.getDatabase(context).cocktailDao(), cocktailRetrofitService)
+        OfflineCocktailRepository(CocktailDB.getDatabase(context).cocktailDao(), CocktailDB.getDatabase(context).IngredientDao(), ingredientRetrofitService, cocktailRetrofitService)
     }
 
     private val ingredientRetrofitService: IngredientApiService by lazy {
         retrofit.create(IngredientApiService::class.java)
     }
     override val ingredientRepository: IngredientRepository by lazy {
-        OfflineIngredientRepository(CocktailDB.getDatabase(context).IngredientDao(), ingredientRetrofitService)
+        OfflineIngredientRepository(CocktailDB.getDatabase(context).IngredientDao(), CocktailDB.getDatabase(context).cocktailDao(), ingredientRetrofitService)
     }
 }

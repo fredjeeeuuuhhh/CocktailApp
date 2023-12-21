@@ -73,7 +73,7 @@ fun SupplementsOverview(
         stringResource(R.string.filter_all) to { true },
     )
 
-    for (category in cocktails.map { it.category!! }.distinct())
+    for (category in cocktails.map { it.category?:"" }.distinct())
         filters += category to { it.category == category }
 
     var currentFilter by rememberSaveable { mutableStateOf(filters.toList()[0].first) }

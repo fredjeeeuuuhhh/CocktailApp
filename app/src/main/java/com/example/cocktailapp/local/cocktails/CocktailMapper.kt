@@ -14,6 +14,7 @@ fun Cocktail.asDbCocktail(): DbCocktail {
         ingredientNames = ingredientNames ?: emptyList(),
         measurements = measurements ?: emptyList(),
         isFavorite = isFavorite ?: false,
+        nrOfOwnedIngredients = nrOwnedIngredients,
     )
 }
 
@@ -29,5 +30,6 @@ fun DbCocktail.toDomainCocktail(): Cocktail {
         ingredientNames = ingredientNames,
         measurements = measurements,
         isFavorite = isFavorite,
+        nrOwnedIngredients = nrOfOwnedIngredients
     )
 }

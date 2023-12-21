@@ -1,7 +1,12 @@
 package com.example.cocktailapp.local.cocktails
 
+import android.util.Log
+import com.example.cocktailapp.local.ingredients.IngredientDao
+import com.example.cocktailapp.local.ingredients.asDbIngredient
 import com.example.cocktailapp.model.Cocktail
 import com.example.cocktailapp.network.CocktailApiService
+import com.example.cocktailapp.network.IngredientApiService
+import com.example.cocktailapp.network.asDomainIngredient
 import com.example.cocktailapp.network.asDomainObjects
 import com.example.cocktailapp.network.asDomainObjectsFromSearch
 import kotlinx.coroutines.flow.Flow
@@ -21,6 +26,8 @@ interface CocktailRepository {
 
 class OfflineCocktailRepository(
     private val cocktailDao: CocktailDao,
+    private val ingredientDao: IngredientDao,
+    private val ingredientApiService: IngredientApiService,
     private val cocktailApiService: CocktailApiService,
 ) : CocktailRepository {
     // private val characters = listOf("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z")
@@ -38,6 +45,18 @@ class OfflineCocktailRepository(
     }
 
     override suspend fun getCocktailById(id: Int): Flow<Cocktail> {
+        val ingredientsNames = cocktailApiService.getCocktailById(id).drinks?.asDomainObjects()
+            ?.first()?.ingredientNames
+
+        if (ingredientsNames != null) {
+            ingredientsNames.forEach {
+                val ingredient = ingredientApiService.getIngredientByName(it).ingredients.map { it.asDomainIngredient() }.first().asDbIngredient()
+                Log.i("sg", ingredient.toString())
+                ingredientDao.insertIngredient(ingredient)
+                cocktailDao.insertCrossRef(CrossRef(id, it))
+            }
+        }
+
         return cocktailDao.getById(id).map {
             it.toDomainCocktail()
         }

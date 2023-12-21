@@ -15,7 +15,6 @@ import com.example.cocktailapp.ui.ingredients.ingredientsoverview.components.Ing
 import eu.bambooapps.material3.pullrefresh.pullRefresh
 import eu.bambooapps.material3.pullrefresh.rememberPullRefreshState
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IngredientsOverview(
@@ -30,18 +29,17 @@ fun IngredientsOverview(
             .pullRefresh(pullRefreshState)
             .fillMaxWidth(),
     ) {
-        when(ingredientApiState){
-            is IngredientApiState.Loading-> {
+        when (ingredientApiState) {
+            is IngredientApiState.Loading -> {
                 Text("Loading ingredients from api")
             }
-            is IngredientApiState.Error-> {
+            is IngredientApiState.Error -> {
                 Text("Error while retrieving ingredients from api")
             }
             is IngredientApiState.Succes -> {
                 Ingredients(
                     ingredients = ingredientApiState.ingredients,
                     onViewDetailClicked = onViewDetailClicked,
-                    onOwnedStatusChanged = {ingredient -> ingredientOverviewViewModel.changeOwnedStatus(ingredient)},
                 )
             }
         }

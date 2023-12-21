@@ -1,6 +1,7 @@
 package com.example.cocktailapp.local.ingredients
 
 import android.util.Log
+import com.example.cocktailapp.local.cocktails.CocktailDao
 import com.example.cocktailapp.model.Ingredient
 import com.example.cocktailapp.network.IngredientApiService
 import com.example.cocktailapp.network.asDomainImgredientNameOnly
@@ -20,6 +21,7 @@ interface IngredientRepository {
 
 class OfflineIngredientRepository(
     private val ingredientDao: IngredientDao,
+    private val cocktailDao: CocktailDao,
     private val ingredientApiService: IngredientApiService,
 ) : IngredientRepository {
     override fun getIngredients(): Flow<List<Ingredient>> {
@@ -38,7 +40,6 @@ class OfflineIngredientRepository(
         try {
             val ingredients = ingredientApiService.getIngredientByName(name).ingredients.map { it.asDomainIngredient() }
             ingredients.forEach {
-                Log.i("'test", it.toString())
                 ingredientDao.updateIngredient(it.name, it.description ?: "", it.containsAlcohol ?: false, it.alcoholPercentage ?: "", it.type ?: "")
             }
         } catch (exception: IOException) {
@@ -49,6 +50,9 @@ class OfflineIngredientRepository(
 
     override suspend fun updateIsOwned(ingredientName: String, isOwned: Boolean): Flow<Void> = flow {
         ingredientDao.updateIsOwned(ingredientName, isOwned)
+        cocktailDao.getByIngredientIdOnlyNoFlow(ingredientName).forEach { id ->
+            cocktailDao.updateTransaction(id)
+        }
     }
 
     override suspend fun refreshIngredients() {

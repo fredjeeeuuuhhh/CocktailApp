@@ -35,10 +35,7 @@ import com.example.cocktailapp.model.Ingredient
 fun IngredientListItem(
     ingredient: Ingredient,
     onViewDetailClicked: () -> Unit,
-    onOwnedStatusChanged : () -> Unit
-){
-    if(ingredient.isOwned==null)ingredient.isOwned=false
-    var isOwned by remember{ mutableStateOf(ingredient.isOwned)}
+) {
     Card(
         modifier = Modifier
             .fillMaxSize()
@@ -51,47 +48,15 @@ fun IngredientListItem(
             contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
         ),
     ) {
-        Box(
-            modifier= Modifier
-                .fillMaxWidth()
-                .height(35.dp)
-                .padding(top = 10.dp),
-            contentAlignment = Alignment.CenterEnd,
-        ){
-            if(!isOwned!!){//watch out for this make sure it is set
-                IconButton(onClick = {
-                    isOwned=true
-                    onOwnedStatusChanged()
-                }) {
-                    Icon(
-                        Icons.Filled.AddCircleOutline,
-                        "Add to owned",
-                        modifier = Modifier.size(35.dp),
-                    )
-                }
-            }else{
-                IconButton(onClick = {
-                    isOwned=false
-                    onOwnedStatusChanged()
-                }) {
-                    Icon(
-                        Icons.Filled.RemoveCircleOutline,
-                        "Add to owned",
-                        modifier = Modifier.size(35.dp),
-                    )
-                }
-            }
-
-        }
         AsyncImage(
             model = ingredient.thumbnail,
             contentDescription = ingredient.name,
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(1f)
+                .aspectRatio(1f),
         )
         Text(
-            text= ingredient.name,
+            text = ingredient.name,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(5.dp),

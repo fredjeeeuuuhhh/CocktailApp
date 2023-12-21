@@ -21,11 +21,11 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun CocktaiilIngredientHeader(
-    onBack: ()->Unit,
-    title:String,
-    isFavorite:Boolean,
-    onStarClicked: (Boolean)->Unit,
-){
+    onBack: () -> Unit,
+    title: String,
+    isFavorite: Boolean,
+    onStarClicked: (Boolean) -> Unit,
+) {
     var selected by rememberSaveable { mutableStateOf(isFavorite) }
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -50,17 +50,17 @@ fun CocktaiilIngredientHeader(
 
         IconButton(
             onClick = {
-                selected=!selected
+                selected = !selected
                 onStarClicked(!isFavorite)
-                      },
+            },
         ) {
-            if(selected){
+            if (selected) {
                 Icon(
                     Icons.Filled.Star,
                     contentDescription = "Close dialog",
                     tint = MaterialTheme.colorScheme.primary,
                 )
-            }else{
+            } else {
                 Icon(
                     Icons.Filled.StarOutline,
                     contentDescription = "Close dialog",

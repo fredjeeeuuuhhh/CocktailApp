@@ -10,7 +10,6 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.cocktailapp.CocktailApplication
 import com.example.cocktailapp.local.ingredients.IngredientRepository
-import com.example.cocktailapp.model.Ingredient
 import com.example.cocktailapp.ui.IngredientApiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -64,15 +63,6 @@ class IngredientsOverviewViewModel(
                         it.copy(currentIngredientList = ingredients, isRefreshing = false)
                     }
                 }
-        }
-    }
-    fun changeOwnedStatus(ingredient: Ingredient) {
-        viewModelScope.launch {
-            ingredientRepository.updateIsOwned(ingredient.name, ingredient.isOwned ?: false)
-                .catch { exception ->
-                    exception.printStackTrace()
-                    ingredientApiState = IngredientApiState.Error
-                }.collect {}
         }
     }
 

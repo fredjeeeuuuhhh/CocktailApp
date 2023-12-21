@@ -16,6 +16,7 @@ data class DbCocktail(
     var ingredientNames: List<String>,
     var measurements: List<String>,
     var isFavorite: Boolean,
+    var nrOfOwnedIngredients: Int,
 )
 
 @Entity(primaryKeys = ["cocktailId", "ingredientName"])
