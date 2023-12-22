@@ -22,7 +22,7 @@
     <string name="error_details_ingredient">Something went wrong while retrieving data from ingredient</string>
     <string name="contains_alcohol">Contains alcohol: %s</string>
     <string name="type">Type of alcohol: %s</string>
-    <string name="percentage">Alcohol percentage: %s%</string>
+    <string name="percentage">Alcohol percentage: %s%%</string>
     <string name="ingredient_tag">IngredientCard</string>
     <string name="alphabet">a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z</string>
     <string name="loading_ingredient_overview">Loading ingredients</string>
