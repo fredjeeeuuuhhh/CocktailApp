@@ -58,4 +58,15 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
     override val ingredientRepository: IngredientRepository by lazy {
         OfflineIngredientRepository(CocktailDB.getDatabase(context).IngredientDao(), CocktailDB.getDatabase(context).cocktailDao(), ingredientRetrofitService, context)
     }
+
+    object AppContainerProvider {
+        private var appContainer: AppContainer? = null
+
+        fun getAppContainer(context: Context): AppContainer {
+            if (appContainer == null) {
+                appContainer = DefaultAppContainer(context.applicationContext)
+            }
+            return appContainer!!
+        }
+    }
 }
