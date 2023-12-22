@@ -27,4 +27,6 @@
     <string name="alphabet">a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z</string>
     <string name="loading_ingredient_overview">Loading ingredients</string>
     <string name="error_ingredient_overview">Something went wrong while retrieving ingredients</string>
+    <string name="no_cocktails">There are no cocktails to show, check your internet connection …</string>
+    <string name="no_ingredients">There are no ingredients to show, check your internet connection …</string>
 </resources>

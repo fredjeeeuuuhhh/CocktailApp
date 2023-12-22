@@ -64,7 +64,7 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
 
         fun getAppContainer(context: Context): AppContainer {
             if (appContainer == null) {
-                appContainer = DefaultAppContainer(context.applicationContext)
+                appContainer = DefaultAppContainer(context)
             }
             return appContainer!!
         }
