@@ -5,7 +5,13 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10"
     id("com.google.devtools.ksp")
+    id("org.jetbrains.dokka") version "1.8.10"
 }
+
+tasks.dokkaHtml {
+    outputDirectory.set(file("$rootDir/docs"))
+}
+
 val bundleId = "com.example.cocktailapp"
 android {
     namespace = bundleId
@@ -29,7 +35,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -78,13 +84,16 @@ dependencies {
     implementation("androidx.test:core-ktx:1.5.0")
     testImplementation("org.testng:testng:6.9.6")
 
-    //room
+    // room
     val room_version = "2.5.0"
     implementation("androidx.room:room-runtime:$room_version")
     // optional - Kotlin Extensions and Coroutines support for Room
     implementation("androidx.room:room-ktx:$room_version")
     // To use Kotlin Symbol Processing (KSP)
     ksp("androidx.room:room-compiler:$room_version")
+
+    // Dokka
+    dokkaPlugin("org.jetbrains.dokka:android-documentation-plugin:1.8.10")
 
     implementation("io.coil-kt:coil-compose:2.5.0")
     implementation("eu.bambooapps:compose-material3-pullrefresh:1.0.0")
@@ -106,6 +115,3 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 }
-
-
-

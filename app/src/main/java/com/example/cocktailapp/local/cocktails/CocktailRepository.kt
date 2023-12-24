@@ -21,17 +21,77 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
+/**
+ * Interface defining methods to retrieve and manipulate Cocktail-related data.
+ */
 interface CocktailRepository {
+
+    /**
+     * Retrieves all cocktails from the repository.
+     *
+     * @return A [Flow] emitting a list of [Cocktail] objects.
+     */
     fun getAll(): Flow<List<Cocktail>>
+
+    /**
+     * Retrieves a specific cocktail by its ID.
+     *
+     * @param id The unique identifier of the cocktail.
+     * @return A [Flow] emitting a [Cocktail] object.
+     */
     fun getCocktailById(id: Int): Flow<Cocktail>
+
+    /**
+     * Searches for cocktails based on a specified ingredient name.
+     *
+     * @param ingredientName The name of the ingredient to search for.
+     * @return A [Flow] emitting a [List] of [Cocktail] objects.
+     */
     fun searchByIngredient(ingredientName: String): Flow<List<Cocktail>>
+
+    /**
+     * Updates the 'isFavorite' status of a cocktail.
+     *
+     * @param cocktailId The unique identifier of the cocktail to update.
+     * @param isFavorite Boolean indicating whether the cocktail is marked as a favorite.
+     * @return A [Flow] of type [Void].
+     */
     suspend fun updateIsFavorite(cocktailId: Int, isFavorite: Boolean): Flow<Void>
+
+    /**
+     * Refreshes the cocktails data.
+     */
     suspend fun refreshCocktails()
+
+    /**
+     * Refreshes the cocktails data in a worker context.
+     */
     suspend fun refreshCocktailsInWorker()
+
+    /**
+     * Retrieves a specific cocktail by its ID in a worker context.
+     *
+     * @param id The unique identifier of the cocktail to retrieve.
+     */
     suspend fun getCocktailByIdInWorker(id: Int)
+
+    /**
+     * Searches for cocktails based on a specified ingredient name in a worker context.
+     *
+     * @param ingredientName The name of the ingredient to search for.
+     */
     suspend fun searchByIngredientInWorker(ingredientName: String)
 }
 
+/**
+ * Concrete implementation of [CocktailRepository] for offline data operations.
+ *
+ * @param cocktailDao The data access object for cocktails.
+ * @param ingredientDao The data access object for ingredients.
+ * @param ingredientApiService The API service for ingredient-related operations.
+ * @param cocktailApiService The API service for cocktail-related operations.
+ * @param context The Android application context.
+ */
 class OfflineCocktailRepository(
     private val cocktailDao: CocktailDao,
     private val ingredientDao: IngredientDao,

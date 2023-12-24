@@ -3,6 +3,19 @@ package com.example.cocktailapp.network
 import com.example.cocktailapp.model.Cocktail
 import kotlinx.serialization.Serializable
 
+/**
+ * Represents an API response for a detailed cocktail item.
+ *
+ * @property idDrink The unique identifier for the cocktail.
+ * @property strDrink The name or title of the cocktail.
+ * @property strCategory The category of the cocktail (e.g., "Martini", "Margarita").
+ * @property strAlcoholic If it contains alcohol, or if it is optional
+ * @property strGlass The type of glass used for serving the cocktail.
+ * @property strInstructions Instructions to prepare the cocktail.
+ * @property strDrinkThumb The URL or path to the image representing the cocktail.
+ * @property strIngredient1-15 Ingredients used in the cocktail (up to 15).
+ * @property strMeasure1-15 Corresponding measurements for the ingredients (up to 15).
+ */
 @Serializable
 data class ApiCocktail(
     val idDrink: String,
@@ -44,6 +57,13 @@ data class ApiCocktail(
     val strMeasure15: String?,
 )
 
+/**
+ * Represents an API response for a simplified cocktail item used in search results.
+ *
+ * @property strDrink The name or title of the cocktail.
+ * @property strDrinkThumb The URL or path to the image representing the cocktail.
+ * @property idDrink The unique identifier for the cocktail.
+ */
 @Serializable
 data class ApiCocktailForSearch(
     val strDrink: String,
@@ -51,16 +71,31 @@ data class ApiCocktailForSearch(
     val idDrink: String,
 )
 
+/**
+ * Represents a list of cocktails obtained from an API search.
+ *
+ * @property drinks List of simplified cocktail items for search results.
+ */
 @Serializable
 data class CocktailApiSearchResult(
     val drinks: List<ApiCocktailForSearch>,
 )
 
+/**
+ * Represents a list of cocktails obtained from an API response.
+ *
+ * @property drinks List of detailed cocktail items.
+ */
 @Serializable
 data class ApiDrinks(
     val drinks: List<ApiCocktail>?,
 )
 
+/**
+ * Extension function converting a list of [ApiCocktail] items to a list of [Cocktail] domain objects.
+ *
+ * @return A [List] of [Cocktail] domain objects representing the cocktails.
+ */
 fun List<ApiCocktail>.asDomainObjects() =
     map { apiCocktail ->
         Cocktail(
@@ -110,6 +145,11 @@ fun List<ApiCocktail>.asDomainObjects() =
         )
     }
 
+/**
+ * Extension function converting a list of [ApiCocktailForSearch] items to a list of simplified [Cocktail] domain objects.
+ *
+ * @return A [List] of simplified [Cocktail] domain objects representing the cocktails for search results.
+ */
 fun List<ApiCocktailForSearch>.asDomainObjectsFromSearch() =
     map { apiCocktail ->
         Cocktail(
