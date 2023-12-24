@@ -53,7 +53,7 @@ class IngredientsOverviewViewModel(
         ingredientApiState = IngredientApiState.Loading
         viewModelScope.launch {
             ingredientRepository.getIngredients()
-                .catch {exception->
+                .catch { exception ->
                     exception.printStackTrace()
                     _uiState.update {
                         it.copy(isRefreshing = false)

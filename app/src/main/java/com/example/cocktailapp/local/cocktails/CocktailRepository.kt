@@ -5,7 +5,6 @@ import androidx.work.Constraints
 import androidx.work.Data
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.example.cocktailapp.local.ingredients.IngredientDao
 import com.example.cocktailapp.local.ingredients.asDbIngredient
@@ -21,7 +20,6 @@ import com.example.cocktailapp.util.WifiSearchByIngredientWorker
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import java.util.UUID
 
 interface CocktailRepository {
     fun getAll(): Flow<List<Cocktail>>
@@ -32,10 +30,6 @@ interface CocktailRepository {
     suspend fun refreshCocktailsInWorker()
     suspend fun getCocktailByIdInWorker(id: Int)
     suspend fun searchByIngredientInWorker(ingredientName: String)
-
-    var wifiWorkRefreshCocktailInfo: Flow<WorkInfo>
-    var wifiSearchByIngredientInfo: Flow<WorkInfo>
-    var wifiGetCocktailByIdInfo: Flow<WorkInfo>
 }
 
 class OfflineCocktailRepository(
@@ -61,17 +55,12 @@ class OfflineCocktailRepository(
         cocktailDao.updateIsFavorite(cocktailId, isFavorite)
     }
 
-    private var wifiGetCocktailByIdID = UUID(1, 2)
-    override var wifiGetCocktailByIdInfo: Flow<WorkInfo> =
-        workManager.getWorkInfoByIdFlow(wifiGetCocktailByIdID)
     override fun getCocktailById(id: Int): Flow<Cocktail> {
         val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
         val inputData = Data.Builder().putInt("id", id).build()
         val requestBuilder = OneTimeWorkRequestBuilder<WifiGetCocktailByIdWorker>()
         val request = requestBuilder.setInputData(inputData).setConstraints(constraints).build()
         workManager.enqueue(request)
-        wifiGetCocktailByIdID = request.id
-        wifiGetCocktailByIdInfo = workManager.getWorkInfoByIdFlow(request.id)
 
         return cocktailDao.getById(id).map {
             it.toDomainCocktail()
@@ -90,18 +79,13 @@ class OfflineCocktailRepository(
         }
     }
 
-    private var wifiSearchByIngredientID = UUID(1, 2)
-    override var wifiSearchByIngredientInfo: Flow<WorkInfo> =
-        workManager.getWorkInfoByIdFlow(wifiSearchByIngredientID)
-
     override fun searchByIngredient(ingredientName: String): Flow<List<Cocktail>> {
         val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
         val inputData = Data.Builder().putString("ingredientName", ingredientName).build()
         val requestBuilder = OneTimeWorkRequestBuilder<WifiSearchByIngredientWorker>()
         val request = requestBuilder.setInputData(inputData).setConstraints(constraints).build()
         workManager.enqueue(request)
-        wifiSearchByIngredientID = request.id
-        wifiSearchByIngredientInfo = workManager.getWorkInfoByIdFlow(request.id)
+
         return cocktailDao.getByIngredient(ingredientName).map { cocktails ->
             cocktails.map {
                 it.toDomainCocktail()
@@ -121,12 +105,7 @@ class OfflineCocktailRepository(
         val requestBuilder = OneTimeWorkRequestBuilder<WifiRefreshCocktailWorker>()
         val request = requestBuilder.setConstraints(constraints).build()
         workManager.enqueue(request)
-        wifiWorkRefreshCocktailID = request.id
-        wifiWorkRefreshCocktailInfo = workManager.getWorkInfoByIdFlow(request.id)
     }
-    private var wifiWorkRefreshCocktailID = UUID(1, 2)
-    override var wifiWorkRefreshCocktailInfo: Flow<WorkInfo> =
-        workManager.getWorkInfoByIdFlow(wifiWorkRefreshCocktailID)
 
     override suspend fun refreshCocktailsInWorker() {
         characters.forEach { character ->
