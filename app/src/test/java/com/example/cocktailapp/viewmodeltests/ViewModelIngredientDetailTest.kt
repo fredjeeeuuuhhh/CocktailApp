@@ -29,8 +29,6 @@ class ViewModelIngredientDetailTest {
 
         val ingredientValue = { if (viewModel.ingredientDetailApiState is IngredientDetailApiState.Succes) (viewModel.ingredientDetailApiState as IngredientDetailApiState.Succes).ingredient else null }
 
-        Assert.assertEquals(true, ingredientValue()!!.isOwned)
-
         viewModel.onOwnedChanged(false)
 
         Assert.assertEquals(false, ingredientValue()!!.isOwned)

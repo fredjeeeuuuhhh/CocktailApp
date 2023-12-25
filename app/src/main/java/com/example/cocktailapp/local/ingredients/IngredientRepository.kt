@@ -9,8 +9,8 @@ import androidx.work.WorkManager
 import com.example.cocktailapp.local.cocktails.CocktailDao
 import com.example.cocktailapp.model.Ingredient
 import com.example.cocktailapp.network.IngredientApiService
-import com.example.cocktailapp.network.asDomainIngredientNameOnly
 import com.example.cocktailapp.network.asDomainIngredient
+import com.example.cocktailapp.network.asDomainIngredientNameOnly
 import com.example.cocktailapp.util.WifiGetIngredientByNameWorker
 import com.example.cocktailapp.util.WifiRefreshIngredientsWorker
 import kotlinx.coroutines.flow.Flow

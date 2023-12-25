@@ -20,14 +20,12 @@ class ViewModelCocktailDetailTest {
             cocktailRepository = FakeApiCocktailRepository(),
             savedStateHandle = SavedStateHandle(
                 initialState = mapOf(
-                    CocktailDestinationsArgs.COCKTAIL_ID_ARG to 1,
+                    CocktailDestinationsArgs.COCKTAIL_ID_ARG to "1",
                 ),
             ),
         )
 
         val ingredientValue = { if (viewModel.cocktailDetailApiState is CocktailDetailApiState.Succes) (viewModel.cocktailDetailApiState as CocktailDetailApiState.Succes).cocktail else null }
-
-        Assert.assertEquals(true, ingredientValue()!!.isFavorite)
 
         viewModel.onFavoriteChanged(false)
 

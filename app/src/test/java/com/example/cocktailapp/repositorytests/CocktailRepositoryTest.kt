@@ -1,11 +1,10 @@
 package com.example.cocktailapp.repositorytests
 
-import androidx.test.core.app.ApplicationProvider
-import com.example.cocktailapp.CocktailApplication
 import com.example.cocktailapp.fake.FakeCocktailApiService
 import com.example.cocktailapp.fake.FakeCocktailDao
 import com.example.cocktailapp.fake.FakeIngredientApiService
 import com.example.cocktailapp.fake.FakeIngredientDao
+import com.example.cocktailapp.helpers.FakeContext
 import com.example.cocktailapp.local.cocktails.OfflineCocktailRepository
 import com.example.cocktailapp.local.cocktails.asDbCocktail
 import com.example.cocktailapp.local.ingredients.asDbIngredient
@@ -17,7 +16,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-
+// only pass when workmanager related code is commented because of the context
 class CocktailRepositoryTest {
     private var cocktail1 = Cocktail(
         1,
@@ -32,7 +31,7 @@ class CocktailRepositoryTest {
         isFavorite = true,
     )
     private var cocktail2 = Cocktail(
-        1,
+        2,
         "Vodka Redbull",
         "Cocktail",
         "Alcohol",
@@ -89,7 +88,6 @@ class CocktailRepositoryTest {
 
     @Before
     fun setup() {
-        val context = ApplicationProvider.getApplicationContext<CocktailApplication>()
         localCocktailDataSource = FakeCocktailDao(
             localCocktails.map { it.asDbCocktail() }.toMutableList(),
             localIngredients.map { it.asDbIngredient() }.toMutableList(),
@@ -105,7 +103,7 @@ class CocktailRepositoryTest {
             localIngredientDataSource,
             networkIngredientDataSource,
             networkCocktailDataSource,
-            context,
+            FakeContext(),
         )
     }
 
