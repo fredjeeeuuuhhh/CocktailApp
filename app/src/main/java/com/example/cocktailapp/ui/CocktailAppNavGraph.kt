@@ -34,13 +34,11 @@ import com.example.cocktailapp.ui.navigation.BottomNavigationBar
 import com.example.cocktailapp.ui.navigation.NavigationDrawerContent
 import com.example.cocktailapp.ui.navigation.NavigationMenuItem
 import com.example.cocktailapp.ui.navigation.TaskNavigationRail
-import com.example.cocktailapp.util.ContentType
 import com.example.cocktailapp.util.NavigationType
 
 @Composable
 fun CocktailAppNavGraph(
     navigationType: NavigationType = NavigationType.BOTTOM_BAR,
-    contentType: ContentType = ContentType.LIST_ONLY,
     navController: NavHostController = rememberNavController(),
     startDestination: String = CocktailDestinations.COCKTAIL_ROUTE,
     navActions: CocktailNavigationActions = remember(navController) {
@@ -81,7 +79,7 @@ fun CocktailAppNavGraph(
                 CocktailScreen(
                     onViewDetailClicked = { cocktail ->
                         navActions.navigateToCocktailDetail(
-                            cocktailId = cocktail.id
+                            cocktailId = cocktail.id,
                         )
                     },
                 )
@@ -114,7 +112,7 @@ fun CocktailAppNavGraph(
                 onBack = { navController.popBackStack() },
                 onViewDetailClicked = { cocktail ->
                     navActions.navigateToCocktailDetail(
-                        cocktailId = cocktail.id
+                        cocktailId = cocktail.id,
                     )
                 },
             )
@@ -149,7 +147,7 @@ fun MenuScaffold(currentRoute: String, menuItems: Array<NavigationMenuItem>, nav
             bottomBar = {
                 BottomNavigationBar(
                     currentRoute = currentRoute,
-                    menuItems = menuItems
+                    menuItems = menuItems,
                 )
             },
         ) { innerPadding ->

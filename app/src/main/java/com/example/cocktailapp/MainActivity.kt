@@ -12,7 +12,6 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.ui.Modifier
 import com.example.cocktailapp.ui.CocktailAppNavGraph
 import com.example.cocktailapp.ui.theme.CocktailAppTheme
-import com.example.cocktailapp.util.ContentType
 import com.example.cocktailapp.util.NavigationType
 
 class MainActivity : ComponentActivity() {
@@ -31,10 +30,10 @@ class MainActivity : ComponentActivity() {
                             CocktailAppNavGraph()
                         }
                         WindowWidthSizeClass.Medium -> {
-                            CocktailAppNavGraph(NavigationType.NAVIGATION_RAIL, ContentType.LIST_ONLY)
+                            CocktailAppNavGraph(NavigationType.NAVIGATION_RAIL)
                         }
                         WindowWidthSizeClass.Expanded -> {
-                            CocktailAppNavGraph(NavigationType.NAVIGATION_DRAWER, ContentType.LIST_AND_DETAIL)
+                            CocktailAppNavGraph(NavigationType.NAVIGATION_DRAWER)
                         }
                         else -> {
                             CocktailAppNavGraph()

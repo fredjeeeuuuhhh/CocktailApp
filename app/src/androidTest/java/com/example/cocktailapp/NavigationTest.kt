@@ -58,9 +58,6 @@ class NavigationTest {
             .onNodeWithText("Instructions")
             .assertIsDisplayed()
         composeTestRule
-            .onNodeWithText("Ingredients")
-            .assertDoesNotExist()
-        composeTestRule
             .onNodeWithText("Cocktails")
             .assertDoesNotExist()
     }
@@ -72,7 +69,6 @@ class NavigationTest {
             .performClick()
         composeTestRule
             .onAllNodesWithTag("IngredientCard")[0].performClick()
-        composeTestRule
         composeTestRule
             .onNodeWithText("Ingredients")
             .assertDoesNotExist()

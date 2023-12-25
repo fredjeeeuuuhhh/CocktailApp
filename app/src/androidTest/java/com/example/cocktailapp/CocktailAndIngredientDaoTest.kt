@@ -43,7 +43,7 @@ class CocktailAndIngredientDaoTest {
         isFavorite = true,
     )
     private var cocktail2 = Cocktail(
-        1,
+        2,
         "Vodka Redbull",
         "Cocktail",
         "Alcohol",
@@ -52,6 +52,7 @@ class CocktailAndIngredientDaoTest {
         "https://www.thecocktaildb.com/images/media/drink/vrwquq1478252802.jpg/preview",
         listOf("Vodka", "Redbull"),
         listOf("1 oz", "1 can"),
+        isFavorite = false,
     )
     private var ingredient1 = Ingredient(
         "Cola",
@@ -69,8 +70,9 @@ class CocktailAndIngredientDaoTest {
         true,
         "40",
         "https://www.thecocktaildb.com/images/ingredients/bacardi-Small.png",
+        isOwned = false,
     )
-    private suspend fun addOneIngredientToDb() {
+    private suspend fun addOneCocktailToDb() {
         cocktailDao.insertCocktail(cocktail1.asDbCocktail())
     }
 
@@ -79,7 +81,7 @@ class CocktailAndIngredientDaoTest {
         cocktailDao.insertCocktail(cocktail2.asDbCocktail())
     }
 
-    private suspend fun addOneCocktailToDb() {
+    private suspend fun addOneIngredientToDb() {
         ingredientDao.insertIngredient(ingredient1.asDbIngredient())
     }
     private suspend fun addTwoIngredientsToDb() {
@@ -113,16 +115,16 @@ class CocktailAndIngredientDaoTest {
         // arrange
         addOneCocktailToDb()
         // act
-        val allItems = cocktailDao.getAll().first()
+        val items = cocktailDao.getAll().first()
         // assert
-        assertEquals(allItems[0].toDomainCocktail(), cocktail1)
+        assertEquals(items[0].toDomainCocktail(), cocktail1)
     }
 
     @Test
     @Throws(Exception::class)
     fun daoInert_insertIngredientIntoDB() = runBlocking {
         // arrange
-        addOneCocktailToDb()
+        addOneIngredientToDb()
         // act
         val allItems = ingredientDao.getAll().first()
         // assert
@@ -145,7 +147,7 @@ class CocktailAndIngredientDaoTest {
     @Throws(Exception::class)
     fun daoGetAllIngredients_returnsAllIngredientsFromDB() = runBlocking {
         // arrange
-        addTwoCocktailsToDb()
+        addTwoIngredientsToDb()
         // act
         val allItems = ingredientDao.getAll().first()
         // assert
@@ -163,8 +165,8 @@ class CocktailAndIngredientDaoTest {
         cocktailDao.updateIsFavorite(cocktail2.id, !cocktail2.isFavorite)
         val allItems = cocktailDao.getAll().first()
         // assert
-        assertEquals(allItems[1].toDomainCocktail().isFavorite, !cocktail2.isFavorite)
-        assertEquals(allItems[0].toDomainCocktail().isFavorite, !cocktail1.isFavorite)
+        assertEquals(allItems[1].toDomainCocktail().isFavorite, !cocktail1.isFavorite)
+        assertEquals(allItems[0].toDomainCocktail().isFavorite, !cocktail2.isFavorite)
     }
 
     @Test
@@ -177,8 +179,8 @@ class CocktailAndIngredientDaoTest {
         ingredientDao.updateIsOwned(ingredient2.name, !ingredient2.isOwned!!)
         val allItems = ingredientDao.getAll().first()
         // assert
-        assertEquals(allItems[1].toDomainIngredient().isOwned, !ingredient2.isOwned!!)
-        assertEquals(allItems[0].toDomainIngredient().isOwned, !ingredient1.isOwned!!)
+        assertEquals(allItems[0].toDomainIngredient().isOwned, !ingredient2.isOwned!!)
+        assertEquals(allItems[1].toDomainIngredient().isOwned, !ingredient1.isOwned!!)
     }
 
     @Test
