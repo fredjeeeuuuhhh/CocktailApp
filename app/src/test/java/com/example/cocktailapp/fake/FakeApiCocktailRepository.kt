@@ -10,7 +10,7 @@ import com.example.cocktailapp.network.asDomainObjectsFromSearch
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class FakeApiCocktailRepository() : CocktailRepository {
+class FakeApiCocktailRepository : CocktailRepository {
     override fun getAll(): Flow<List<Cocktail>> = flow {
         emit(ApiDrinks(FakeDataSource.cocktail).drinks!!.asDomainObjects())
     }
@@ -38,14 +38,5 @@ class FakeApiCocktailRepository() : CocktailRepository {
     }
 
     override suspend fun refreshCocktails() {
-    }
-
-    override suspend fun refreshCocktailsInWorker() {
-    }
-
-    override suspend fun getCocktailByIdInWorker(id: Int) {
-    }
-
-    override suspend fun searchByIngredientInWorker(ingredientName: String) {
     }
 }

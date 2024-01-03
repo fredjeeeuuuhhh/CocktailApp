@@ -19,6 +19,8 @@ import retrofit2.Retrofit
 interface AppContainer {
     val cocktailRepository: CocktailRepository
     val ingredientRepository: IngredientRepository
+    val cocktailRetrofitService: CocktailApiService
+    val ingredientRetrofitService: IngredientApiService
 }
 
 @OptIn(ExperimentalSerializationApi::class)
@@ -34,29 +36,29 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
         coerceInputValues = true
         explicitNulls = false
     }
-    private val BASE_URL = "https://www.thecocktaildb.com/api/json/v1/1/"
+    private val baseUrl = "https://www.thecocktaildb.com/api/json/v1/1/"
     private val retrofit = Retrofit.Builder()
         .addConverterFactory(
             json.asConverterFactory("application/json".toMediaType()),
         )
-        .baseUrl(BASE_URL)
+        .baseUrl(baseUrl)
         .client(client)
         .build()
 
-    private val cocktailRetrofitService: CocktailApiService by lazy {
+    override val cocktailRetrofitService: CocktailApiService by lazy {
         retrofit.create(CocktailApiService::class.java)
     }
 
-    private val ingredientRetrofitService: IngredientApiService by lazy {
+    override val ingredientRetrofitService: IngredientApiService by lazy {
         retrofit.create(IngredientApiService::class.java)
     }
 
     override val cocktailRepository: CocktailRepository by lazy {
-        OfflineCocktailRepository(CocktailDB.getDatabase(context).cocktailDao(), CocktailDB.getDatabase(context).IngredientDao(), ingredientRetrofitService, cocktailRetrofitService, context)
+        OfflineCocktailRepository(CocktailDB.getDatabase(context).cocktailDao(), context)
     }
 
     override val ingredientRepository: IngredientRepository by lazy {
-        OfflineIngredientRepository(CocktailDB.getDatabase(context).IngredientDao(), CocktailDB.getDatabase(context).cocktailDao(), ingredientRetrofitService, context)
+        OfflineIngredientRepository(CocktailDB.getDatabase(context).IngredientDao(), CocktailDB.getDatabase(context).cocktailDao(), context)
     }
 
     object AppContainerProvider {

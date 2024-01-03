@@ -8,9 +8,6 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.cocktailapp.local.cocktails.CocktailDao
 import com.example.cocktailapp.model.Ingredient
-import com.example.cocktailapp.network.IngredientApiService
-import com.example.cocktailapp.network.asDomainIngredient
-import com.example.cocktailapp.network.asDomainIngredientNameOnly
 import com.example.cocktailapp.util.WifiGetIngredientByNameWorker
 import com.example.cocktailapp.util.WifiRefreshIngredientsWorker
 import kotlinx.coroutines.flow.Flow
@@ -49,18 +46,6 @@ interface IngredientRepository {
      * Refreshes the ingredients data.
      */
     suspend fun refreshIngredients()
-
-    /**
-     * Retrieves an ingredient by its name in a worker context.
-     *
-     * @param name The name of the ingredient to retrieve.
-     */
-    suspend fun getIngredientByNameInWorker(name: String)
-
-    /**
-     * Refreshes the ingredients data in a worker context.
-     */
-    suspend fun refreshIngredientsInWorker()
 }
 
 /**
@@ -68,16 +53,14 @@ interface IngredientRepository {
  *
  * @param ingredientDao The data access object for ingredients.
  * @param cocktailDao The data access object for cocktails.
- * @param ingredientApiService The API service for ingredient-related operations.
  * @param context The Android application context.
  */
 class OfflineIngredientRepository(
     private val ingredientDao: IngredientDao,
     private val cocktailDao: CocktailDao,
-    private val ingredientApiService: IngredientApiService,
-    context: Context,
+    private val context: Context?,
 ) : IngredientRepository {
-    private val workManager = WorkManager.getInstance(context)
+
     override fun getIngredients(): Flow<List<Ingredient>> {
         return ingredientDao.getAll().map { ingredients ->
             ingredients.map {
@@ -87,20 +70,16 @@ class OfflineIngredientRepository(
     }
 
     override fun getIngredientByName(name: String): Flow<Ingredient> {
-        val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
-        val inputData = Data.Builder().putString("ingredientName", name).build()
-        val requestBuilder = OneTimeWorkRequestBuilder<WifiGetIngredientByNameWorker>()
-        val request = requestBuilder.setInputData(inputData).setConstraints(constraints).build()
-        workManager.enqueue(request)
+        if (context != null) {
+            val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+            val inputData = Data.Builder().putString("ingredientName", name).build()
+            val requestBuilder = OneTimeWorkRequestBuilder<WifiGetIngredientByNameWorker>()
+            val request = requestBuilder.setInputData(inputData).setConstraints(constraints).build()
+            val workManager = WorkManager.getInstance(context)
+            workManager.enqueue(request)
+        }
 
         return ingredientDao.getByName(name).map { it.toDomainIngredient() }
-    }
-
-    override suspend fun getIngredientByNameInWorker(name: String) {
-        val ingredients = ingredientApiService.getIngredientByName(name).ingredients.map { it.asDomainIngredient() }
-        ingredients.forEach {
-            ingredientDao.updateIngredient(it.name, it.description ?: "", it.containsAlcohol ?: false, it.alcoholPercentage ?: "", it.type ?: "")
-        }
     }
 
     override suspend fun updateIsOwned(ingredientName: String, isOwned: Boolean): Flow<Void> = flow {
@@ -111,16 +90,12 @@ class OfflineIngredientRepository(
     }
 
     override suspend fun refreshIngredients() {
-        val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
-        val requestBuilder = OneTimeWorkRequestBuilder<WifiRefreshIngredientsWorker>()
-        val request = requestBuilder.setConstraints(constraints).build()
-        workManager.enqueue(request)
-    }
-
-    override suspend fun refreshIngredientsInWorker() {
-        val ingredients = ingredientApiService.getIngredients().drinks.map { it.strIngredient1.asDomainIngredientNameOnly().asDbIngredient() }
-        ingredients.forEach { ingredient ->
-            ingredientDao.insertIngredientIfNotExisting(ingredient)
+        if (context != null) {
+            val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+            val requestBuilder = OneTimeWorkRequestBuilder<WifiRefreshIngredientsWorker>()
+            val request = requestBuilder.setConstraints(constraints).build()
+            val workManager = WorkManager.getInstance(context)
+            workManager.enqueue(request)
         }
     }
 }

@@ -6,7 +6,7 @@ import com.example.cocktailapp.network.ApiCocktail
 import com.example.cocktailapp.network.ApiIngredient
 
 object FakeDataSource {
-    val cocktail1 = Cocktail(
+    private val cocktail1 = Cocktail(
         1,
         "Bacardi cola",
         "Cocktail",
@@ -18,7 +18,7 @@ object FakeDataSource {
         listOf("1 oz", "1 can"),
         isFavorite = true,
     )
-    val cocktail2 = Cocktail(
+    private val cocktail2 = Cocktail(
         1,
         "Vodka Redbull",
         "Cocktail",
@@ -29,7 +29,7 @@ object FakeDataSource {
         listOf("Vodka", "Redbull"),
         listOf("1 oz", "1 can"),
     )
-    val ingredient1 = Ingredient(
+    private val ingredient1 = Ingredient(
         "Cola",
         "Coca cola",
         "Soda",
@@ -38,7 +38,7 @@ object FakeDataSource {
         "https://www.thecocktaildb.com/images/ingredients/cola-Small.png",
         isOwned = true,
     )
-    val ingredient2 = Ingredient(
+    private val ingredient2 = Ingredient(
         "Bacardi",
         "Strong good alcohol",
         "Alcohol",

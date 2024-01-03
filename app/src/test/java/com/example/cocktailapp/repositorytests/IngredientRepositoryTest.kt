@@ -1,10 +1,7 @@
 package com.example.cocktailapp.repositorytests
 
-import com.example.cocktailapp.fake.FakeCocktailApiService
 import com.example.cocktailapp.fake.FakeCocktailDao
-import com.example.cocktailapp.fake.FakeIngredientApiService
 import com.example.cocktailapp.fake.FakeIngredientDao
-import com.example.cocktailapp.helpers.FakeContext
 import com.example.cocktailapp.local.cocktails.asDbCocktail
 import com.example.cocktailapp.local.ingredients.OfflineIngredientRepository
 import com.example.cocktailapp.local.ingredients.asDbIngredient
@@ -17,7 +14,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
-// only pass when workmanager related code is commented because of the context
 class IngredientRepositoryTest {
     private var cocktail1 = Cocktail(
         1,
@@ -84,8 +80,6 @@ class IngredientRepositoryTest {
 
     private lateinit var localCocktailDataSource: FakeCocktailDao
     private lateinit var localIngredientDataSource: FakeIngredientDao
-    private lateinit var networkCocktailDataSource: FakeCocktailApiService
-    private lateinit var networkIngredientDataSource: FakeIngredientApiService
 
     private lateinit var ingredientRepository: OfflineIngredientRepository
 
@@ -99,13 +93,10 @@ class IngredientRepositoryTest {
             localCocktails.map { it.asDbCocktail() }.toMutableList(),
             localIngredients.map { it.asDbIngredient() }.toMutableList(),
         )
-        networkIngredientDataSource = FakeIngredientApiService()
-        networkCocktailDataSource = FakeCocktailApiService()
         ingredientRepository = OfflineIngredientRepository(
             localIngredientDataSource,
             localCocktailDataSource,
-            networkIngredientDataSource,
-            FakeContext(),
+            context = null,
         )
     }
 

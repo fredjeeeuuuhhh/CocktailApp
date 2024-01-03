@@ -6,7 +6,7 @@ import com.example.cocktailapp.network.asDomainIngredient
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class FakeApiIngredientRepository() : IngredientRepository {
+class FakeApiIngredientRepository : IngredientRepository {
     override fun getIngredients(): Flow<List<Ingredient>> = flow {
         emit(FakeDataSource.ingredients.map { it.asDomainIngredient() })
     }
@@ -20,11 +20,5 @@ class FakeApiIngredientRepository() : IngredientRepository {
     }
 
     override suspend fun refreshIngredients() {
-    }
-
-    override suspend fun getIngredientByNameInWorker(name: String) {
-    }
-
-    override suspend fun refreshIngredientsInWorker() {
     }
 }

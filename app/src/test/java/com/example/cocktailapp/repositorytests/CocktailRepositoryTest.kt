@@ -1,10 +1,6 @@
 package com.example.cocktailapp.repositorytests
 
-import com.example.cocktailapp.fake.FakeCocktailApiService
 import com.example.cocktailapp.fake.FakeCocktailDao
-import com.example.cocktailapp.fake.FakeIngredientApiService
-import com.example.cocktailapp.fake.FakeIngredientDao
-import com.example.cocktailapp.helpers.FakeContext
 import com.example.cocktailapp.local.cocktails.OfflineCocktailRepository
 import com.example.cocktailapp.local.cocktails.asDbCocktail
 import com.example.cocktailapp.local.ingredients.asDbIngredient
@@ -16,7 +12,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-// only pass when workmanager related code is commented because of the context
+
 class CocktailRepositoryTest {
     private var cocktail1 = Cocktail(
         1,
@@ -80,9 +76,6 @@ class CocktailRepositoryTest {
     private val localIngredients = listOf(ingredient1, ingredient2, ingredient3, ingredient4)
 
     private lateinit var localCocktailDataSource: FakeCocktailDao
-    private lateinit var localIngredientDataSource: FakeIngredientDao
-    private lateinit var networkCocktailDataSource: FakeCocktailApiService
-    private lateinit var networkIngredientDataSource: FakeIngredientApiService
 
     private lateinit var cocktailRepository: OfflineCocktailRepository
 
@@ -92,18 +85,9 @@ class CocktailRepositoryTest {
             localCocktails.map { it.asDbCocktail() }.toMutableList(),
             localIngredients.map { it.asDbIngredient() }.toMutableList(),
         )
-        localIngredientDataSource = FakeIngredientDao(
-            localCocktails.map { it.asDbCocktail() }.toMutableList(),
-            localIngredients.map { it.asDbIngredient() }.toMutableList(),
-        )
-        networkCocktailDataSource = FakeCocktailApiService()
-        networkIngredientDataSource = FakeIngredientApiService()
         cocktailRepository = OfflineCocktailRepository(
             localCocktailDataSource,
-            localIngredientDataSource,
-            networkIngredientDataSource,
-            networkCocktailDataSource,
-            FakeContext(),
+            context = null,
         )
     }
 

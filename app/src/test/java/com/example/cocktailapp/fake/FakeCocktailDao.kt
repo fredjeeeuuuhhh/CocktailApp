@@ -61,7 +61,7 @@ class FakeCocktailDao(
     }
 
     override suspend fun getOwnedIngredientsForCocktail(cocktailId: Int): Int {
-        val names = cocktails.find{ it.cocktailId == cocktailId}!!.ingredientNames
+        val names = cocktails.find { it.cocktailId == cocktailId }!!.ingredientNames
         val ingredients = ingredients.filter { names.contains(it.ingredientName) }
         return ingredients.filter { it.isOwned }.size
     }
@@ -71,10 +71,10 @@ class FakeCocktailDao(
     }
 
     override fun getById(cocktailId: Int): Flow<DbCocktail> = flow {
-       emit(cocktails.find { it.cocktailId == cocktailId }!!)
+        emit(cocktails.find { it.cocktailId == cocktailId }!!)
     }
 
-    override fun getByIngredient(ingredientName: String): Flow<List<DbCocktail>> = flow{
+    override fun getByIngredient(ingredientName: String): Flow<List<DbCocktail>> = flow {
         emit(cocktails.filter { it.ingredientNames.contains(ingredientName) })
     }
 }
